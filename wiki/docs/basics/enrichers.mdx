@@ -1,0 +1,304 @@
+---
+description: Learn how to add or mutate data in logs, as they're processed.
+---
+
+# Enrichers
+
+Enrichers are powerful tools that allow you to enhance log entries with additional context or metadata. They can be used
+to add custom information to each log entry or modify existing data.
+
+:::info what you'll learn
+
+- What enrichers are
+- How to apply enrichers to your logging setup
+- How the order of enrichers affects output
+- How to create your own enrichers
+- What enrichers **rLog** provides out of the box
+
+:::
+
+## What is an Enricher?
+
+An enricher is a function that takes a log entry as input, and returns a modified log entry. This allows you to add
+extra data or transform the log entry in some way before it gets output to the console.
+
+## Creating enrichers
+
+Here's a basic example of an enricher that adds a timestamp to each log entry.
+
+```typescript title="timestamp-enricher.ts"
+import { LogEnricherCallback, LogEntry } from "@rbxts/rlog";
+
+export const timestampEnricher: LogEnricherCallback = (entry: LogEntry) => {
+  entry.encoded_data["timestamp"] = DateTime.now();
+  return entry;
+};
+```
+
+:::tip
+
+**rLog** actually already provides a timestamp property on your logs, but we'll be using this enricher as a base example
+regardless; for its simplicity
+
+:::
+
+## Using enrichers
+
+Once you have your enricher created, you can "attach" it to your **rLog** instances via the `enrichers` setting in your
+config.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+import { timestampEnricher } from "./timestamp-enricher";
+
+const logger = new rLog({ enrichers: [timestampEnricher] });
+```
+
+### Order of Enrichers
+
+Enrichers are applied to logs (or "ran") in the order they are "attached" to the **rLog** instance.
+
+This means that the output of the first enricher is passed as input to the next one, and so on.
+
+This allows for complex transformations and data enrichment flows.
+
+```typescript title="timestamp-enricher.ts"
+import { LogEnricherCallback, LogEntry } from "@rbxts/rlog";
+
+export const timestampEnricher: LogEnricherCallback = (entry: LogEntry) => {
+  entry.encoded_data["timestamp"] = DateTime.now();
+  return entry;
+};
+```
+
+```typescript title="transform-timestamp-enricher.ts"
+import { LogEnricherCallback, LogEntry } from "@rbxts/rlog";
+
+export const transformTimestampEnricher: LogEnricherCallback = (entry: LogEntry) => {
+  if (typeIs(entry.encoded_data["timestamp"], "number")) {
+    const ms = DateTime.fromUnixTimestampMillis(entry.encoded_data.timestamp);
+    const formattedTimestamp = ms.FormatLocalTime("LL", "en-us");
+    entry.encoded_data.timestamp = formattedTimestamp;
+  }
+  return entry;
+};
+```
+
+```ts
+import { rLog } from "@rbxts/rlog";
+import { timestampEnricher } from "./timestamp-enricher";
+import { transformTimestampEnricher } from "./transform-timestamp-enricher";
+
+const logger = new rLog().withEnrichers(timestampEnricher, transformTimestampEnricher);
+
+logger.i("Hello world!");
+```
+
+```logs title="Console"
+[INFO]: Hello world!
+{ data: { timestamp: "August 14, 2024" } }
+```
+
+## Enricher Filters
+
+Not all enrichers need to run for every log entry.
+
+Since you have access to the entire `LogEntry`, you can make these decisions on a case-by-case basis in your enrichers.
+
+```ts title="timestamp-enricher.ts"
+import { LogEnricherCallback, LogEntry, LogLevel, rLog } from "@rbxts/rlog";
+
+export const timestampEnricher: LogEnricherCallback = (entry: LogEntry) => {
+  // just return the instance without changing anything
+  if (entry.Level < LogLevel.WARNING) return entry;
+  // ...
+};
+```
+
+## Common Use Cases
+
+Enrichers are versatile and extensive, and can be used to provide a lot of different features.
+
+### Adding Contextual Information
+
+You might want to add information like a User ID or Session ID to every log entry.
+
+```ts
+function enricherForPlayer(player: Player): LogEnricherCallback {
+  const uid = tostring(player.UserId);
+
+  return (entry) => {
+    entry.encoded_data.userId = uid;
+    return entry;
+  };
+}
+```
+
+### Dynamic Data Enrichment
+
+Enrichers can also be used to add data that changes dynamically, such as request or transaction IDs:
+
+```ts
+const transactionEnricher: LogEnricherCallback = (entry) => {
+  entry.encoded_data.transactionId = generateTransactionId();
+  return entry;
+};
+```
+
+### Conditional Enrichment
+
+Enrichers can modify log entries based on certain conditions.
+
+For example, you might only want to add certain metadata for error logs.
+
+```ts
+const errorTraceEnricher: LogEnricherCallback = (entry) => {
+  if (entry.level === LogLevel.ERROR) {
+    entry.encoded_data.trace = debug.traceback(entry.message);
+  }
+
+  return entry;
+};
+```
+
+### Sensitive Data Scrubbing
+
+You might want to avoid accidentally leaking certain data to your cloud provider or front end users.
+
+```ts
+const scrubApiKeysEnricher: LogEnricherCallback = (entry) => {
+  entry.encoded_data["api_key"] = undefined;
+
+  return entry;
+};
+```
+
+## Best Practices
+
+- **Keep Enrichers Simple**: Enrichers should be straightforward and focus on a single task, like adding a specific
+  piece of metadata.
+
+- **Order Enrichers Wisely**: Think about the order in which you apply enrichers. The output of one enricher _will_
+  affect the next.
+
+- **Avoid Heavy Operations**: Since enrichers run for every log entry, avoid performing heavy computations inside them
+  to prevent slowing down your application.
+
+- **Avoid yielding**: If your enricher is running for every log entry, yielding inside an enricher will cause the flow
+  of your program to stop in that thread. In some situations this is desirable- but you generally want your enrichers to
+  be simple and non blocking.
+
+## Provided Enrichers {#provided-enrichers}
+
+**rLog** provides some ready to use enrichers right out of the box, to cover common use cases.
+
+:::tip
+
+If you believe you have a common use case that isn't covered by these, feel free to open an issue on the [GitHub](#), or
+[Create a PR](#) to add it yourself!
+
+:::
+
+### Function Tags
+
+Uses the name of the nearest function as the tag, if the tag is empty.
+
+```ts title="actions.ts"
+import { rLog } from "@rbxts/rlog";
+
+export function doAction() {
+  const logger = new rLog();
+  logger.i("Hello world!");
+}
+```
+
+```ts title="main.ts"
+import { rLog, functionTagEnricher } from "@rbxts/rlog";
+import { doAction } from "./actions";
+
+rLog.UpdateDefaultConfig({ enrichers: [functionTagEnricher] });
+
+doAction();
+```
+
+```logs title="Console"
+[INFO]: doAction -> Hello world!
+```
+
+### File Tags
+
+Uses the path of the file as the tag, if the tag is empty.
+
+```ts title="ReplicatedStorage/TS/actions.ts"
+import { rLog } from "@rbxts/rlog";
+
+export function doAction() {
+  const logger = new rLog();
+  logger.i("Hello world!");
+}
+```
+
+```ts title="ReplicatedStorage/TS/main.ts"
+import { rLog, fileTagEnricher } from "@rbxts/rlog";
+import { doAction } from "./actions";
+
+rLog.UpdateDefaultConfig({ enrichers: [fileTagEnricher] });
+
+doAction();
+```
+
+```logs title="Console"
+[INFO]: ReplicatedStorage.TS.actions -> Hello world!
+```
+
+### Attach Source Metadata
+
+:::warning
+
+Source Metadata is a bit of an advanced topic covered in one of our [advanced guides](../advanced/source-metadata).
+
+:::
+
+Attaches source metadata to a log entry.
+
+The metadata is attached under the `source_metadata` key in `encoded_data`.
+
+```ts title="ReplicatedStorage/TS/actions.ts"
+import { rLog } from "@rbxts/rlog";
+
+export function doAction() {
+  const logger = new rLog();
+  logger.i("Hello world!");
+}
+```
+
+```ts title="ReplicatedStorage/TS/main.ts"
+import { rLog, sourceMetadataEnricher } from "@rbxts/rlog";
+import { doAction } from "./actions";
+
+rLog.UpdateDefaultConfig({ enrichers: [sourceMetadataEnricher] });
+
+doAction();
+```
+
+```logs title="Console"
+[INFO]: Hello world!
+{
+  data: {
+    source_metadata: {
+      function_name: "doAction",
+      nearest_function_name: "doAction",
+      file_path: "ReplicatedStorage.TS.actions",
+      line_number: 5
+    }
+  }
+}
+```
+
+## Summary
+
+Let's recap what we've learned about Enrichers:
+
+- **Enrichers** are callbacks that can add new or change existing data on a log entry.
+- You can add **multiple** enrichers to an instance, but they're invoked in the order they're added.
+- Enrichers can decide to **not** operate on data by returning it as is.

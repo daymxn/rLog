@@ -1,0 +1,194 @@
+---
+description: Learn about the source data that log entries have attached to them.
+---
+
+# Source Metadata
+
+Source Metadata is data attached to log entries that represent metadata regarding where the log occurred.
+
+This data can be useful for better error tracing, or supporting certain features.
+
+:::info what you'll learn
+
+- What source metadata is
+- How source metadata is attached to logs
+- The different components of source metadata
+
+:::
+
+## Overview
+
+At its core, source metadata is just a simple type.
+
+```ts
+export type SourceMetadata = {
+  function_name?: string;
+  nearest_function_name?: string;
+  file_path: string;
+  line_number: number;
+};
+```
+
+You can find this type on log entries under the `source_metadata` property.
+
+```ts
+export type LogEntry = {
+  level: LogLevel;
+  message: string;
+  data: LogData;
+  encoded_data: LogData;
+  config: Writable<RLogConfig>;
+  context?: LogContext;
+  timestamp: number;
+  // highlight-next-line
+  source_metadata: SourceMetadata;
+};
+```
+
+### Function Name
+
+The `function_name` property of source metadata contains the name of the function where the log occurred.
+
+This may be `undefined` if the log occurred in an anonymous function.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+const logger = new rLog({
+  enrichers: [
+    (entry) => {
+      entry.message = entry.source_metadata.function_name;
+      return entry;
+    },
+  ],
+});
+
+function GivePlayerMoney() {
+  logger.i("Where am I?");
+}
+
+GivePlayerMoney();
+```
+
+```logs title="Console"
+[INFO]: GivePlayerMoney
+```
+
+### Nearest Function Name
+
+If the instance was created in an anonymous function, it won't have a name. Even if the outer scope was a named
+function.
+
+To solve this, you can use the `nearest_function_name` property instead.
+
+If the function _does_ have a name though, `nearest_function_name` will point to the same thing as `function_name`.
+
+:::warning
+
+If you somehow have a stack full of anonymous functions, it's possible for `nearest_function_name` to be `undefined` as
+well.
+
+:::
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+const logger = new rLog({
+  enrichers: [
+    (entry) => {
+      entry.message = entry.source_metadata.nearest_function_name;
+      return entry;
+    },
+  ],
+});
+
+function GivePlayerMoney() {
+  const doStuff = () => {
+    logger.i("Where am I?");
+  };
+
+  doStuff();
+}
+
+GivePlayerMoney();
+```
+
+```logs title="Console"
+[INFO]: GivePlayerMoney
+```
+
+Notice how it says `GivePlayerMoney` instead of `doStuff`? This is because `doStuff` is _not_ a named function. It's a
+variable that points to an anonymous function.\*
+
+<i>
+  <small>*technically it's an arrow function, but in luau it gets transpiled to an anonymous function</small>
+</i>
+
+### File Path
+
+The `file_path` property of source metadata contains the full path to the file where the log occurred.
+
+```ts title="ReplicatedStorage/TS/main.ts"
+import { rLog } from "@rbxts/rlog";
+
+const logger = new rLog({
+  enrichers: [
+    (entry) => {
+      entry.message = entry.source_metadata.file_path;
+      return entry;
+    },
+  ],
+});
+
+function GivePlayerMoney() {
+  logger.i("Where am I?");
+}
+
+GivePlayerMoney();
+```
+
+```logs title="Console"
+[INFO]: ReplicatedStorage.TS.main
+```
+
+### Line Number
+
+The `line_number` property of source metadata contains the line in the file where the log occurred.
+
+:::info
+
+For example purposes, we're using the TS line number, but it's _actually_ the line number in the transpiled luau code.
+
+:::
+
+```ts {13} showLineNumbers
+import { rLog } from "@rbxts/rlog";
+
+const logger = new rLog({
+  enrichers: [
+    (entry) => {
+      entry.message = `${entry.source_metadata.line_number}`;
+      return entry;
+    },
+  ],
+});
+
+function GivePlayerMoney() {
+  logger.i("Where am I?");
+}
+
+GivePlayerMoney();
+```
+
+```logs title="Console"
+[INFO]: 13
+```
+
+## Summary
+
+Let's recap what we've learned about source metadata:
+
+- It contains data pertaining to **where** the log occurred.
+- You can use **nearest_function_name** when dealing with anonymous functions.
+- **nearest_function_name** can still be `undefined` in certain situations.
+- The **line_number** is the file line number in the _transpiled luau_, not the TS source.

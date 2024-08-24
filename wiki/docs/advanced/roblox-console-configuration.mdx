@@ -1,0 +1,302 @@
+---
+description: Learn how to configure the roblox console output from your logs.
+---
+
+# Roblox Console Configuration
+
+**rLog** provides the `robloxConsoleSink` as a default sink for outputting to the roblox console, with sensible defaults
+for formatting and behavior. Sometimes though, you may want to customize this behavior to fit your own use-case.
+
+:::info what you'll learn
+
+- How the `robloxConsoleSink` is applied to instances
+- How to configure the `robloxConsoleSink`
+- How to customize the format of your logs
+- How to customize where your logs go
+- How to disable console output for certain instances
+
+:::
+
+## Configuration
+
+The `robloxConsoleSink` is (by default) applied on the default instance, but you can manually configure it by overriding
+the sink.
+
+```ts
+import { rLog, robloxConsoleSink } from "@rbxts/rlog";
+
+rLog.UpdateDefaultConfig({
+  sinks: [
+    robloxConsoleSink({
+      // ...
+    }),
+  ],
+});
+```
+
+The `robloxConsoleSink` function takes an argument of `RobloxConsoleSinkConfig` that you can use to configure special
+behavior.
+
+```ts
+export type RobloxConsoleSinkConfig = {
+  formatMethod?: FormatMethodCallback;
+  outputMethod?: OutputMethodCallback;
+  minLogLevel?: LogLevel;
+  disable?: boolean;
+};
+```
+
+### Custom Formatting
+
+The `formatMethod` setting can be used to customize the behavior of converting log entries to output objects.
+
+```ts
+export type FormatMethodCallback = (entry: LogEntry) => LuaTuple<unknown[]>;
+```
+
+Notice how the output type is a `LuaTuple` and _not_ a string? Since the `print` and `warn` globals in roblox allow you
+to specify a variable amount of arguments, you can use this to take advantage of certain features the roblox console
+provides.
+
+```ts title="custom-formatter.ts"
+import { LogEntry, FormatMethodCallback } from "@rbxts/rlog";
+
+export const customFormatMethod: FormatMethodCallback = (entry) => {
+  return $tuple(entry.message, entry.encoded_data);
+};
+```
+
+```ts
+import { rLog, robloxConsoleSink } from "@rbxts/rlog";
+import { customFormatMethod } from "./custom-formatter";
+
+rLog.UpdateDefaultConfig({
+  sinks: [
+    robloxConsoleSink({
+      formatMethod: customFormatMethod,
+    }),
+  ],
+});
+
+const logger = new rLog();
+
+logger.i("Hello world!", { time: DateTime.now() });
+```
+
+```logs title="Console"
+Hello world!  ▶ {...}
+```
+
+By taking advantage of the fact that the roblox console will natively wrap tables, we can create collapsible tables in
+our output instead of just the entire output as JSON.
+
+#### Default Behavior
+
+You may only want to change something minor in regards to formatting, while retaining the other existing behavior the
+`robloxConsoleSink` provides by default.
+
+While you'll need to implement it all yourself, you can use this function to get an idea of what the default
+`formatMethod` does:
+
+```ts
+function defaultFormatEntry(entry: LogEntry) {
+  const tag = entry.config.tag !== undefined ? `${entry.config.tag} -> ` : "";
+
+  const data = {
+    correlation_id: entry.context?.correlation_id,
+    timestamp: entry.timestamp,
+    data: Object.isEmpty(entry.encoded_data) ? undefined : entry.encoded_data,
+  };
+
+  return $tuple(`[${LogLevel[entry.level]}]:`, `${tag}${entry.message}\n${HttpService.JSONEncode(data)}`);
+}
+```
+
+### Custom Output
+
+The `outputMethod` setting can be used to customize the behavior of sending the formatted message to the roblox console.
+
+```ts
+export type OutputMethodCallback = (entry: LogEntry, messages: LuaTuple<unknown[]>) => void;
+```
+
+This method will be called after `formatMethod` is called, and is the last destination for the `robloxConsoleSink`.
+
+```ts title="custom-output.ts"
+import { LogEntry, OutputMethodCallback } from "@rbxts/rlog";
+
+export const customOutputMethod: OutputMethodCallback = (entry, messages) => {
+  print(...messages);
+};
+```
+
+```ts
+import { rLog, robloxConsoleSink } from "@rbxts/rlog";
+import { customOutputMethod } from "./custom-output";
+
+rLog.UpdateDefaultConfig({
+  sinks: [
+    robloxConsoleSink({
+      outputMethod: customOutputMethod,
+    }),
+  ],
+});
+
+const logger = new rLog();
+
+logger.i("Hello world!");
+```
+
+```logs title="Console"
+[INFO]: Hello world!
+```
+
+#### Default Behavior
+
+The default behavior is actually very straightforward. It just checks if the entry is of `WARNING` or higher, and
+spreads it out to the relevant global.
+
+```ts
+const defaultOutputEntry: OutputMethodCallback = (entry, messages) => {
+  if (entry.level >= LogLevel.WARNING) {
+    warn(...messages);
+  } else {
+    print(...messages);
+  }
+};
+```
+
+### Min Log Level
+
+The `minLogLevel` setting can be used to configure the minimum `LogLevel` that actually gets output to the roblox
+console.
+
+This can be useful if you only want to log certain levels to the roblox console, while still allowing them to be ran
+through the other sinks you have.
+
+```ts
+import { rLog, robloxConsoleSink, LogLevel } from "@rbxts/rlog";
+
+rLog.UpdateDefaultConfig({
+  sinks: [
+    robloxConsoleSink({
+      minLogLevel: LogLevel.DEBUG,
+    }),
+  ],
+});
+
+const logger = new rLog();
+
+logger.i("Hello world!");
+logger.d("Goodbye world!");
+```
+
+```logs title="Console"
+[DEBUG]: Goodbye world!
+```
+
+### Disabling the Sink
+
+The `disable` setting will completely disable the roblox sink; messages will not be sent to the roblox console.
+
+```ts
+import { rLog, robloxConsoleSink } from "@rbxts/rlog";
+import { RunService } from "@rbxts/services";
+
+rLog.UpdateDefaultConfig({
+  sinks: [
+    robloxConsoleSink({
+      disable: !RunService.IsStudio(), // disable logging during production
+    }),
+  ],
+});
+```
+
+This is mainly provided as a way to temporarily toggle the roblox console, or setup configuration for only logging to
+the console under certain situations.
+
+## Instance Overrides
+
+Since sinks override one another when merging configs, you can configure unique settings for individual instances.
+
+For example, maybe I want to exclude data from my console logs- but only for a specific scope.
+
+```ts title="custom-formatter.ts"
+import { LogEntry, FormatMethodCallback } from "@rbxts/rlog";
+
+export const customFormatMethod: FormatMethodCallback = (entry) => {
+  if (entry.context) {
+    return $tuple(entry.message, {
+      correlation_id: entry.context.correlation_id,
+    });
+  } else {
+    return $tuple(entry.message);
+  }
+};
+```
+
+```ts title="pets"
+import { LogContext, LogConfig, robloxConsoleSink } from "@rbxts/rlog";
+import { customFormatMethod } from "./custom-formatter";
+
+const config: LogConfig = {
+  tag: "Actions",
+  sinks: [robloxConsoleSink({ formatMethod: customFormatMethod })],
+};
+
+export function buyPet(context: LogContext, player: PlayerId, pet: PetId) {
+  const logger = context.use(config);
+  logger.i("Buying pet", { player: player, pet: pet });
+  // ...
+}
+```
+
+```ts
+import { withLogContext, LogConfig } from "@rbxts/rlog";
+import { remotes } from "./remotes";
+import { buyPet } from "./pets";
+
+const config: LogConfig = { tag: "Remotes" };
+
+remotes.buyPet.connect((player: Player, pet: PetId) => {
+  withLogContext((context) => {
+    const logger = context.use(config);
+    logger.i("Player asked to buy a pet", { player: player, pet: pet });
+
+    buyPet(context, player.UserId, pet);
+  });
+});
+```
+
+```logs title="Console"
+[INFO]: Remotes -> Player asked to buy a pet
+{
+  data: { player: "Player1", pet: "18219" },
+  correlation_id: "QQLRSFsPfoTfgD7b"
+}
+
+[INFO]: Actions -> Buying pet
+{ correlation_id: "QQLRSFsPfoTfgD7b" }
+```
+
+## Best Practices
+
+- **Consider using custom enrichers**: If your intent is to add or remove extra data from the output- then consider
+  using a custom enricher instead. Customizing the `robloxConsoleSink` is behavior intended for when you have _multiple_
+  sinks and want behavior to be different for the roblox console only.
+- **Avoid yielding**: As the same with any other sink, you should avoid any yielding behavior in your custom formatting
+  or output methods, as it could prevent other logs from being properly processed.
+- **Be mindful with custom formats**: When providing a `customFormat`, you are responsible for attaching the
+  `correlation_id`, `timestamp`, and `encoded_data` to your final output. These are things they may cause problems
+  during debugging should you forget to include them.
+
+## Summary
+
+Let's recap what we've learned about customizing the roblox console output:
+
+- The `robloxConsoleSink` accepts a **config** as a parameter.
+- Format methods decide the **shape** of the data output to the console.
+- Output methods decide **how** data is output to the console.
+- Custom format methods are **responsible** for ensuring all [expected] data is present in the output.
+- The `minLogLevel` setting can **prevent** logs from reaching the roblox console while _retaining_ output to other
+  sinks.

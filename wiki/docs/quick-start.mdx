@@ -1,0 +1,156 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Quick Start
+
+**rLog** is a context based server-side logging framework for ROBLOX, designed to help organize and structure your
+logging process.
+
+This guide will walk you through the basics of getting started, in just a few steps.
+
+## Installation
+
+First, install `rlog` with your preferred package manager:
+
+<Tabs>
+<TabItem value="npm" default>
+
+```bash title="Terminal"
+npm install @rbxts/rlog
+```
+
+</TabItem>
+<TabItem value="pnpm">
+
+```bash title="Terminal"
+pnpm add @rbxts/rlog
+```
+
+</TabItem>
+<TabItem value="yarn">
+
+```bash title="Terminal"
+yarn add @rbxts/rlog
+```
+
+</TabItem>
+<TabItem value="wally">
+
+```toml title="wally.toml"
+[dependencies]
+Reflex = "daymxn/rlog@1.0.0"
+```
+
+</TabItem>
+</Tabs>
+
+## Start using rLog
+
+Once installed, you can immediately start with creating an **rLog** instance.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+// Initialize the logger
+const logger = new rLog();
+```
+
+:::tip
+
+You can also use the default ("global") instance if you don't need (or want) to create your own.
+
+```ts
+import { rLogger } from "@rbxts/rlog";
+```
+
+:::
+
+### Logging your first message
+
+Logging messages is easy and straightforward with **rLog**.
+
+Just call the method for your intended `LogLevel`, and pass in a message.
+
+```ts
+logger.info("Hello world!");
+```
+
+```logs title="Console"
+[INFO]: Hello world!
+```
+
+### Adding data to your message
+
+By passing a table as the second parameter to your logging method, you can optionally output data with your message.
+
+```ts
+logger.info("Hello world!", {
+  user: "Daymon",
+  action: "start",
+});
+```
+
+```logs title="Console"
+[INFO]: Hello world!
+{
+  data: {
+    user: "Daymon",
+    action: "start"
+  }
+}
+```
+
+#### ROBLOX data types
+
+The table you pass is automatically encoded, and even supports ROBLOX data types!
+
+```ts
+logger.info("Hello world!", {
+  position: new Vector3(1, 5, 10),
+  rotation: new CFrame(),
+});
+```
+
+```logs title="Console"
+[INFO]: Hello world!
+{
+  data: {
+    position: { X: 1, Y: 5, Z: 10 },
+    rotation: "CFrame(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1)"
+  }
+}
+```
+
+### Configuration
+
+If you need more control over your logging setup, you can configure **rLog** with enrichers, custom log levels, and
+more:
+
+```ts
+import { rLog, LogLevel } from "@rbxts/rlog";
+
+// Advanced setup with custom serialization and enrichers
+const logger = new rLog({
+  minLogLevel: LogLevel.WARNING,
+  tag: "Main",
+  enrichers: [
+    (entry) => {
+      entry.encoded_data.timestamp = DateTime.now().ToIsoDate();
+      return entry;
+    },
+  ],
+  serialization: {
+    encodeFunctions: true,
+  },
+});
+```
+
+### Next Steps
+
+If you're wanting to learn more, feel free to check out any of the following resources:
+
+- [Fast Breakdown](fast-breakdown)
+- [API Reference](#)
+- [Basic Guides](basics/log-entries)
+- [Advanced Guides](advanced/source-metadata)
+- [Setting up Google Cloud Logging](advanced/google-cloud-logging)

@@ -1,0 +1,354 @@
+---
+description: Learn about the severity levels that logs can have.
+---
+
+# Log Levels
+
+Logs can have a different severity level attached to them, indicating at a quick glance the importance of a message.
+
+:::info what you'll learn
+
+- What log levels are
+- How log levels are used
+- The various helper methods to create different log messages
+- How to apply a minimum log level to your logging setup
+
+:::
+
+## Levels
+
+Within **rLog**, there are five possible severity levels you can use:
+
+- Verbose
+- Debug
+- Info
+- Warn
+- Error
+
+The levels escalate in order of importance, `Verbose` being the least important, and `Error` being the most important.
+
+The level of a log entry is (by default) attached to the start of the message, and surrounded in brackets.
+
+```LogLevel
+[WARN]: There was an issue!
+```
+
+### Verbose
+
+Verbose is the lowest level of logging.
+
+Verbose messages are those that are not usually needed unless you need to see deep step-by-step processes in your
+application.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+import { sendPayment } from "./payment";
+
+const logger = new rLog();
+// highlight-next-line
+logger.verbose("Application started");
+
+function processOrder(orderId: string, userId: string) {
+  // All the logging methods have short hand aliases you can use as well
+  // highlight-next-line
+  logger.v("Fetching details for order", { order: orderId, user: userId });
+}
+
+processOrder("12345", "user789");
+```
+
+```logs title="Console"
+[VERBOSE]: Application started
+[VERBOSE]: Fetching details for order
+{ data: { order: "12345", "user789" } }
+```
+
+### Debug
+
+Debug is the second lowest level of logging.
+
+Generally used for messages that you don't necessarily need to see at runtime, but they're useful when you need to find
+out why something is happening.
+
+Essentially, messages and data that could be useful when debugging.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+import { sendPayment } from "./payment";
+
+const logger = new rLog();
+
+logger.verbose("Application started");
+
+function processOrder(orderId: string, userId: string) {
+  logger.v("Fetching details for order", { order: orderId, user: userId });
+
+  const orderDetails = { items: ["item1", "item2"], total: 100 };
+
+  // highlight-next-line
+  logger.d(`Retrieved order details`, { details: orderDetails });
+}
+
+processOrder("12345", "user789");
+```
+
+```logs title="Console"
+[VERBOSE]: Application started
+[VERBOSE]: Fetching details for order
+{ data: { order: "12345", "user789" } }
+
+// highlight-start
+[DEBUG]: Retrieved order details
+{ data: { details: { items: ["item1", "item2"], total: 100 } } }
+// highlight-end
+```
+
+### Info
+
+The baseline level of logging.
+
+Useful for messages that signify an event or interaction. Usually occur only once or twice in a control flow, and are
+used less for debugging, and more for seeing what's going on in your application.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+import { sendPayment } from "./payment";
+
+const logger = new rLog();
+
+logger.verbose("Application started");
+
+function processOrder(orderId: string, userId: string) {
+  // highlight-next-line
+  logger.i("Processing order");
+
+  logger.v("Fetching details for order", { order: orderId, user: userId });
+
+  const orderDetails = { items: ["item1", "item2"], total: 100 };
+
+  logger.d(`Retrieved order details`, { details: orderDetails });
+
+  // highlight-next-line
+  logger.i("Order complete");
+}
+
+processOrder("12345", "user789");
+```
+
+```logs title="Console"
+[VERBOSE]: Application started
+
+// highlight-next-line
+[INFO]: Processing order
+
+[VERBOSE]: Fetching details for order
+{ data: { order: "12345", "user789" } }
+
+[DEBUG]: Retrieved order details
+{ data: { details: { items: ["item1", "item2"], total: 100 } } }
+
+// highlight-next-line
+[INFO]: Order complete
+```
+
+### Warning
+
+Something that isn't necessarily breaking, but should be looked at.
+
+Depending on your style, it may end up being used less often than the other levels.
+
+:::info
+
+By default, logs with a level of `WARNING` or above are sent through `warn` in the ROBLOX console, while the rest are
+sent through `print`.
+
+:::
+
+```ts
+import { rLog } from "@rbxts/rlog";
+import { sendPayment } from "./payment";
+
+const logger = new rLog();
+
+logger.verbose("Application started");
+
+function processOrder(orderId: string, userId: string) {
+  logger.i("Processing order");
+
+  logger.v("Fetching details for order", { order: orderId, user: userId });
+
+  const orderDetails = { items: ["item1", "item2"], total: 1 };
+
+  logger.d(`Retrieved order details`, { details: orderDetails });
+
+  if (orderDetails.total < 10) {
+    // highlight-next-line
+    logger.w("Order has a suspiciously low total");
+  }
+
+  logger.v("Sending order for payment");
+
+  const paymentSuccessful = sendPayment(order, userId, orderDetails);
+
+  if (!paymentSuccessful) {
+    // highlight-next-line
+    logger.w("Payment for order failed");
+  }
+
+  logger.i("Order complete");
+}
+
+processOrder("12345", "user789");
+```
+
+```logs title="Console"
+[VERBOSE]: Application started
+
+[INFO]: Processing order
+
+[VERBOSE]: Fetching details for order
+{ data: { order: "12345", "user789" } }
+
+[DEBUG]: Retrieved order details
+{ data: { details: { items: ["item1", "item2"], total: 1 } } }
+
+// highlight-next-line
+[WARNING]: Order has a suspiciously low total
+
+[VERBOSE]: Sending order for payment
+
+// highlight-next-line
+[WARNING]: Payment for order failed
+
+[INFO]: Order complete
+```
+
+### Error
+
+Something went wrong, and needs to be looked at ASAP.
+
+Usually used to indicate fatal issues or exceptions that weren't expected, and break the application.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+import { sendPayment } from "./payment";
+
+const logger = new rLog();
+
+logger.verbose("Application started");
+
+function processOrder(orderId: string, userId: string) {
+  try {
+    logger.i("Processing order");
+
+    logger.v("Fetching details for order", { order: orderId, user: userId });
+
+    const orderDetails = { items: ["item1", "item2"], total: 1 };
+
+    logger.d(`Retrieved order details`, { details: orderDetails });
+
+    if (orderDetails.total < 10) {
+      logger.w("Order has a suspiciously low total");
+    }
+
+    logger.v("Sending order for payment");
+
+    const paymentSuccessful = sendPayment(order, userId, orderDetails);
+
+    if (!paymentSuccessful) {
+      logger.w("Payment for order failed");
+    }
+
+    logger.i("Order complete");
+  } catch (e) {
+    // highlight-start
+    logger.e("An unexpected error occurred", {
+      reason: e.message,
+    });
+    //highlight-end
+  }
+}
+
+processOrder("12345", 789);
+```
+
+```logs title="Console"
+[VERBOSE]: Application started
+
+[INFO]: Processing order
+
+[VERBOSE]: Fetching details for order
+{ data: { order: "12345", 789 } }
+
+[DEBUG]: Retrieved order details
+{ data: { details: { items: ["item1", "item2"], total: 1 } } }
+
+[WARNING]: Order has a suspiciously low total
+
+// highlight-start
+[ERROR]: An unexpected error occurred
+{ data: { reason: "Invalid UserID provided! Expected a string, but got numbers!" } }
+// highlight-end
+```
+
+## Minimum Log Level
+
+Logs are great when you need them, and an eye sore when you don't.
+
+It's always the worst when you're trying to debug a certain issue, or see what's going on in your application, but your
+output is flooded with verbose logs that you don't need right now.
+
+To fix this, you can set the minimum level that should actually be sent to the console.
+
+:::info
+
+By default, this is set to `VERBOSE` when in studio and `WARNING` when in a published game. If you are fine with the
+defaults, you don't need to change it.
+
+:::
+
+### Config
+
+The first way to configure this is via the `minLogLevel` setting in your config.
+
+```ts
+import { rLog, LogLevel } from "@rbxts/rlog";
+
+const logger = new rLog({ minLogLevel: LogLevel.DEBUG });
+
+logger.v("Hello verbose!");
+logger.d("Hello debug!");
+logger.i("Hello info!");
+```
+
+```logs title="Console"
+[DEBUG]: Hello debug!
+[INFO]: Hello info!
+```
+
+Levels that are less than the provided `minLogLevel` are effectively "filtered out", and don't make it through to the
+console.
+
+### Helper Method
+
+The second way to configure this is via the `withMinLogLevel` method on `RLog` instances.
+
+```ts
+// returns a copy of this logger, but with the `minLogLevel` set to `DEBUG`
+const logger = new rLog().withMinLogLevel(LogLevel.DEBUG);
+```
+
+This will return a copy of the instance, with the `minLogLevel` set to `DEBUG`.
+
+You'll find that a few config options have helper method alternatives like this; to allow more dynamic configuration or
+functional setups.
+
+## Summary
+
+Let's recap what we've learned about log levels:
+
+- They respresent the **severity** or **importance** of a log
+- They're the **first** part of a log message
+- They have an **increasing** level of importance
+- You can set a **minimum** level to output
+- Levels above `INFO` are sent through the `warn` console in roblox

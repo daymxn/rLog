@@ -1,0 +1,63 @@
+{
+	"name": "@rbxts/rlog",
+	"version": "1.0.0",
+	"description": "Context based Server-Side logging solution for ROBLOX projects.",
+	"main": "out/init.lua",
+	"scripts": {
+		"build": "rbxtsc --noInclude",
+		"dev": "rbxtsc -w --type game --rojo test.project.json --noInclude",
+		"watch": "rbxtsc -w --noInclude",
+		"prepublishOnly": "npm run build"
+	},
+	"keywords": [
+		"rlog",
+		"rbxts",
+		"roblox",
+		"roblox-ts",
+		"typescript",
+		"logging"
+	],
+	"author": "Daymon Littrell-Reyes",
+	"repository": "daymxn/rlog",
+	"bugs": {
+		"url": "https://github.com/daymxn/rlog/issues"
+	},
+	"license": "Apache-2.0",
+	"types": "out/index.d.ts",
+	"files": [
+		"out",
+		"!**/*.tsbuildinfo",
+		"!**/*.spec.lua",
+		"!**/*.spec.d.ts"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"devDependencies": {
+		"@rbxts/compiler-types": "^2.3.0-types.1",
+		"@rbxts/jest": "^0.1.0",
+		"@rbxts/types": "^1.0.795",
+		"@typescript-eslint/eslint-plugin": "^7.1.1",
+		"@typescript-eslint/parser": "^7.1.1",
+		"eslint": "^8.57.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-prettier": "^5.1.3",
+		"eslint-plugin-react-hooks": "^4.6.2",
+		"eslint-plugin-roblox-ts": "^0.0.36",
+		"prettier": "^3.2.5",
+		"prettier-plugin-organize-imports": "^3.2.4",
+		"roblox-ts": "^2.3.0",
+		"typescript": "^5.4.2"
+	},
+	"dependencies": {
+		"@rbxts/object-utils": "^1.0.4",
+		"@rbxts/reverse-array": "^1.0.3",
+		"@rbxts/rust-classes": "^0.12.0",
+		"@rbxts/services": "^1.5.4",
+		"@rbxts/set-timeout": "^1.1.2",
+		"@rbxts/stacks-and-queues": "^1.0.5",
+		"@rbxts/string-utils": "^1.0.3",
+		"@rbxts/t": "^3.1.1",
+		"@rbxts/testez": "https://github.com/xeqi/testez#patch-1"
+	}
+}

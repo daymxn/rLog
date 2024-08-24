@@ -1,0 +1,2734 @@
+{
+  "metadata": {
+    "toolPackage": "@microsoft/api-extractor",
+    "toolVersion": "7.47.5",
+    "schemaVersion": 1011,
+    "oldestForwardsCompatibleVersion": 1001,
+    "tsdocConfig": {
+      "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
+      "noStandardTags": true,
+      "tagDefinitions": [
+        {
+          "tagName": "@alpha",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@beta",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@defaultValue",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@decorator",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@deprecated",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@eventProperty",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@example",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@experimental",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@inheritDoc",
+          "syntaxKind": "inline"
+        },
+        {
+          "tagName": "@internal",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@label",
+          "syntaxKind": "inline"
+        },
+        {
+          "tagName": "@link",
+          "syntaxKind": "inline",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@override",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@packageDocumentation",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@param",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@privateRemarks",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@public",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@readonly",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@remarks",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@returns",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@sealed",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@see",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@throws",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@typeParam",
+          "syntaxKind": "block",
+          "allowMultiple": true
+        },
+        {
+          "tagName": "@virtual",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@betaDocumentation",
+          "syntaxKind": "modifier"
+        },
+        {
+          "tagName": "@internalRemarks",
+          "syntaxKind": "block"
+        },
+        {
+          "tagName": "@preapproved",
+          "syntaxKind": "modifier"
+        }
+      ],
+      "supportForTags": {
+        "@alpha": true,
+        "@beta": true,
+        "@defaultValue": true,
+        "@decorator": true,
+        "@deprecated": true,
+        "@eventProperty": true,
+        "@example": true,
+        "@experimental": true,
+        "@inheritDoc": true,
+        "@internal": true,
+        "@label": true,
+        "@link": true,
+        "@override": true,
+        "@packageDocumentation": true,
+        "@param": true,
+        "@privateRemarks": true,
+        "@public": true,
+        "@readonly": true,
+        "@remarks": true,
+        "@returns": true,
+        "@sealed": true,
+        "@see": true,
+        "@throws": true,
+        "@typeParam": true,
+        "@virtual": true,
+        "@betaDocumentation": true,
+        "@internalRemarks": true,
+        "@preapproved": true
+      },
+      "reportUnsupportedHtmlElements": false
+    }
+  },
+  "kind": "Package",
+  "canonicalReference": "@rbxts/rlog!",
+  "docComment": "/**\n * Metadata based logging framework for ROBLOX projects.\n *\n * @remarks\n *\n * `rlog` exports the {@link RLog} class as the primary entry point.\n *\n * @packageDocumentation\n */\n",
+  "name": "@rbxts/rlog",
+  "preserveMemberOrder": false,
+  "members": [
+    {
+      "kind": "EntryPoint",
+      "canonicalReference": "@rbxts/rlog!",
+      "name": "",
+      "preserveMemberOrder": false,
+      "members": [
+        {
+          "kind": "Enum",
+          "canonicalReference": "@rbxts/rlog!EncodingType:enum",
+          "docComment": "/**\n * Enum representing the types of encoding strategies.\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare enum EncodingType "
+            }
+          ],
+          "fileUrlPath": "src/configuration/index.ts",
+          "releaseTag": "Public",
+          "name": "EncodingType",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@rbxts/rlog!EncodingType.DEEP:member",
+              "docComment": "/**\n * Deep encoding strategy that processes elements thoroughly.\n *\n * More specifically, this will ensure all data is properly encoded and accounted for; inspecting the individual type of each property in a provided object.\n *\n * @see\n *\n * {@link EncodingType.FAST}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "DEEP = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "0"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "DEEP"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@rbxts/rlog!EncodingType.FAST:member",
+              "docComment": "/**\n * Fast encoding strategy that focuses on speed.\n *\n * More specifically, this will just try to encode all data to a JSON string or using `tostring` if encoding to a JSON string fails.\n *\n * So nested types (or roblox datatypes) will not be properly encoded.\n *\n * Useful if you're not logging any complex data, and want to avoid extra runtime overhead.\n *\n * @see\n *\n * {@link EncodingType.DEEP}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "FAST = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "1"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "FAST"
+            }
+          ]
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@rbxts/rlog!LogData:type",
+          "docComment": "/**\n * Type representing the additional data associated with a log entry.\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export type LogData = "
+            },
+            {
+              "kind": "Reference",
+              "text": "Record",
+              "canonicalReference": "!Record:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<string, unknown>"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/common/index.ts",
+          "releaseTag": "Public",
+          "name": "LogData",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@rbxts/rlog!LogEnricherCallback:type",
+          "docComment": "/**\n * Type representing a callback function for enriching log entries, or an \"enricher\".\n *\n * Enrichers optionally mutate {@link LogEntry}s. You can add data to a {@link LogEntry}, edit its {@link LogEntry.metadata | metadata}, or just return it if you don't need to do anything.\n *\n * To learn more about enrichers, and how they work, see {@link RLog.withEnricher | withEnricher}.\n *\n * @param entry - The log entry to enrich.\n *\n * @param config - The configuration used for logging.\n *\n * @returns The enriched log entry.\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export type LogEnricherCallback = "
+            },
+            {
+              "kind": "Content",
+              "text": "(entry: "
+            },
+            {
+              "kind": "Reference",
+              "text": "LogEntry",
+              "canonicalReference": "@rbxts/rlog!LogEntry:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", config: "
+            },
+            {
+              "kind": "Reference",
+              "text": "RLogConfig",
+              "canonicalReference": "@rbxts/rlog!RLogConfig:type"
+            },
+            {
+              "kind": "Content",
+              "text": ") => "
+            },
+            {
+              "kind": "Reference",
+              "text": "LogEntry",
+              "canonicalReference": "@rbxts/rlog!LogEntry:type"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/common/index.ts",
+          "releaseTag": "Public",
+          "name": "LogEnricherCallback",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 7
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@rbxts/rlog!LogEntry:type",
+          "docComment": "/**\n * A single logging event.\n *\n * Each message has its own instance of this, with relevant data attached.\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export type LogEntry = "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    level: "
+            },
+            {
+              "kind": "Reference",
+              "text": "LogLevel",
+              "canonicalReference": "@rbxts/rlog!LogLevel:enum"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    message: string;\n    data: "
+            },
+            {
+              "kind": "Reference",
+              "text": "LogData",
+              "canonicalReference": "@rbxts/rlog!LogData:type"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    metadata: "
+            },
+            {
+              "kind": "Reference",
+              "text": "LogMetadata",
+              "canonicalReference": "@rbxts/rlog!LogMetadata:type"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n}"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/common/index.ts",
+          "releaseTag": "Public",
+          "name": "LogEntry",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 8
+          }
+        },
+        {
+          "kind": "Enum",
+          "canonicalReference": "@rbxts/rlog!LogLevel:enum",
+          "docComment": "/**\n * Enum representing the various log levels, or \"importance\" of a {@link LogEntry}.\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare enum LogLevel "
+            }
+          ],
+          "fileUrlPath": "src/common/index.ts",
+          "releaseTag": "Public",
+          "name": "LogLevel",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@rbxts/rlog!LogLevel.DEBUG:member",
+              "docComment": "/**\n * The second lowest level of logging.\n *\n * Generally used for messages that you don't necessarily need to see at runtime, but they're useful when you need to find out why something is happening.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "DEBUG = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "1"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "DEBUG"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@rbxts/rlog!LogLevel.ERROR:member",
+              "docComment": "/**\n * The highest level of logging.\n *\n * Used to indicate issues or exceptions that broke the application, and need to be fixed.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "ERROR = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "4"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "ERROR"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@rbxts/rlog!LogLevel.INFO:member",
+              "docComment": "/**\n * The baseline level of logging.\n *\n * Useful for messages that signify an event or interaction. Usually occur only once or twice in a control flow, and are used less for debugging, and more for seeing what's going on in your application.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "INFO = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "2"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "INFO"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@rbxts/rlog!LogLevel.VERBOSE:member",
+              "docComment": "/**\n * The lowest level of logging.\n *\n * Verbose messages are those that are not usually useful unless you need to see deep step-by-step processes in your application.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "VERBOSE = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "0"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "VERBOSE"
+            },
+            {
+              "kind": "EnumMember",
+              "canonicalReference": "@rbxts/rlog!LogLevel.WARNING:member",
+              "docComment": "/**\n * Not as bad as an {@link LogLevel.ERROR | ERROR}, but something that you should be looked at.\n *\n * Useful for situations where something isn't necessarily breaking, but it's behaving in a way that isn't desired.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "WARNING = "
+                },
+                {
+                  "kind": "Content",
+                  "text": "3"
+                }
+              ],
+              "initializerTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "name": "WARNING"
+            }
+          ]
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@rbxts/rlog!LogMetadata:type",
+          "docComment": "/**\n * Metadata associated with a log entry.\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export type LogMetadata = "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    timestamp: number;\n    correlation_id?: string;\n    tag?: string;\n}"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/common/index.ts",
+          "releaseTag": "Public",
+          "name": "LogMetadata",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 2
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@rbxts/rlog!LogSinkCallback:type",
+          "docComment": "/**\n * Type representing a callback function for consuming log entries, or a \"sink\".\n *\n * Sinks optionally consume {@link LogEntry}s. If you return `true`, then the log will be stopped, and no further sinks will be called. The {@link LogEntry} will also not be logged to the console.\n *\n * To learn more about sinks, and how they work, see {@link RLog.withSink | withSink}.\n *\n * @param entry - The log entry to handle.\n *\n * @param config - The configuration used for logging.\n *\n * @returns A boolean indicating whether the log was consumed, or void.\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export type LogSinkCallback = "
+            },
+            {
+              "kind": "Content",
+              "text": "(entry: "
+            },
+            {
+              "kind": "Reference",
+              "text": "LogEntry",
+              "canonicalReference": "@rbxts/rlog!LogEntry:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", config: "
+            },
+            {
+              "kind": "Reference",
+              "text": "RLogConfig",
+              "canonicalReference": "@rbxts/rlog!RLogConfig:type"
+            },
+            {
+              "kind": "Content",
+              "text": ") => boolean | void"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/common/index.ts",
+          "releaseTag": "Public",
+          "name": "LogSinkCallback",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 6
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@rbxts/rlog!PartialRLogConfig:type",
+          "docComment": "/**\n * Version of {@link RLogConfig} that allows all data to be absent.\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export type PartialRLogConfig = "
+            },
+            {
+              "kind": "Reference",
+              "text": "Partial",
+              "canonicalReference": "!Partial:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "ExcludeMembers",
+              "canonicalReference": "!ExcludeMembers:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "RLogConfig",
+              "canonicalReference": "@rbxts/rlog!RLogConfig:type"
+            },
+            {
+              "kind": "Content",
+              "text": ", "
+            },
+            {
+              "kind": "Reference",
+              "text": "SerializationConfig",
+              "canonicalReference": "@rbxts/rlog!SerializationConfig:type"
+            },
+            {
+              "kind": "Content",
+              "text": ">> & {\n    readonly serialization?: "
+            },
+            {
+              "kind": "Reference",
+              "text": "Partial",
+              "canonicalReference": "!Partial:type"
+            },
+            {
+              "kind": "Content",
+              "text": "<"
+            },
+            {
+              "kind": "Reference",
+              "text": "SerializationConfig",
+              "canonicalReference": "@rbxts/rlog!SerializationConfig:type"
+            },
+            {
+              "kind": "Content",
+              "text": ">;\n}"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/configuration/index.ts",
+          "releaseTag": "Public",
+          "name": "PartialRLogConfig",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 13
+          }
+        },
+        {
+          "kind": "Class",
+          "canonicalReference": "@rbxts/rlog!RLog:class",
+          "docComment": "/**\n * Class for faciliating Roblox Logging.\n *\n * You can also use {@link rlog} or {@link rLog}- for style purposes.\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export declare class RLog "
+            }
+          ],
+          "fileUrlPath": "src/rlog.ts",
+          "releaseTag": "Public",
+          "isAbstract": false,
+          "name": "RLog",
+          "preserveMemberOrder": false,
+          "members": [
+            {
+              "kind": "Constructor",
+              "canonicalReference": "@rbxts/rlog!RLog:constructor(1)",
+              "docComment": "/**\n * Constructs a new {@link RLog} instance.\n *\n * Uses the provided table in place of the argument names.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "constructor({ config, tag, parent, sinks, enrichers, correlation_id }: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLogConstructorParameters",
+                  "canonicalReference": "@rbxts/rlog!RLogConstructorParameters:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "{ config, tag, parent, sinks, enrichers, correlation_id }",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ]
+            },
+            {
+              "kind": "Constructor",
+              "canonicalReference": "@rbxts/rlog!RLog:constructor(2)",
+              "docComment": "/**\n * Constructs a new {@link RLog} instance.\n *\n * @param config - Configuration settings to use for this logger instance.\n *\n * @param tag - Optional tag for this logger instance.\n *\n * @param parent - Optional parent logger instance.\n *\n * @param sinks - Optional array of sink callbacks.\n *\n * @param enrichers - Optional array of enricher callbacks.\n *\n * @param correlation_id - Optional correlation ID.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "constructor(config?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PartialRLogConfig",
+                  "canonicalReference": "@rbxts/rlog!PartialRLogConfig:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", tag?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", parent?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", sinks?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogSinkCallback",
+                  "canonicalReference": "@rbxts/rlog!LogSinkCallback:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", enrichers?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogEnricherCallback",
+                  "canonicalReference": "@rbxts/rlog!LogEnricherCallback:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "[]"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", correlation_id?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ");"
+                }
+              ],
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 2,
+              "parameters": [
+                {
+                  "parameterName": "config",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "tag",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "parent",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "sinks",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 7,
+                    "endIndex": 9
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "enrichers",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 10,
+                    "endIndex": 12
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "correlation_id",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 13,
+                    "endIndex": 14
+                  },
+                  "isOptional": true
+                }
+              ]
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#child:member(1)",
+              "docComment": "/**\n * Creates a child logger with an optional correlation ID.\n *\n * There are two components at play here: correlation ids, and child loggers.\n *\n * #### Correlation IDs\n *\n * Correlation IDs are a way to keep track of logging events that occur in a single \"flow\" or \"logical process\". For example, you could create a child logger for a function:\n * ```ts\n * function buyPet(player: Player, pet: PetId) {\n *   const logger = rLog.default.child();\n *   logger.v(\"Player is purchasing a pet\", { player: player, pet: pet });\n *\n *   // ... buy pet\n *\n *   logger.d(\"Player pet bought\");\n * }\n *\n * buyPet(Players.LocalPlayer, \"1\");\n * // > [VERBOSE]: Player is purchasing a pet\n * // > { \"correlation_id\": \"adss8fd_1318za_112\", \"data\": { \"player\": 1333, \"pet\": \"1\" } }\n * // >\n * // > [DEBUG]: Player pet bought\n * // > { \"correlation_id\": \"adss8fd_1318za_112\" }\n * ```\n *\n * Correlation IDs can be used to track the flow of a function call. This is especially useful in client to server remote calls, where you want each call to be associated with its own logs.\n *\n * This also helps in preventing the need to re-log data, as you can filter for the correlation id to find the relevant data.\n *\n * #### Child Loggers\n *\n * The relationship between a parent and child logger comes with two benefits:\n *\n * ##### Shared Correlation IDs\n *\n * The child logger will (by default) inherit the correlation id of the parent.\n *\n * If you provide your own `correlation_id`, it will override the child's.\n *\n * If you don't provide one, and the parent doesn't have one, a new will be generated.\n *\n * Although, this behavior can be disabled with the {@link RLogConfig | autoGenerateCorrelation} setting.\n *\n * ##### Shared Sinks and Enrichers\n *\n * A child logger has its own sinks and enrichers, meaning you can attach sinks and enrichers to only the child logger without affecting the parent.\n *\n * But after a child logger has called its own enrichers (if any), it will then call the parent's.\n *\n * It will repeat this process with sinks.\n *\n * ##### Usage\n *\n * Child loggers are especially useful when tracking the control flow across multiple functions:\n * ```\n * import { PurchaseHandler } from \"./purchaseHandler\";\n *\n * const Logger = new rLog(settings, \"Actions\");\n *\n * function buyPet(player: Player, pet: PetId) {\n *   const logger = Logger.child();\n *   logger.v(\"Player is purchasing a pet\", { player: player, pet: pet });\n *\n *   PurchaseHandler.processPet(logger, player, pet);\n *\n *   logger.d(\"Player pet bought\");\n * }\n *\n * buyPet(Players.LocalPlayer, \"1\");\n * // > [VERBOSE]: Actions -> Player is purchasing a pet\n * // > { \"correlation_id\": \"adss8fd_1318za_112\", \"data\": { \"player\": 1333, \"pet\": \"1\" } }\n * // >\n * // > [VERBOSE]: PurchaseHandler -> Processing a pet purchase\n * // > { \"correlation_id\": \"adss8fd_1318za_112\", \"data\": { \"player\": 1333, \"pet\": \"1\" } }\n * // >\n * // > [DEBUG]: PurchaseHandler -> Pet purchase processed\n * // > { \"correlation_id\": \"adss8fd_1318za_112\" }\n * // >\n * // > [DEBUG]: Actions -> Player pet bought\n * // > { \"correlation_id\": \"adss8fd_1318za_112\" }\n * ```\n *\n * @param correlation_id - Optional Correlation ID for tracking. Defaults to the current `correlation_id`, if any.\n *\n * @returns The new {@link RLog} instance.\n *\n * @see\n *\n * {@link RLog.childWithTag | childWithTag}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "child(correlation_id?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string | undefined"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "correlation_id",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "child"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#childWithTag:member(1)",
+              "docComment": "/**\n * Creates a child logger with a specific tag and optional correlation ID.\n *\n * Alternative version of {@link RLog.child | child} that allows you to specify a unique `tag` for the child instance.\n *\n * _Note that child loggers do not inherit their parent's tag unless you call this method._\n *\n * @param tag - The tag for the child logger. Defaults to the calling instance's `tag`, if any.\n *\n * @param correlation_id - Optional correlation ID. Defaults to the calling instance's `correlation_id`, if any.\n *\n * @returns The new {@link RLog} instance.\n *\n * @example\n * ```ts\n * const Logger = new rLog(settings);\n *\n * function processPurchase(parent: RLog, player: Player, pet: PetId) {\n *   const logger = parent.childWithTag(\"processPurchase\")\n *\n *   logger.v(\"Processing a pet purchase\", { player: player, pet: pet });\n *\n *   // ...\n *\n *   logger.d(\"Pet purchase processed\")\n * }\n *\n * function buyPet(parent: RLog, player: Player, pet: PetId) {\n *   const logger = parent.childWithTag(\"buyPet\");\n *\n *   logger.v(\"Player is purchasing a pet\", { player: player, pet: pet });\n *\n *   processPurchase(logger, player, pet);\n *\n *   logger.d(\"Player pet bought\");\n * }\n *\n * buyPet(Logger, Players.LocalPlayer, \"1\");\n * // > [VERBOSE]: buyPet -> Player is purchasing a pet\n * // > { \"correlation_id\": \"adss8fd_1318za_112\", \"data\": { \"player\": 1333, \"pet\": \"1\" } }\n * // >\n * // > [VERBOSE]: processPurchase -> Processing a pet purchase\n * // > { \"correlation_id\": \"adss8fd_1318za_112\", \"data\": { \"player\": 1333, \"pet\": \"1\" } }\n * // >\n * // > [DEBUG]: processPurchase -> Pet purchase processed\n * // > { \"correlation_id\": \"adss8fd_1318za_112\" }\n * // >\n * // > [DEBUG]: buyPet -> Player pet bought\n * // > { \"correlation_id\": \"adss8fd_1318za_112\" }\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "childWithTag(tag?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string | undefined"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", correlation_id?: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string | undefined"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "tag",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": true
+                },
+                {
+                  "parameterName": "correlation_id",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "childWithTag"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#clone:member(1)",
+              "docComment": "/**\n * Creates a new {@link RLog} instance with all the same settings and properties.\n *\n * Everything is deep copied, so any mutations to the original will safely not replicate.\n *\n * @returns A duplicate of this {@link RLog} instance.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "clone(): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "clone"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#clone:member(2)",
+              "docComment": "/**\n * Creates a new {@link RLog} instance with all the same settings and properties.\n *\n * The provided {@link RLogConstructorParameters | parameters} will be merged with the existing parameters on this instance.\n *\n * Everything is deep copied, so any mutations to the original will safely not replicate.\n *\n * @returns A duplicate of this {@link RLog} instance.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "clone({ config, tag, parent, sinks, enrichers, correlation_id }: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLogConstructorParameters",
+                  "canonicalReference": "@rbxts/rlog!RLogConstructorParameters:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 2,
+              "parameters": [
+                {
+                  "parameterName": "{ config, tag, parent, sinks, enrichers, correlation_id }",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "clone"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#d:member(1)",
+              "docComment": "/**\n * Shorthand version of {@link RLog.debug | debug}.\n *\n * @param message - The message to log.\n *\n * @param data - Optional data to log.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "d(message: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", data?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogData",
+                  "canonicalReference": "@rbxts/rlog!LogData:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "message",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "data",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "d"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#debug:member(1)",
+              "docComment": "/**\n * Logs a debug message.\n *\n * @param message - The message to log.\n *\n * @param data - Optional data to log.\n *\n * @see\n *\n * {@link RLog.d | d}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "debug(message: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", data?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogData",
+                  "canonicalReference": "@rbxts/rlog!LogData:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "message",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "data",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "debug"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@rbxts/rlog!RLog.default:member",
+              "docComment": "/**\n * The default or \"global\" {@link RLog} instance.\n *\n * All loggers inherit from this, so it's a convenient way for attaching global sinks or enrichers.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "static readonly default: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": true,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "default",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": true,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#e:member(1)",
+              "docComment": "/**\n * Shorthand version of {@link RLog.error | error}.\n *\n * @param message - The message to log.\n *\n * @param data - Optional data to log.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "e(message: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", data?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogData",
+                  "canonicalReference": "@rbxts/rlog!LogData:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "message",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "data",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "e"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#error:member(1)",
+              "docComment": "/**\n * Logs an error message.\n *\n * @param message - The message to log.\n *\n * @param data - Optional data to log.\n *\n * @see\n *\n * {@link RLog.e | e}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "error(message: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", data?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogData",
+                  "canonicalReference": "@rbxts/rlog!LogData:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "message",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "data",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "error"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#i:member(1)",
+              "docComment": "/**\n * Shorthand version of {@link RLog.info | info}.\n *\n * @param message - The message to log.\n *\n * @param data - Optional data to log.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "i(message: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", data?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogData",
+                  "canonicalReference": "@rbxts/rlog!LogData:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "message",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "data",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "i"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#info:member(1)",
+              "docComment": "/**\n * Logs an informational message.\n *\n * @param message - The message to log.\n *\n * @param data - Optional data to log.\n *\n * @see\n *\n * {@link RLog.i | i}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "info(message: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", data?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogData",
+                  "canonicalReference": "@rbxts/rlog!LogData:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "message",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "data",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "info"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#log:member(1)",
+              "docComment": "/**\n * Logs a message with a specified log level.\n *\n * @param level - The log level.\n *\n * @param message - The log message.\n *\n * @param data - Optional data to log. Will be encoded according to this logger's {@link RLogConfig | config}.\n *\n * @see\n *\n * {@link RLog.verbose | verbose}, {@link RLog.debug | debug}, {@link RLog.info | info}, {@link RLog.warning | warning}, {@link RLog.error | error}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "log(level: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogLevel",
+                  "canonicalReference": "@rbxts/rlog!LogLevel:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", message: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", data?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogData",
+                  "canonicalReference": "@rbxts/rlog!LogData:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 7,
+                "endIndex": 8
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "level",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "message",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "data",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 5,
+                    "endIndex": 6
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "log"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@rbxts/rlog!RLog#parent:member",
+              "docComment": "/**\n * The parent {@link RLog} of this instance.\n *\n * See {@link RLog.child | child} for more details on parent and child instances.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "readonly parent: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": " | undefined"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": true,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "parent",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 3
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@rbxts/rlog!RLog#path:member",
+              "docComment": "/**\n * The full path of this {@link RLog}.\n *\n * A {@link RLog} path is a concatenation of names (tags) of all its parent instances, with the root being `DEFAULT`.\n *\n * In other words, its the hierarchy of the instance.\n *\n * Instances without a tag are referred to as anonymous instances, and as such are labeled as `<Anonymous>`.\n *\n * @example\n * ```\n * const main = new RLog().withTag(\"main\");\n * const secondary = main.childWithTag(\"secondary\");\n * const anonymous = secondary.child();\n *\n * print(main.path);\n * print(secondary.path);\n * print(anonymous.path);\n * // > DEFAULT.main\n * // > DEFAULT.main.secondary\n * // > DEFAULT.main.secondary.<Anonymous>\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "readonly path: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": true,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "path",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog.SetDefaultConfig:member(1)",
+              "docComment": "/**\n * Sets the config for the {@link RLog.default | default} instance.\n *\n * Since all {@link RLog} instances inherit their config from the default instance, this is a convenient way to provide default configuration settings.\n *\n * _Note that this will **not** change the config for instances already created._\n *\n * @param config - The {@link RLogConfig} to use.\n *\n * @example\n * ```ts\n * RLog.SetDefaultConfig({ { serialization: { encodeFunctions: true } } });\n *\n * // Inherits the `encodeFunctions` setting automatically\n * const logger = new RLog({ serialization: { encodeRobloxTypes: false } });\n *\n * logger.i(\"Player died\", { player: player, location: player.Position, revive: () => {} });\n * // > [INFO]: Player died\n * // > { \"data\": { \"player\": 1338, \"location\": \"<Vector3>\", \"revive\": \"<Function>\" } }\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "static SetDefaultConfig(config: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PartialRLogConfig",
+                  "canonicalReference": "@rbxts/rlog!PartialRLogConfig:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": true,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "config",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "SetDefaultConfig"
+            },
+            {
+              "kind": "Property",
+              "canonicalReference": "@rbxts/rlog!RLog#tag:member",
+              "docComment": "/**\n * The tag of this {@link RLog} instance.\n *\n * Tags are used for filtering logs.\n *\n * See {@link RLog.withTag | withTag} for more details.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "readonly tag: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string | undefined"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isReadonly": true,
+              "isOptional": false,
+              "releaseTag": "Public",
+              "name": "tag",
+              "propertyTypeTokenRange": {
+                "startIndex": 1,
+                "endIndex": 2
+              },
+              "isStatic": false,
+              "isProtected": false,
+              "isAbstract": false
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#v:member(1)",
+              "docComment": "/**\n * Shorthand version of {@link RLog.verbose | verbose}.\n *\n * @param message - The message to log.\n *\n * @param data - Optional data to log.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "v(message: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", data?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogData",
+                  "canonicalReference": "@rbxts/rlog!LogData:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "message",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "data",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "v"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#verbose:member(1)",
+              "docComment": "/**\n * Logs a verbose message.\n *\n * @param message - The message to log.\n *\n * @param data - Optional data to log.\n *\n * @see\n *\n * {@link RLog.v | v}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "verbose(message: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", data?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogData",
+                  "canonicalReference": "@rbxts/rlog!LogData:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "message",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "data",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "verbose"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#w:member(1)",
+              "docComment": "/**\n * Shorthand version of {@link RLog.warning | warning}.\n *\n * @param message - The message to log.\n *\n * @param data - Optional data to log.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "w(message: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", data?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogData",
+                  "canonicalReference": "@rbxts/rlog!LogData:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "message",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "data",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "w"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#warn:member(1)",
+              "docComment": "/**\n * Shorthand version of {@link RLog.warning | warning}.\n *\n * @param message - The message to log.\n *\n * @param data - Optional data to log.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "warn(message: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", data?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogData",
+                  "canonicalReference": "@rbxts/rlog!LogData:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "message",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "data",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "warn"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#warning:member(1)",
+              "docComment": "/**\n * Logs a warning message.\n *\n * @param message - The message to log.\n *\n * @param data - Optional data to log.\n *\n * @see\n *\n * {@link RLog.w | w}, {@link RLog.warn | warn}\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "warning(message: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", data?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogData",
+                  "canonicalReference": "@rbxts/rlog!LogData:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Content",
+                  "text": "void"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "message",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "data",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "warning"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#withConfig:member(1)",
+              "docComment": "/**\n * Returns a new {@link RLog} with the config merged with the existing config.\n *\n * You can use this to toggle certain features on {@link RLog.child | child} instances, or conditionally apply certain configurations.\n *\n * @param config - Configuration settings to apply to the new instance.\n *\n * @returns The new {@link RLog} instance\n *\n * @example\n * ```ts\n * let logger = new RLog({ minLogLevel: LogLevel.DEBUG });\n *\n * const data = { position: new Vector2(5, 10) };\n *\n * logger.v(\"Hello verbose!\", data);\n * logger.d(\"Hello debug!\", data);\n * // > [DEBUG]: Hello debug!\n * // > { data: { position: { X: 5, Y: 10 } } }\n *\n * // Inherits the minLogLevel\n * logger = logger.withConfig({ serialization: { encodeRobloxTypes: false } });\n *\n * logger.v(\"Hello verbose!\", data);\n * logger.d(\"Hello debug!\", data);\n * // > [DEBUG]: Hello debug!\n * // > { data: { position: \"<Vector2>\" } }\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "withConfig(config: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "PartialRLogConfig",
+                  "canonicalReference": "@rbxts/rlog!PartialRLogConfig:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "config",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "withConfig"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#withCorrelationId:member(1)",
+              "docComment": "/**\n * Returns a new {@link RLog} with the correlation_id set to `correlation_id`.\n *\n * Correlation IDs are appended to log messages when present, for further tracking beyond {@link RLog.withTag | tags}. Especially useful when tracking control flows across services or files.\n *\n * To learn more about Correlation IDs, see {@link RLog.child | child}.\n *\n * @param correlation_id - The new correlation_id to use.\n *\n * @returns The new {@link RLog} instance.\n *\n * @example\n * ```ts\n * const logger = new RLog().withCorrelationId(\"12345\");\n *\n * logger.d(\"Hello world!\");\n * // > [DEBUG]: \"Hello world!\"\n * // > { correlation_id: \"12345\" }\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "withCorrelationId(correlation_id: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "correlation_id",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "withCorrelationId"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#withEnricher:member(1)",
+              "docComment": "/**\n * Creates a new {@link RLog} instance with the given `enricher` added.\n *\n * Enrichers are callbacks that may or may not add data to (or mutate directly) a {@link LogEntry}.\n *\n * In the case of multiple enrichers, they are called in the order they are added.\n *\n * Furthermore, child enrichers are called before {@link RLog.child | parent} enrichers.\n *\n * _Note that enrichers are called before sinks._\n *\n * @param enricher - The enricher callback.\n *\n * @param minLevel - The minimum {@link LogLevel} for the enricher. The enricher will not be called for logs that are below this. Defaults to {@link LogLevel.VERBOSE}.\n *\n * @returns The new {@link RLog} instance.\n *\n * @example\n * ```ts\n * function MyCustomEnricher(entry: LogEntry, config: RLogConfig): LogEntry {\n *   // attach the local player's user id if we're running in a LocalScript\n *   if(RunService.IsClient()) {\n *     entry.data[\"player\"] = Players.LocalPlayer.UserId;\n *   }\n *\n *   // return the modified entry\n *   return entry;\n * }\n *\n * const logger = new RLog().withEnricher(MyCustomEnricher);\n *\n * logger.v(\"Hello verbose\");\n * // > [VERBOSE]: Hello Verbose\n * // > { \"data\": { \"player\": 1333 } }\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "withEnricher(enricher: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogEnricherCallback",
+                  "canonicalReference": "@rbxts/rlog!LogEnricherCallback:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", minLevel?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogLevel",
+                  "canonicalReference": "@rbxts/rlog!LogLevel:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "enricher",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "minLevel",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "withEnricher"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#withEnrichers:member(1)",
+              "docComment": "/**\n * Creates a new {@link RLog} instance with all of the given `enrichers` added.\n *\n * Version of {@link RLog.withEnricher | withEnricher} that allows you to provide multiple enrichers at once.\n *\n * @param enrichers - Array of enricher callbacks.\n *\n * @param minLevel - The minimum {@link LogLevel} for the enrichers. The enrichers will not be called for logs that are below this. Defaults to {@link LogLevel.VERBOSE}.\n *\n * @returns The new {@link RLog} instance.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "withEnrichers(enrichers: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyArray",
+                  "canonicalReference": "!ReadonlyArray:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogEnricherCallback",
+                  "canonicalReference": "@rbxts/rlog!LogEnricherCallback:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ">"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", minLevel?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogLevel",
+                  "canonicalReference": "@rbxts/rlog!LogLevel:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 8,
+                "endIndex": 9
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "enrichers",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 5
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "minLevel",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 6,
+                    "endIndex": 7
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "withEnrichers"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#withMinLogLevel:member(1)",
+              "docComment": "/**\n * Returns a new {@link RLog} with the minLogLevel set to `minLogLevel`.\n *\n * Messages below the minimum level will be ignored.\n *\n * You can also set this in the {@link RLogConfig | config}, this method is purely provided as a means for easier changing.\n *\n * @param minLevel - The {@link LogLevel} to allow logs for.\n *\n * @returns The new {@link RLog} instance\n *\n * @example\n * ```ts\n * let logger = new RLog();\n *\n * logger.v(\"Hello verbose!\");\n * logger.d(\"Hello debug!\");\n * // > [VERBOSE]: Hello verbose!\n * // > [DEBUG]: Hello debug!\n *\n * logger = logger.withMinLogLevel(LogLevel.DEBUG);\n *\n * logger.v(\"Hello verbose!\");\n * logger.d(\"Hello debug!\");\n * // > [DEBUG]: Hello debug!\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "withMinLogLevel(minLevel: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogLevel",
+                  "canonicalReference": "@rbxts/rlog!LogLevel:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "minLevel",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "withMinLogLevel"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#withParent:member(1)",
+              "docComment": "/**\n * Returns a new {@link RLog} with the parent set to the provided `parent`.\n *\n * You can use this to switch the parents of {@link RLog.child | child} instances, or whatever else you fancy.\n *\n * @param parent - The new parent to use on the new instance.\n *\n * @returns The new {@link RLog} instance\n *\n * @example\n * ```ts\n * const mainLogger = new RLog(settings, \"Main\");\n * const secondaryLogger = new RLog(settings, \"Secondary\");\n *\n * print(mainLogger.path);\n * print(secondaryLogger.path);\n * // > DEFAULT.Main\n * // > DEFAULT.Secondary\n *\n * const newSecondary = secondaryLogger.withParent(mainLogger);\n *\n * print(newSecondary.path);\n * // > DEFAULT.Main.Secondary\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "withParent(parent: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": " | undefined"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 4,
+                "endIndex": 5
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "parent",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 3
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "withParent"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#withSink:member(1)",
+              "docComment": "/**\n * Creates a new {@link RLog} instance with the given `sink` added.\n *\n * Sinks are callbacks that take in a {@link LogEntry} and return a boolean indicating if the entry was \"consumed\".\n *\n * If an entry is \"consumed\", that means it should not be processed any more.\n *\n * This is especially useful if you want to log your events to an external server, but not the local console.\n *\n * In the case of multiple sinks, they are called in the order they are added.\n *\n * Furthermore, child sinks are called before {@link RLog.child | parent} sinks.\n *\n * _Note that the {@link LogEntry} you receive will already be enriched._\n *\n * @param sink - The sink callback.\n *\n * @param minLevel - The minimum {@link LogLevel} for the sink. The sink will not be called for logs that are below this. Defaults to {@link LogLevel.VERBOSE}.\n *\n * @returns The new {@link RLog} instance.\n *\n * @example\n * ```ts\n * function MyCustomSink(entry: LogEntry, config: RLogConfig): boolean {\n *   // ... log to external server\n *   return true; // consume the message, meaning don't pass it along\n * }\n *\n * const logger = new RLog().withSink(MyCustomSink);\n *\n * logger.v(\"Hello verbose\"); // no output to the console, since it was consumed.\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "withSink(sink: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogSinkCallback",
+                  "canonicalReference": "@rbxts/rlog!LogSinkCallback:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", minLevel?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogLevel",
+                  "canonicalReference": "@rbxts/rlog!LogLevel:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 5,
+                "endIndex": 6
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "sink",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "minLevel",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 3,
+                    "endIndex": 4
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "withSink"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#withSinks:member(1)",
+              "docComment": "/**\n * Creates a new {@link RLog} instance with all of the given `sinks` added.\n *\n * Version of {@link RLog.withSink | withSink} that allows you to provide multiple sinks at once.\n *\n * @param sinks - Array of sink callbacks.\n *\n * @param minLevel - The minimum {@link LogLevel} for the sinks. The sinks will not be called for logs that are below this. Defaults to {@link LogLevel.VERBOSE}.\n *\n * @returns The new {@link RLog} instance.\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "withSinks(sinks: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "ReadonlyArray",
+                  "canonicalReference": "!ReadonlyArray:interface"
+                },
+                {
+                  "kind": "Content",
+                  "text": "<"
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogSinkCallback",
+                  "canonicalReference": "@rbxts/rlog!LogSinkCallback:type"
+                },
+                {
+                  "kind": "Content",
+                  "text": ">"
+                },
+                {
+                  "kind": "Content",
+                  "text": ", minLevel?: "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "LogLevel",
+                  "canonicalReference": "@rbxts/rlog!LogLevel:enum"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 8,
+                "endIndex": 9
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "sinks",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 5
+                  },
+                  "isOptional": false
+                },
+                {
+                  "parameterName": "minLevel",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 6,
+                    "endIndex": 7
+                  },
+                  "isOptional": true
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "withSinks"
+            },
+            {
+              "kind": "Method",
+              "canonicalReference": "@rbxts/rlog!RLog#withTag:member(1)",
+              "docComment": "/**\n * Returns a new {@link RLog} with the tag set to `tag`.\n *\n * Tags are appended to log messages when present, for easier filtering.\n *\n * Usually, they're used at the class level to keep track of all logs facilitated by a single class\n *\n * @param tag - The new tag to use.\n *\n * @returns The new {@link RLog} instance.\n *\n * @example\n * ```ts\n * let logger = new RLog();\n *\n * logger.d(\"Hello world!\");\n * // > [DEBUG]: \"Hello world!\"\n *\n * logger = logger.withTag(\"main\");\n *\n * logger.d(\"Hello world!\");\n * // > [DEBUG]: main -> \"Hello world!\"\n * ```\n *\n */\n",
+              "excerptTokens": [
+                {
+                  "kind": "Content",
+                  "text": "withTag(tag: "
+                },
+                {
+                  "kind": "Content",
+                  "text": "string"
+                },
+                {
+                  "kind": "Content",
+                  "text": "): "
+                },
+                {
+                  "kind": "Reference",
+                  "text": "RLog",
+                  "canonicalReference": "@rbxts/rlog!RLog:class"
+                },
+                {
+                  "kind": "Content",
+                  "text": ";"
+                }
+              ],
+              "isStatic": false,
+              "returnTypeTokenRange": {
+                "startIndex": 3,
+                "endIndex": 4
+              },
+              "releaseTag": "Public",
+              "isProtected": false,
+              "overloadIndex": 1,
+              "parameters": [
+                {
+                  "parameterName": "tag",
+                  "parameterTypeTokenRange": {
+                    "startIndex": 1,
+                    "endIndex": 2
+                  },
+                  "isOptional": false
+                }
+              ],
+              "isOptional": false,
+              "isAbstract": false,
+              "name": "withTag"
+            }
+          ],
+          "implementsTokenRanges": []
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@rbxts/rlog!rlog:var",
+          "docComment": "/**\n * Mapping to {@link RLog}\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "rlog: "
+            },
+            {
+              "kind": "Content",
+              "text": "typeof "
+            },
+            {
+              "kind": "Reference",
+              "text": "RLog",
+              "canonicalReference": "@rbxts/rlog!RLog:class"
+            }
+          ],
+          "fileUrlPath": "src/rlog.ts",
+          "isReadonly": true,
+          "releaseTag": "Public",
+          "name": "rlog",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          }
+        },
+        {
+          "kind": "Variable",
+          "canonicalReference": "@rbxts/rlog!rLog:var",
+          "docComment": "/**\n * Mapping to {@link RLog}\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "rLog: "
+            },
+            {
+              "kind": "Content",
+              "text": "typeof "
+            },
+            {
+              "kind": "Reference",
+              "text": "RLog",
+              "canonicalReference": "@rbxts/rlog!RLog:class"
+            }
+          ],
+          "fileUrlPath": "src/rlog.ts",
+          "isReadonly": true,
+          "releaseTag": "Public",
+          "name": "rLog",
+          "variableTypeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 3
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@rbxts/rlog!RLogConfig:type",
+          "docComment": "/**\n * Configuration settings for {@link RLog}.\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export type RLogConfig = "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    readonly minLogLevel: "
+            },
+            {
+              "kind": "Reference",
+              "text": "LogLevel",
+              "canonicalReference": "@rbxts/rlog!LogLevel:enum"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    readonly functionTags: boolean;\n    readonly fileTags: boolean;\n    readonly serialization: "
+            },
+            {
+              "kind": "Reference",
+              "text": "SerializationConfig",
+              "canonicalReference": "@rbxts/rlog!SerializationConfig:type"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    readonly autoGenerateChildCorrelation: boolean;\n    readonly autoGenerateCorrelation: boolean;\n    readonly correlationGenerator?: () => string;\n}"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/configuration/index.ts",
+          "releaseTag": "Public",
+          "name": "RLogConfig",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 6
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@rbxts/rlog!RLogConstructorParameters:type",
+          "docComment": "/**\n * Table version of the constructor parameters for {@link RLog}.\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export type RLogConstructorParameters = "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    config?: "
+            },
+            {
+              "kind": "Reference",
+              "text": "PartialRLogConfig",
+              "canonicalReference": "@rbxts/rlog!PartialRLogConfig:type"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    tag?: string;\n    parent?: "
+            },
+            {
+              "kind": "Reference",
+              "text": "RLog",
+              "canonicalReference": "@rbxts/rlog!RLog:class"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    sinks?: "
+            },
+            {
+              "kind": "Reference",
+              "text": "LogSinkCallback",
+              "canonicalReference": "@rbxts/rlog!LogSinkCallback:type"
+            },
+            {
+              "kind": "Content",
+              "text": "[];\n    enrichers?: "
+            },
+            {
+              "kind": "Reference",
+              "text": "LogEnricherCallback",
+              "canonicalReference": "@rbxts/rlog!LogEnricherCallback:type"
+            },
+            {
+              "kind": "Content",
+              "text": "[];\n    correlation_id?: string;\n}"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/rlog.ts",
+          "releaseTag": "Public",
+          "name": "RLogConstructorParameters",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 10
+          }
+        },
+        {
+          "kind": "TypeAlias",
+          "canonicalReference": "@rbxts/rlog!SerializationConfig:type",
+          "docComment": "/**\n * Configuration settings for serialization.\n *\n * @see\n *\n * {@link RLogConfig}\n *\n * @public\n */\n",
+          "excerptTokens": [
+            {
+              "kind": "Content",
+              "text": "export type SerializationConfig = "
+            },
+            {
+              "kind": "Content",
+              "text": "{\n    readonly minLogLevel: "
+            },
+            {
+              "kind": "Reference",
+              "text": "LogLevel",
+              "canonicalReference": "@rbxts/rlog!LogLevel:enum"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    readonly encodeRobloxTypes: boolean;\n    readonly encodeFunctions: boolean;\n    readonly deepEncodeTables: boolean;\n    readonly encodeType: "
+            },
+            {
+              "kind": "Reference",
+              "text": "EncodingType",
+              "canonicalReference": "@rbxts/rlog!EncodingType:enum"
+            },
+            {
+              "kind": "Content",
+              "text": ";\n    readonly encodeMethod: string;\n}"
+            },
+            {
+              "kind": "Content",
+              "text": ";"
+            }
+          ],
+          "fileUrlPath": "src/configuration/index.ts",
+          "releaseTag": "Public",
+          "name": "SerializationConfig",
+          "typeTokenRange": {
+            "startIndex": 1,
+            "endIndex": 6
+          }
+        }
+      ]
+    }
+  ]
+}

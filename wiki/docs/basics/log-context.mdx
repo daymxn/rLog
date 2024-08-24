@@ -1,0 +1,587 @@
+---
+description: Learn about correlation ids, and creating linkage between logs.
+---
+
+import useBaseUrl from "@docusaurus/useBaseUrl";
+import ThemedImage from "@theme/ThemedImage";
+
+# Log Context
+
+One of the most important features that **rLog** provides; log context provides a flexible and powerful way to manage
+logging across different parts of your application.
+
+Log context centralizes correlation ids, allowing you to create a linkage between log entries in individual logic flows-
+enabling more streamlined debugging in high traffic or asynchronous environments.
+
+:::info what you'll learn
+
+- What log context is
+- How to track logs in individual control flows
+- How to share configuration between log instances
+- How to retain verbose logs only when something important happens
+
+:::
+
+## Philosophy
+
+**rLog** is actually partially designed around log context. The idea is to seperate your configuration from your
+individual **rLog** instances, and instead of manually creating individual instances- you `use` your configuration when
+needed.
+
+You then pass this context along to the different components of your application in the flow.
+
+<ThemedImage
+  alt="Example Diagram"
+  sources={{
+    light: useBaseUrl("/img/log-context-flow.svg"),
+    dark: useBaseUrl("/img/log-context-flow-darkmode.svg"),
+  }}
+/>
+
+:::warning
+
+Log context was not designed with parallel luau in mind. If you're using parallel luau, you may run into issues.
+
+Although, remember that `parallel !== asynchronous`.
+
+Log context works perfectly fine in asynchronous environments.
+
+:::
+
+## Usage
+
+Now that we have an idea of _what_ log context is, let's hop right into how to use it!
+
+### Basic Usage
+
+Log context have a concept of "life cycles", in which you need to `start` the context to use it, and `stop` it when
+you're done.
+
+This is needed to support certain features that we'll get into later on in this tutorial. It also enforces strict
+logical flows; forcing you to put more thought behind the structure of your application.
+
+You create instances of log context through `LogContext.start`, use the context in control flows with `use` and stop the
+context with `stop`.
+
+```ts title="datastore.ts"
+import { rLog, LogContext } from "@rbxts/rlog";
+
+const config = { tag: "Datastore" };
+
+export function AddMoney(context: LogContext, player: Player, money: number) {
+  // highlight-next-line
+  const logger = context.use(config);
+
+  logger.i("Adding money to player save");
+  // ...
+  logger.i("Money added");
+}
+```
+
+```ts title="player-actions.ts"
+import { rLog, LogContext } from "@rbxts/rlog";
+import { AddMoney } from "./datastore";
+
+const config = { tag: "PlayerActions" };
+
+export function GiveMoney(context: LogContext, player: Player, money: number) {
+  // highlight-next-line
+  const logger = context.use(config);
+
+  logger.i("Giving player money", { player: player, money: money });
+
+  AddMoney(context, player, money);
+
+  logger.i("Money given to player");
+}
+```
+
+```ts title="network.ts"
+import { LogContext } from "@rbxts/rlog";
+import { GiveMoney } from "./player-actions";
+import { remotes } from "./remotes";
+
+remotes.giveMoney.connect((player: Player, money: number) => {
+  // highlight-next-line
+  const context = LogContext.start();
+
+  GiveMoney(context, player, money);
+
+  // highlight-next-line
+  context.stop();
+});
+```
+
+```logs title="Console"
+[INFO]: PlayerActions -> Giving player money
+{
+  data: { player: "Player1", money: 100 },
+  correlation_id: "ZnT961Kwlav6JFii"
+}
+
+[INFO]: Datastore -> Adding money to player save
+{ correlation_id: "ZnT961Kwlav6JFii" }
+
+[INFO]: Datastore -> Money added
+{ correlation_id: "ZnT961Kwlav6JFii" }
+
+[INFO]: PlayerActions -> Money given to player
+{ correlation_id: "ZnT961Kwlav6JFii" }
+```
+
+As you can see, the log context attaches a matching `correlation_id` to each log in the control flow.
+
+This correlation id can be used to filter for log entries in a singular invocation; avoiding the pollution of duplicate
+logs of different invocations.
+
+This also allows you to only specify _new_ data, while still retaining debug ability.
+
+Notice how we only specify the `player` in the first log, even though all the other logs are also unique to the
+`player`? Since you can filter your logs according to `correlation_id`, the `player` can be implied from earlier logs.
+So you only need to log extra data as it's needed.
+
+This allows you to follow more practical DRY principles.
+
+### Automatic scoping
+
+Manually creating context with `start` and manually stopping it with `stop` can not only become verbose- but it's also
+error prone.
+
+Failing to properly call `stop` on a log context can cause memory leaks, even if an exception occurs in your
+application.
+
+To solve this, **rLog** provides a mechanism for _automatic_ lifecycle managment through `withLogContext`.
+
+```ts title="actions/pets.ts"
+import { LogContext, LogConfig } from "@rbxts/rlog";
+
+const config: LogConfig = { tag: "Actions" };
+
+export function buyPet(context: LogContext, player: PlayerId, pet: PetId) {
+  const logger = context.use(config);
+
+  logger.i("Buying pet", { player: player, pet: pet });
+
+  // ..
+
+  logger.i("Pet bought");
+}
+```
+
+```ts
+import { withLogContext } from "@rbxts/rlog";
+import { remotes } from "./remotes";
+import { buyPet } from "./actions/pets";
+
+remotes.buyPet.connect((player: Player, pet: PetId) => {
+  // automatically starts and stops the context
+  withLogContext((context) => {
+    buyPet(context, player.UserId, pet);
+  });
+});
+```
+
+```logs title="Console"
+[INFO]: Actions -> Buying pet
+{
+  data: { player: "Player1", pet: "18219" },
+  correlation_id: "QQLRSFsPfoTfgD7b"
+}
+
+[INFO]: Actions -> Pet bought
+{ correlation_id: "QQLRSFsPfoTfgD7b" }
+```
+
+:::tip
+
+`withLogContext` will automatically catch any exceptions that occur within its scope, `stop` the context, and then
+rethrow the exception for your own processing; you don't need to worry about memory leaks occurring from unexpected
+errors.
+
+:::
+
+### Functional Scoping
+
+While `withLogContext` is generally designed with the idea of being called at the remote level in an event based
+environment- this isn't always the case. Maybe your application is more response based than event based.
+
+Thankfully, `withLogContext` also returns whatever you return within the scope.
+
+```ts title="actions/pets.ts"
+import { LogContext, LogConfig } from "@rbxts/rlog";
+
+const config: LogConfig = { tag: "Actions" };
+
+export function buyPet(context: LogContext, player: PlayerId, pet: PetId): boolean {
+  const logger = context.use(config);
+
+  logger.i("Buying pet", { player: player, pet: pet });
+
+  // ..
+
+  logger.i("Pet bought");
+
+  return true;
+}
+```
+
+```ts title="remotes.ts"
+import { t } from "@rbxts/t";
+import { Server, remote, createRemotes } from "@rbxts/remo"";
+
+export const remotes = createRemotes({
+  buyPet: remote<Server, [pet: PetId]>(t.string).returns<boolean>(t.boolean)
+})
+```
+
+```ts
+import { withLogContext } from "@rbxts/rlog";
+import { remotes } from "./remotes";
+import { buyPet } from "./actions/pets";
+
+remotes.buyPet.onRequest((player: Player, pet: PetId) =>
+  withLogContext((context) => {
+    return buyPet(context, player.UserId, pet);
+  }),
+);
+```
+
+This will return the `boolean` value from `buyPet` back to `onRequest`.
+
+### Asynchronous Scoping
+
+If you have asynchronous behavior you're wanting to wrap, you can use `withLogContextAsync` in place of
+`withLogContext`.
+
+This will provide an environment for invoking asynchronous functions, and ensure the context gets closed even if the
+promise fails or is cancelled.
+
+:::info
+
+`withLogContextAsync` requires `Promises.lua` at `^4.0.0`, which (at the time of this writing) not released for
+`roblox-ts` yet.
+
+To workaround this, **rLog** bundles `Promises.lua`. If you're using an older version, you make run into issues.
+
+:::
+
+```ts
+import { withLogContextAsync } from "@rbxts/rlog";
+import { remotes } from "./remotes";
+import { buyPet } from "./actions/pets";
+
+remotes.buyPet.onRequest((player: Player, pet: PetId) =>
+  withLogContextAsync(async (context) => {
+    return buyPet(context, player.UserId, pet);
+  }),
+);
+```
+
+## Configuration
+
+Log Context has an internal `config` that all users of the context inherit from. By default, this is just set to the
+default config, but you can specify your own during creation.
+
+```ts title="actions/pets.ts"
+import { LogContext, LogConfig } from "@rbxts/rlog";
+
+const config: LogConfig = { tag: "Actions" };
+
+export function buyPet(context: LogContext, player: PlayerId, pet: PetId) {
+  const logger = context.use(config);
+
+  logger.i("Buying pet", { player: player, pet: pet });
+
+  // ..
+
+  logger.i("Pet bought");
+}
+```
+
+```ts
+import { withLogContext, LogLevel } from "@rbxts/rlog";
+import { remotes } from "./remotes";
+import { buyPet } from "./actions/pets";
+
+remotes.buyPet.connect((player: Player, pet: PetId) => {
+  withLogContext({ minLogLevel: LogLevel.DEBUG }, (context) => {
+    buyPet(context, player.UserId, pet);
+  });
+});
+```
+
+You can use this to pass common configuration to all loggers under a given scope.
+
+There are also overrides for `withLogContextAsync` as well.
+
+```ts
+import { withLogContextAsync, LogLevel } from "@rbxts/rlog";
+import { remotes } from "./remotes";
+import { buyPet } from "./actions/pets";
+
+remotes.buyPet.onRequest((player: Player, pet: PetId) =>
+  withLogContextAsync({ minLogLevel: LogLevel.DEBUG }, async (context) => {
+    return buyPet(context, player.UserId, pet);
+  }),
+);
+```
+
+## Overwriting Context
+
+You may find yourself in edge case scenarios where you need more fine grained control over the details of a context.
+
+**rLog** provides a few helper methods to assist in this.
+
+### Config
+
+If you ever want to update the associated config in a log context with new values- you can use the `withConfig` method
+to merge the configs and create a new context instance while retaining the correlation id.
+
+```ts
+import { LogContext, LogLevel } from "@rbxts/rlog";
+
+const mainContext = LogContext.start({ minLogLevel: LogLevel.DEBUG });
+const deepContext = context.withConfig({ serialization: { deepEncodeTables: false } });
+
+const mainLogger = context.use({ tag: "Main" });
+const deepLogger = deepContext.use({ tag: "Deep" });
+
+mainLogger.i("Hello info!");
+deepLogger.i("Hello info!");
+
+const data = { player: { position: new Vector3(1, 2, 3) } };
+mainLogger.d("Hello debug!", data);
+deepLogger.d("Hello debug!", data);
+
+mainContext.stop();
+deepContext.stop();
+```
+
+```logs title="Console"
+[DEBUG]: Main -> Hello debug!
+{
+  data: {
+    player: {
+      position: null
+    }
+  },
+  correlation_id: "QQLRSFsPfoTfgD7b"
+}
+
+[DEBUG]: Deep -> Hello debug
+{
+  data: {
+    player: {
+      position: { X: 1, Y: 2, Z: 3 }
+    }
+  },
+  correlation_id: "QQLRSFsPfoTfgD7b"
+}
+```
+
+### Instances
+
+Sometimes you might have an **rLog** instance that was already created, and you want to use a context with it.
+
+In these cases, you can't really call `use` on the context- since the logger instance already exists.
+
+To fix this, you can use the `withContext` method.
+
+:::warning
+
+Remember that **rLog** instances follow the principle of immutability- so you're creating a _new_ instance with the
+context attached, not updating the old one.
+
+:::
+
+```ts
+import { LogContext, rLog } from "@rbxts/rlog";
+
+const MainLogger = new rLog();
+
+const context = LogContext.start();
+
+const logger = MainLogger.withContext(context);
+
+context.stop();
+```
+
+This will also _merge_ the configs between the context and your logger instance; placing priority on the logger's
+configuration.
+
+## Context Bypass
+
+The biggest reason for context having their own lifecycles is to provide support for context bypass.
+
+Context bypass allows logs to bypass the `minLogLevel` whenever another log in the tree exceeds `WARNING`.
+
+You can enable this feature by setting the `contextBypass` setting.
+
+```ts title="actions/pets.ts"
+import { LogContext, LogConfig } from "@rbxts/rlog";
+import { save } from "./save";
+
+const config: LogConfig = { tag: "Actions" };
+
+export async function buyPet(context: LogContext, player: PlayerId, pet: PetId) {
+  const logger = context.use(config);
+
+  logger.d("Buying pet", { player: player, pet: pet });
+
+  const playerSave = await save.get(context, player);
+
+  // ...
+
+  logger.d("Pet bought");
+}
+```
+
+```ts
+import { rLog, LogLevel, withLogContext } from "@rbxts/rlog";
+import { remotes } from "./remotes";
+import { buyPet } from "./actions/pets";
+
+rLog.UpdateDefaultConfig({ minLogLevel: LogLevel.INFO });
+
+remotes.buyPet.connect((player: Player, pet: PetId) => {
+  // automatically starts and stops the context
+  withLogContextAsync({ contextBypass: true }, (context) => buyPet(context, player.UserId, pet));
+});
+```
+
+```logs title="Console"
+
+[ERROR]: Saves -> Failed to load player save
+{
+  data: { err: "Roblox datastore API is down" },
+  correlation_id: "QQLRSFsPfoTfgD7b"
+}
+
+[DEBUG]: Actions -> Buying pet
+{
+  data: { player: "Player1", pet: "18219" },
+  correlation_id: "QQLRSFsPfoTfgD7b"
+}
+```
+
+This allows you to set a high `minLogLevel` without sacrificing a proper log trace whenever something bad happens.
+
+### Flushing on Close
+
+Internally, `contextBypass` is handled by a service called the `LogContextManager`.
+
+This service keeps a table mapping of correlation ids to log entries and relevant sinks; keeping them in memory until
+the context is stopped.
+
+Although, this also means that you might have situations where logs are stored in memory that might need to be flushed
+to a sink- but the game closed before they could.
+
+To fix this, you can call the `ForceContextFlush` method in a `bindToClose` hook.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+game.bindToClose(() => {
+  rLog.ForceContextFlush();
+});
+```
+
+This will force any pending messages to be sent through the sinks, regardless of the `minLogLevel`.
+
+:::tip
+
+The reason this is exposed as a method you have to call instead of a setting where **rLog** internally binds on its own
+is to allow you to handle last call logging on your own.
+
+So if you have some internal system that logs right before the game closes, you can allow that to run before calling
+this method; you have control over when the context is forced through.
+
+:::
+
+### Suspending Context
+
+One thing you might have noticed is that the logs that come out from a context bypass are out of order.
+
+This is because **rLog** places priority on getting the important message out over getting the others.
+
+If this behavior is undesirable, and you'd rather have your logs retain their order, you can take advantage of the
+`suspendContext` setting.
+
+```ts title="actions/pets.ts"
+import { LogContext, LogConfig } from "@rbxts/rlog";
+import { save } from "./save";
+
+const config: LogConfig = { tag: "Actions" };
+
+export async function buyPet(context: LogContext, player: PlayerId, pet: PetId) {
+  const logger = context.use(config);
+
+  logger.d("Buying pet", { player: player, pet: pet });
+
+  const playerSave = await save.get(context, player);
+
+  // ...
+
+  logger.d("Pet bought");
+}
+```
+
+```ts
+import { rLog, LogLevel, withLogContext } from "@rbxts/rlog";
+import { remotes } from "./remotes";
+import { buyPet } from "./actions/pets";
+
+rLog.UpdateDefaultConfig({
+  minLogLevel: LogLevel.INFO,
+  contextBypass: true,
+  suspendContext: true,
+});
+
+remotes.buyPet.connect((player: Player, pet: PetId) => {
+  // automatically starts and stops the context
+  withLogContextAsync((context) => buyPet(context, player.UserId, pet));
+});
+```
+
+```logs title="Console"
+[DEBUG]: Actions -> Buying pet
+{
+  data: { player: "Player1", pet: "18219" },
+  correlation_id: "QQLRSFsPfoTfgD7b"
+}
+
+[ERROR]: Saves -> Failed to load player save
+{
+  data: { err: "Roblox datastore API is down" },
+  correlation_id: "QQLRSFsPfoTfgD7b"
+}
+```
+
+`suspendContext` forces logs to be "suspended" until the context is closed. They then all get sent in the order they
+were received.
+
+## Best Practices
+
+- **Wrap control flows in context**: Having a context associated with each invocation of a control flow will allow you
+  to avoid logs being jumbled together.
+- **Only log new data in a context**: Since log context creates a straightforward linkage between other entries in the
+  same flow, only logging _new_ data allows you to avoid polluting your logs with the same data over and over again.
+- **Use context bypass at the global scope**: If you're wanting to set a `minLogLevel` to save on verbose logging, but
+  still want to take advantage of the verbose logs when they're needed- then keep `contextBypass` enabled from the
+  default instance.
+- **Force context flush on close**: To avoid accidentally missing logs, it's good practice to ensure you're calling
+  `ForceContextFlush` before the game closes via `bindToClose`.
+- **Use automatic scoping**: Automatic scoping handles the creation, starting, and closing of context for you. Take
+  advantage of this to avoid accidentally leaking memory- and only manually manage the context when you need more fine
+  grained control.
+
+## Summary
+
+Let's recap what we've learned about log context:
+
+- They carry **correlation ids** for creating linkage between log entries.
+- They allow you to **filter** logs in individual control flows.
+- You can use them in **asynchronous** environments via `withLogContextAsync`.
+- They provide a way to share **common configuration** between log instances.
+- They need to be **stopped** to avoid memory leaks.
+- You can use **context bypass** to allow log entries to bypass `minLogLevel` when something important occurs.

@@ -161,7 +161,12 @@ function encodeToObjectOrString(config: SerializationConfig, element: unknown): 
 }
 
 /**
- * Public facing serialization. Converts to valid json according to config.
+ * Serializes an element to a valid JSON element.
+ *
+ * @param config - The serialization configuration.
+ * @param element - The element to encode.
+ *
+ * @returns A copy of the element with all values encoded as JSON-safe variants.
  */
 export function serialize(config: SerializationConfig, element: LogData): LogData {
   const encodedElement = encodeToObjectOrString(config, element);

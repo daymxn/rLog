@@ -35,7 +35,7 @@ export type LogEntry = {
 
 ### Level
 
-The `level` is the [Log Level](log-level), or severity, of the log.
+The `level` is the [Log Level](./log-levels.mdx), or severity, of the log.
 
 ```ts
 import { rLog } from "@rbxts/rlog";
@@ -116,7 +116,8 @@ In practice, this will be a part of your logs.
 
 Log Context allows you to create linkage between log entries, and is one of the most important features of **rLog**.
 
-But, it's a bit too complex of a topic for now; you'll learn more about it in the [Log Context](#) guide.
+But, it's a bit too complex of a topic for now; you'll learn more about it in the [Log Context](./log-context.mdx)
+guide.
 
 #### Correlation ID
 
@@ -134,7 +135,22 @@ These are provided via Log Context.
 }
 ```
 
-You'll learn more about Correlation IDs aswell in the [Log Context](#) guide.
+You'll learn more about Correlation IDs aswell in the [Log Context](./log-context.mdx) guide.
+
+### Source Metadata
+
+`source_metadata` is additional metadata detailing _where_ in the source code this log occurred.
+
+```ts
+export type SourceMetadata = {
+  function_name?: string;
+  nearest_function_name?: string;
+  file_path: string;
+  line_number: number;
+};
+```
+
+You'll learn more about Source Metadata in the [Source Metadata](/advanced/source-metadata.mdx) guide.
 
 ## Summary
 

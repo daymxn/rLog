@@ -1,6 +1,6 @@
-import { HttpService } from "@rbxts/services";
 import { enrich, LogData, LogEntry, LogLevel, sink, SourceMetadata } from "./common";
 import { mergeConfigs, PartialRLogConfig, RLogConfig } from "./configuration";
+import type { LogContext } from "./context";
 import { LogContextManager } from "./context/log-context-manager";
 import { serialize } from "./serialization";
 import { robloxConsoleSink } from "./sinks";
@@ -19,156 +19,32 @@ export type RLogConstructorParameters = {
 };
 
 function isConstructorParameters(value: object): value is RLogConstructorParameters {
-  return "config" in value || "context" in value;
+  return "config" in value || "context" in value || "inheritDefault" in value;
 }
 
-// TODO(): needs testing
 function extractSourceMetadata(): SourceMetadata {
-  const metadata = {
-    function_name: undefined,
-    nearest_function_name: undefined,
-    file_path: undefined,
-    line_number: undefined,
-  } as Writable<Partial<SourceMetadata>>;
+  const metadata = {} as Writable<Partial<SourceMetadata>>;
 
-  let stack_level = 2;
+  let stack_level = 3;
   let file;
-  do {
-    stack_level += 1;
 
-    const [file, line, func] = debug.info(stack_level, "sln");
+  do {
+    const [file, line, func] = debug.info(stack_level++, "sln");
     if (file === FILE_NAME) continue;
+
     if (metadata.file_path === undefined) {
       metadata.file_path = file;
       metadata.function_name = func;
       metadata.line_number = line;
     }
-    if (metadata.nearest_function_name === undefined) {
-      metadata.nearest_function_name = func;
-    } else {
-      break;
-    }
-  } while (file !== undefined);
+    metadata.nearest_function_name ??= func;
+  } while (file !== undefined && metadata.nearest_function_name === undefined);
 
   return metadata as SourceMetadata;
 }
 
-function GenerateCorrelationID(config: RLogConfig) {
-  if (config.correlationGenerator) return config.correlationGenerator();
-
-  return `${DateTime.now().UnixTimestamp}_${HttpService.GenerateGUID(false)}`;
-}
-
-// TODO(): document
-export type ContextCallback<R = void> = (context: LogContext) => R;
-
-function isContextCallback(value: unknown): value is ContextCallback {
-  return typeIs(value, "function");
-}
-
-// TODO(): document
-export function withLogContext<R = void>(callback: ContextCallback<R>): R;
-// TODO(): document. don't forget about @inheritDoc
-export function withLogContext<R = void>(config: PartialRLogConfig, callback: ContextCallback<R>): R;
-
-// will run the callback right away
-// will catch errors so we can close context, but will rethrow them after
-// TODO(): document
-export function withLogContext<R = void>(arg1: PartialRLogConfig | ContextCallback<R>, arg2?: ContextCallback<R>): R {
-  if (isContextCallback(arg1)) {
-    const createdContext = LogContext.start();
-    try {
-      return arg1(createdContext);
-    } finally {
-      createdContext.stop();
-    }
-  } else if (isContextCallback(arg2)) {
-    const createdContext = LogContext.start(arg1);
-
-    try {
-      return arg2(createdContext);
-    } finally {
-      createdContext.stop();
-    }
-  } else {
-    error(`withLogContext called with invalid arguments:\narg1:"${arg1}"\narg2:"${arg2}"`);
-  }
-}
-
-// TODO(): document
-export async function withLogContextAsync<R = void>(callback: ContextCallback<Promise<R>>): Promise<R>;
-// TODO(): document. don't forget about @inheritDoc
-export async function withLogContextAsync<R = void>(
-  config: PartialRLogConfig,
-  callback: ContextCallback<Promise<R>>
-): Promise<R>;
-
-// will run the callback right away
-// will catch errors so we can close context, but will rethrow them after
-// TODO(): document
-export async function withLogContextAsync<R = void>(
-  arg1: PartialRLogConfig | ContextCallback<Promise<R>>,
-  arg2?: ContextCallback<Promise<R>>
-): Promise<R> {
-  if (isContextCallback(arg1)) {
-    const createdContext = LogContext.start();
-
-    return arg1(createdContext).finally(() => {
-      createdContext.stop();
-    }) as Promise<R>;
-  } else if (isContextCallback(arg2)) {
-    const createdContext = LogContext.start(arg1);
-
-    return arg2(createdContext).finally(() => {
-      createdContext.stop();
-    }) as Promise<R>;
-  } else {
-    return Promise.reject(
-      `withLogContext called with invalid arguments:\narg1:"${arg1}"\narg2:"${arg2}"`
-    ) as Promise<R>;
-  }
-}
-
-// TODO(): document
-export class LogContext {
-  private _dead: boolean = false;
-
-  public IsDead() {
-    return this._dead;
-  }
-
-  constructor(
-    public readonly correlation_id: string,
-    public readonly config: RLogConfig
-  ) {}
-
-  public withConfig(config: PartialRLogConfig) {
-    if (this._dead) error("Attempted to use a dead LogContext via `LogContext.withConfig`");
-
-    return new LogContext(this.correlation_id, mergeConfigs(this.config, config));
-  }
-
-  public use(config?: PartialRLogConfig) {
-    if (this._dead) error("Attempted to use a dead LogContext via `LogContext.use`");
-
-    return new rLog(config, this);
-  }
-
-  public stop() {
-    this._dead = true;
-    LogContextManager.flush(this);
-  }
-
-  public static start(config?: PartialRLogConfig): LogContext {
-    const finalConfig = mergeConfigs(config);
-    const id = GenerateCorrelationID(finalConfig);
-
-    return new LogContext(id, finalConfig);
-  }
-}
-
 /**
- * Class for faciliating Roblox Logging.
+ * Class for Server-Side Roblox Logging.
  *
  * You can also use {@link rlog} or {@link rLog}- for style purposes.
  *
@@ -177,11 +53,20 @@ export class LogContext {
 export class RLog {
   /**
    * @internal
+   * @readonly
    */
   public _config: RLogConfig;
 
   /**
-   * TODO(): document
+   * The {@link LogContext} assigned to this instance, if any.
+   *
+   * Log context provides a way to carry Correlation IDs through-out
+   * logs in an individual flow.
+   *
+   * To learn more about what that means, you can look at the docs
+   * for {@link LogContext}.
+   *
+   * @see {@link RLog.withLogContext | withLogContext}
    */
   public readonly context: LogContext | undefined;
 
@@ -196,23 +81,19 @@ export class RLog {
   /**
    * Constructs a new {@link RLog} instance.
    *
-   * Uses the provided table in place of the argument names.
-   */
-  public constructor({ config, context, inheritDefault }: RLogConstructorParameters);
-
-  /**
-   * Constructs a new {@link RLog} instance.
-   *
    * @param config - Configuration settings to use for this logger instance.
-   *
+   * @param context - The {@link LogContext} to use as a base for this instance.
+   * @param inheritDefault - Whether to merge configs with the {@link RLog.default | default instance}. Defaults to true.
    */
   public constructor(config?: PartialRLogConfig, context?: LogContext, inheritDefault?: boolean);
 
   /**
    * Constructs a new {@link RLog} instance.
    *
-   * See the other constructors for more details.
+   * Uses the provided table in place of the argument names.
    */
+  public constructor({ config, context, inheritDefault }: RLogConstructorParameters);
+
   public constructor(
     config: PartialRLogConfig | RLogConstructorParameters = {},
     context?: LogContext,
@@ -226,23 +107,37 @@ export class RLog {
 
     this._config = mergeConfigs(inheritDefault ? RLog.default?._config : undefined, context?.config, config);
     if (context) {
-      this.context = new LogContext(context.correlation_id, this._config);
+      this.context = context.withConfig(this._config);
     }
   }
 
   /**
-   * Sets the config for the {@link RLog.default | default} instance.
+   * Overwrites the config for the {@link RLog.default | default} instance.
+   *
+   * You will rarely need to use this, and generally will want to be using
+   * {@link RLog.UpdateDefaultConfig | UpdateDefaultConfig} insted.
+   *
+   * @param config - The {@link RLogConfig} to use.
+   *
+   * @see {@link RLog.UpdateDefaultConfig | UpdateDefaultConfig}, {@link RLog.ResetDefaultConfig | ResetDefaultConfig}
+   */
+  public static SetDefaultConfig(config: PartialRLogConfig) {
+    this.default._config = mergeConfigs(config);
+  }
+
+  /**
+   * Merges the given config with the existing config for the {@link RLog.default | default} instance.
    *
    * Since all {@link RLog} instances inherit their config from the default instance,
    * this is a convenient way to provide default configuration settings.
    *
-   * _Note that this will **not** change the config for instances already created._
-   *
    * @param config - The {@link RLogConfig} to use.
+   *
+   * @see {@link RLog.UpdateDefaultConfig | SetDefaultConfig}, {@link RLog.ResetDefaultConfig | ResetDefaultConfig}
    *
    * @example
    * ```ts
-   * RLog.SetDefaultConfig({ { serialization: { encodeFunctions: true } } });
+   * RLog.UpdateDefaultConfig({ serialization: { encodeFunctions: true } });
    *
    * // Inherits the `encodeFunctions` setting automatically
    * const logger = new RLog({ serialization: { encodeRobloxTypes: false } });
@@ -252,16 +147,37 @@ export class RLog {
    * // > { "data": { "player": 1338, "location": "<Vector3>", "revive": "<Function>" } }
    * ```
    */
-  public static SetDefaultConfig(config: PartialRLogConfig) {
-    this.default._config = mergeConfigs(config);
-  }
-
   public static UpdateDefaultConfig(config: PartialRLogConfig) {
     this.default._config = mergeConfigs(this.default._config, config);
   }
 
+  /**
+   * Resets the config for the {@link RLog.default | default} instance to the original settings.
+   *
+   * Essentially would be the same as if you never touched the default config.
+   *
+   * @see {@link RLog.UpdateDefaultConfig | UpdateDefaultConfig}, {@link RLog.ResetDefaultConfig | SetDefaultConfig}
+   */
   public static ResetDefaultConfig() {
     this.default._config = mergeConfigs({ sinks: [robloxConsoleSink()] });
+  }
+
+  /**
+   * Force any pending messages to be sent through the sinks, regardless of the `minLogLevel`.
+   *
+   * Inteded to be called before the game closes, to ensure there are no missing logs.
+   *
+   * @see {@link LogContext}
+   *
+   * @example
+   * ```ts
+   * game.bindToClose(() => {
+   *   RLog.ForceContextFlush();
+   * });
+   * ```
+   */
+  public static ForceContextFlush() {
+    LogContextManager.forceFlush();
   }
 
   /**
@@ -303,8 +219,8 @@ export class RLog {
   /**
    * Logs a message with a specified log level.
    *
-   * @param level - The log level.
-   * @param message - The log message.
+   * @param level - The severity of the log.
+   * @param message - The core message of the log.
    * @param data - Optional data to log. Will be encoded according to this logger's {@link RLogConfig | config}.
    *
    * @see {@link RLog.verbose | verbose}, {@link RLog.debug | debug}, {@link RLog.info | info}, {@link RLog.warning | warning}, {@link RLog.error | error}
@@ -355,6 +271,12 @@ export class RLog {
    * @param data - Optional data to log.
    *
    * @see {@link RLog.v | v}
+   *
+   * @example
+   * ```log
+   * [VERBOSE]: Hello World!
+   * { data: { player: "Player1" } }
+   * ```
    */
   public verbose(message: string, data: LogData = {}) {
     this.log(LogLevel.VERBOSE, message, data);
@@ -377,6 +299,12 @@ export class RLog {
    * @param data - Optional data to log.
    *
    * @see {@link RLog.d | d}
+   *
+   * @example
+   * ```log
+   * [DEBUG]: Hello World!
+   * { data: { player: "Player1" } }
+   * ```
    */
   public debug(message: string, data: LogData = {}) {
     this.log(LogLevel.DEBUG, message, data);
@@ -399,6 +327,12 @@ export class RLog {
    * @param data - Optional data to log.
    *
    * @see {@link RLog.i | i}
+   *
+   * @example
+   * ```log
+   * [INFO]: Hello World!
+   * { data: { player: "Player1" } }
+   * ```
    */
   public info(message: string, data: LogData = {}) {
     this.log(LogLevel.INFO, message, data);
@@ -421,6 +355,12 @@ export class RLog {
    * @param data - Optional data to log.
    *
    * @see {@link RLog.w | w}, {@link RLog.warn | warn}
+   *
+   * @example
+   * ```log
+   * [WARNING]: Hello World!
+   * { data: { player: "Player1" } }
+   * ```
    */
   public warning(message: string, data: LogData = {}) {
     this.log(LogLevel.WARNING, message, data);
@@ -453,6 +393,12 @@ export class RLog {
    * @param data - Optional data to log.
    *
    * @see {@link RLog.e | e}
+   *
+   * @example
+   * ```log
+   * [ERROR]: Hello World!
+   * { data: { player: "Player1" } }
+   * ```
    */
   public error(message: string, data: LogData = {}) {
     this.log(LogLevel.ERROR, message, data);
@@ -469,10 +415,7 @@ export class RLog {
   }
 
   /**
-   * Returns a new {@link RLog} with the config merged with the existing config.
-   *
-   * You can use this to toggle certain features on {@link RLog.child | child} instances, or
-   * conditionally apply certain configurations. 
+   * Returns a new {@link RLog} with the provided config merged with the existing config.
    *
    * @param config - Configuration settings to apply to the new instance.
    *
@@ -503,12 +446,13 @@ export class RLog {
   }
 
   /**
-   * Returns a new {@link RLog} with the minLogLevel set to `minLogLevel`.
+   * Returns a new {@link RLog} with the {@link RLogConfig.minLogLevel | minLogLevel} set
+   * to the provided level.
    *
    * Messages below the minimum level will be ignored.
    * 
-   * You can also set this in the {@link RLogConfig | config}, this method is purely
-   * provided as a means for easier changing.
+   * You can also set this in the {@link RLogConfig | config}, this method is provided
+   * purely as a means for easier changing.
    *
    * @param minLevel - The {@link LogLevel} to allow logs for.
    *
@@ -535,12 +479,13 @@ export class RLog {
   }
 
   /**
-   * Returns a new {@link RLog} with the tag set to `tag`.
+   * Returns a new {@link RLog} with the {@link RLogConfig.tag | tag} set
+   * to the provided string.
    *
    * Tags are appended to log messages when present, for easier filtering.
    *
-   * Usually, they're used at the class level to keep track of all logs
-   * facilitated by a single class
+   * Usually, they're used at the class or module level to keep track of all logs
+   * facilitated by a single service or action.
    *
    * @param tag - The new tag to use.
    *
@@ -563,8 +508,15 @@ export class RLog {
     return this.clone({ config: { tag: tag } });
   }
 
-  // TODO(): document
-  public withContext(context: LogContext): RLog {
+  /**
+   * Returns a new {@link RLog} with the {@link RLog.context | context} set
+   * to the provided context.
+   *
+   * @param context - The new context to use.
+   *
+   * @returns The new {@link RLog} instance.
+   */
+  public withLogContext(context: LogContext): RLog {
     return this.clone({ context: context });
   }
 }
@@ -585,8 +537,6 @@ export const rLog = RLog;
 
 /**
  * Mapping to {@link RLog.default} for easier default usage.
- *
- * TODO(): Update docs and use places to use this instead
  *
  * @public
  */

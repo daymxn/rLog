@@ -1,5 +1,5 @@
 import { RLogConfig } from "../configuration";
-import { LogContext, RLog } from "../rlog";
+import { LogContext } from "../context";
 
 /**
  * Enum representing the various log levels, or "importance" of a {@link LogEntry}.
@@ -68,16 +68,26 @@ export type LogData = Record<string, unknown>;
 export type LogEntry = {
   /** The log level of the entry. */
   level: LogLevel;
+
   /** The message associated with the log entry. */
   message: string;
+
   /** Additional data associated with the log entry. */
   data: LogData;
+
+  /** Additional data associated with the log entry, encoded to be presentable in the roblox console. */
   encoded_data: LogData;
 
+  /** A `Writable` version of the config that was used when sending the log entry. */
   config: Writable<RLogConfig>;
 
+  /** The context used when sending the log, if there was one present at all. */
   context?: LogContext;
+
+  /** The epoch milliseconds in which the log occurred. */
   timestamp: number;
+
+  /** Metadata detailing where in the source this log occurred. */
   source_metadata: SourceMetadata;
 };
 
@@ -88,19 +98,50 @@ export type LogEntry = {
  * then the log will be stopped, and no further sinks will be called. The {@link LogEntry} will
  * also not be logged to the console.
  *
- * To learn more about sinks, and how they work, see {@link RLog.withSink | withSink}.
+ * Sinks are generally used to send logs to an external database or service, but they can
+ * also be used to filter logs by "consuming" them.
+ *
+ * **Note:** you should not yield in sinks. If you're sending data to an external service, do
+ * so via queue that gets dispatched in a different thread.
  *
  * @param entry - The log entry to handle.
- * @param attachment - The instance for where this sink is attached.
- * @param source - The instance for where this event is occuring.
  *
- * @returns A boolean indicating whether the log was consumed, or void.
+ * @returns `true` if the log was consume, `false` or `void` otherwise.
  *
  * @public
+ *
+ * @example
+ * ```ts
+ * const logger = new rLog({
+ * sinks: [
+ *   (entry) => {
+ *      someExternalDBFunction(entry);
+ *   },
+ *   (entry) => {
+ *     return true;
+ *   },
+ *   (entry) => {
+ *     // never reaches because the previous sink returned true
+ *     error("Messages should not log to the console");
+ *   },
+ * ],
+ * });
+ *
+ * logger.i("Hello world!");
+ * ```
  */
 export type LogSinkCallback = (entry: LogEntry) => boolean | void;
 
-// TODO(): documentation
+/**
+ * Runs a log through all the provided sinks, stopping if any return true.
+ *
+ * @param entry - Log to send through the sinks.
+ * @param sinks - Collection of {@link LogSinkCallback} to call with the entry.
+ *
+ * @internal
+ *
+ * @throws If sinks is empty, as there's nowhere to send the log.
+ */
 export function sink(entry: LogEntry, sinks: LogSinkCallback[]) {
   if (sinks.isEmpty()) {
     warn("rLog entry is missing sinks. I don't have anywhere to send this message.\n", entry.message);
@@ -117,11 +158,7 @@ export function sink(entry: LogEntry, sinks: LogSinkCallback[]) {
  * edit its {@link LogEntry.source_metadata | metadata}, or just return it if you don't need to
  * do anything.
  *
- * To learn more about enrichers, and how they work, see {@link RLog.withEnricher | withEnricher}.
- *
  * @param entry - The log entry to enrich.
- * @param attachment - The instance for where this enricher is attached.
- * @param source - The instance for where this event is occuring.
  *
  * @returns The enriched log entry.
  *
@@ -129,7 +166,16 @@ export function sink(entry: LogEntry, sinks: LogSinkCallback[]) {
  */
 export type LogEnricherCallback = (entry: LogEntry) => LogEntry;
 
-// TODO(): documentation
+/**
+ * Runs a log through all the provided enrichers, folding the value along the way.
+ *
+ * @param entry - Log to send through the enrichers.
+ * @param enrichers - Collection of {@link LogEnricherCallback} to call with the entry.
+ *
+ * @internal
+ *
+ * @returns The final log entry, after being folded across all the enrichers.
+ */
 export function enrich(entry: LogEntry, enrichers: LogEnricherCallback[]): LogEntry {
   return enrichers.reduce<LogEntry>((log, enricher) => enricher(log), entry);
 }
@@ -139,13 +185,15 @@ export function enrich(entry: LogEntry, enrichers: LogEnricherCallback[]): LogEn
  *
  * @param entry - The log entry to convert.
  *
- * @returns Any amount of arguments to output in the entry's place
+ * @returns A tuple of of arguments to output in the entry's place
  *
  * @public
  */
 export type FormatMethodCallback = (entry: LogEntry) => LuaTuple<unknown[]>;
 
-// TODO(): document
+/**
+ * Metadata used in identifying _where_ in the source code a log occurred.
+ */
 export type SourceMetadata = {
   /**
    * The name of the function where this was created.
@@ -173,6 +221,8 @@ export type SourceMetadata = {
 
   /**
    * The line number in the file where this was created.
+   *
+   * This will be the line number in the translated luau code- _not_ the TS line number.
    */
   line_number: number;
 };

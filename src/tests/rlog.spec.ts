@@ -4,8 +4,8 @@ import { HttpService, LogService } from "@rbxts/services";
 import { includes, startsWith } from "@rbxts/string-utils";
 import { t } from "@rbxts/t";
 import { LogData, LogEntry, LogLevel, SourceMetadata } from "../common";
-import { LogContextManager } from "../context";
-import { LogContext, rlog, withLogContext } from "../rlog";
+import { LogContext, LogContextManager, withLogContext } from "../context";
+import { rlog } from "../rlog";
 import { bind, check } from "./matchers";
 
 // TODO(): maybe split into separate files?

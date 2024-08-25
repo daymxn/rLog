@@ -41,14 +41,16 @@ export type SerializationConfig = {
    *
    * @example
    * ```ts
-   * class PlayerClass {
-   *   constructor(public name: string) {};
-   *   public eatFood() {
-   *    // ...
+   * function createPlayer(name: string) {
+   *   return {
+   *     name: name,
+   *     eatFood: () => {
+   *       // ...
+   *     }
    *   }
    * }
    *
-   * const player = new PlayerClass("daymon");
+   * const player = createPlayer("daymon");
    *
    * let logger = new RLog({ serialization: { encodeFunctions: true } });
    *
@@ -68,7 +70,7 @@ export type SerializationConfig = {
   /**
    * Whether to perform deep encoding on tables.
    *
-   * When disabled, tables will not be recursively encoded. Which may cause you
+   * When disabled, tables will not be recursively encoded, which may cause you
    * to miss out on certain data types being properly translated (eg; roblox data types).
    *
    * This will occur even if you have {@link SerializationConfig.encodeRobloxTypes | encodeRobloxTypes}
@@ -136,7 +138,7 @@ export type SerializationConfig = {
    * // > { "data": { "player": { "name": "daymon" } } }
    * ```
    */
-  readonly encodeMethod: string; // TODO(): we should provide a fallback too for custom encoding, might be a stretch for a serialization lib though tbh
+  readonly encodeMethod: string;
 };
 
 /**
@@ -204,24 +206,43 @@ export type RLogConfig = {
    *   return "1";
    * }
    *
-   * const logger = new RLog({ correlationGenerator: generateCorrelationID });
+   * const config = { correlationGenerator: generateCorrelationID };
    *
-   * const child = logger.child();
-   * child.i("Player created", { player: player });
+   * withLogContext(config, (context) => {
+   *   const logger = context.use();
+   *   logger.i("Player created", { player: player });
+   * });
    * // > [INFO]: Player created
    * // > { "correlation_id": "1", "data": { "player": 1338 } }
    * ```
    */
   readonly correlationGenerator?: () => string;
 
-  // children do not inherit
-  // TODO(): documentation
+  /**
+   * Optional string to prefix to all logs.
+   *
+   * Will be followed by a `->` between the log message and the log level.
+   *
+   * **Note:** This setting is ignored when merging configs.
+   *
+   * @example
+   * ```ts
+   * const logger = new RLog({ tag: "Main" });
+   *
+   * logger.i("Hello world!");
+   * // > [INFO]: Main -> Hello world!
+   * ```
+   */
   readonly tag?: string;
 
-  // TODO(): documentation
+  /**
+   * An array of {@link LogSinkCallback} to call whenever sending a message.
+   */
   readonly sinks?: LogSinkCallback[];
 
-  // TODO(): documentation
+  /**
+   * An array of {@link LogEnricherCallback} to call whenever sending a message.
+   */
   readonly enrichers?: LogEnricherCallback[];
 
   /**
@@ -236,15 +257,29 @@ export type RLogConfig = {
    * Allows you to set a high {@link RLogConfig.minLogLevel | minLogLevel} without sacrificing
    * a proper log trace whenever something bad happens.
    *
-   * // TODO(): in the wiki we'll go into what goes on behind the scenes, and the ContextManager
-   *
    * @defaultValue `false`
    *
    * @see {@link RLogConfig.suspendContext | suspendContext}
    *
    * @example
    * ```ts
-   * // TODO()
+   * const config = { minLogLevel: LogLevel.DEBUG, contextBypass: true }
+   *
+   * withLogContext(config, (context) => {
+   *   const logger = context.use();
+   *
+   *   logger.i("Hello world!");
+   *   logger.w("Oh no!");
+   *   logger.i("Goodbye world!");
+   * });
+   * // > [WARNING]: Oh no!
+   * // > { correlation_id: "QQLRSFsPfoTfgD7b" }
+   * //
+   * // > [INFO]: Hello world!
+   * // > { correlation_id: "QQLRSFsPfoTfgD7b" }
+   * //
+   * // > [INFO]: Goodbye world!
+   * // > { correlation_id: "QQLRSFsPfoTfgD7b" }
    * ```
    */
   readonly contextBypass: boolean;
@@ -263,7 +298,23 @@ export type RLogConfig = {
    *
    * @example
    * ```ts
-   * // TODO()
+   * const config = { minLogLevel: LogLevel.DEBUG, suspendContext: true }
+   *
+   * withLogContext(config, (context) => {
+   *   const logger = context.use();
+   *
+   *   logger.i("Hello world!");
+   *   logger.w("Oh no!");
+   *   logger.i("Goodbye world!");
+   * });
+   * // > [INFO]: Hello world!
+   * // > { correlation_id: "QQLRSFsPfoTfgD7b" }
+   * //
+   * // > [WARNING]: Oh no!
+   * // > { correlation_id: "QQLRSFsPfoTfgD7b" }
+   * //
+   * // > [INFO]: Goodbye world!
+   * // > { correlation_id: "QQLRSFsPfoTfgD7b" }
    * ```
    */
   readonly suspendContext: boolean;

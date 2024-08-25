@@ -18,6 +18,8 @@ import { LogEntry } from "../common";
  * CoolFunction();
  * // > [INFO]: CoolFunction -> Hello world!
  * ```
+ *
+ * @public
  */
 export function functionTagEnricher(entry: LogEntry) {
   if (entry.config.tag === undefined) {

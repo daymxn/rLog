@@ -7,6 +7,9 @@
 		"build": "rbxtsc --noInclude",
 		"dev": "rbxtsc -w --type game --rojo test.project.json --noInclude",
 		"watch": "rbxtsc -w --noInclude",
+		"buildApi": "npm run build && npm run api",
+		"api": "api-extractor run --local --verbose",
+		"api-docs": "api-documenter markdown -o ./docs/api",
 		"prepublishOnly": "npm run build"
 	},
 	"keywords": [
@@ -15,7 +18,9 @@
 		"roblox",
 		"roblox-ts",
 		"typescript",
-		"logging"
+		"logging",
+		"context",
+		"server-side"
 	],
 	"author": "Daymon Littrell-Reyes",
 	"repository": "daymxn/rlog",
@@ -26,6 +31,7 @@
 	"types": "out/index.d.ts",
 	"files": [
 		"out",
+		"!**/tests/**",
 		"!**/*.tsbuildinfo",
 		"!**/*.spec.lua",
 		"!**/*.spec.d.ts"
@@ -35,7 +41,6 @@
 	},
 	"devDependencies": {
 		"@rbxts/compiler-types": "^2.3.0-types.1",
-		"@rbxts/jest": "^0.1.0",
 		"@rbxts/types": "^1.0.795",
 		"@typescript-eslint/eslint-plugin": "^7.1.1",
 		"@typescript-eslint/parser": "^7.1.1",
@@ -47,17 +52,14 @@
 		"prettier": "^3.2.5",
 		"prettier-plugin-organize-imports": "^3.2.4",
 		"roblox-ts": "^2.3.0",
-		"typescript": "^5.4.2"
+		"typescript": "^5.4.2",
+		"@rbxts/testez": "https://github.com/daymxn/testez"
 	},
 	"dependencies": {
-		"@rbxts/object-utils": "^1.0.4",
-		"@rbxts/reverse-array": "^1.0.3",
-		"@rbxts/rust-classes": "^0.12.0",
 		"@rbxts/services": "^1.5.4",
-		"@rbxts/set-timeout": "^1.1.2",
-		"@rbxts/stacks-and-queues": "^1.0.5",
-		"@rbxts/string-utils": "^1.0.3",
 		"@rbxts/t": "^3.1.1",
-		"@rbxts/testez": "https://github.com/xeqi/testez#patch-1"
+		"@rbxts/string-utils": "^1.0.3",
+		"@rbxts/object-utils": "^1.0.4",
+		"@rbxts/reverse-array": "^1.0.3"
 	}
 }

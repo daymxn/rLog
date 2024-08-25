@@ -13,6 +13,8 @@ import { LogEntry } from "../common";
  * logger.i("Hello world!");
  * // > [INFO]: ReplicatedStorage.TS.main -> Hello world!
  * ```
+ *
+ * @public
  */
 export function fileTagEnricher(entry: LogEntry) {
   if (entry.config.tag === undefined) {

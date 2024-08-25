@@ -26,8 +26,6 @@ const mustBeALogLevel = t.keyOf(LogLevel);
 const MessageFormat = "%[(%a+)%]:%s(.+)\n(.+)";
 
 // TODO(): Future work -> assertions library? also need a deepcopy that exports better messages
-// eg; deepCopy({x: 5}, {x: "5"}) -> Expected "x" to be 5 (number) but was "5" (string) instead
-
 // TODO(): clean this shit up jesus
 // TODO(): add tests for provided sinks and enrichers whenever I split this up
 export = () => {

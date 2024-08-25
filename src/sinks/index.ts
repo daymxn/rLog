@@ -1,1 +1,6 @@
-export { robloxConsoleSink } from "./roblox-console-sink";
+export {
+  FormatMethodCallback,
+  OutputMethodCallback,
+  RobloxConsoleSinkConfig,
+  robloxConsoleSink,
+} from "./roblox-console-sink";

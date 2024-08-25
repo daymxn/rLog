@@ -94,6 +94,8 @@ export type RobloxConsoleSinkConfig = {
  *   ],
  * });
  * ```
+ *
+ * @public
  */
 export function robloxConsoleSink({ formatMethod, outputMethod, minLogLevel, disable }: RobloxConsoleSinkConfig = {}) {
   return (entry: LogEntry) => {

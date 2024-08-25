@@ -65,16 +65,16 @@ The biggest problem with this is that it breaks across asynchronous boundaries.
 
 ```ts
 async function DoOtherThing() {
-  return coroutine.running();
+	return coroutine.running();
 }
 
 async function DoThing() {
-  const thread = coroutine.running();
-  const otherThread = await DoOtherThing();
+	const thread = coroutine.running();
+	const otherThread = await DoOtherThing();
 
-  // thread !== otherThread
-  // error-next-line
-  assert(thread === otherThread);
+	// thread !== otherThread
+	// error-next-line
+	assert(thread === otherThread);
 }
 ```
 
@@ -121,12 +121,12 @@ withLogContext(() => {
 
 ```ts title="After"
 function SomeFunction(context: LogContext) {
-  const logger = context.use();
-  // ...
+	const logger = context.use();
+	// ...
 }
 
 withLogContext((context) => {
-  SomeFunction(context);
+	SomeFunction(context);
 });
 ```
 
@@ -134,30 +134,30 @@ Or maybe even a transformer that looks at the AST and figures out where context 
 
 ```ts title="Before"
 function SomeFunctionThatLogs() {
-  rLogger.info("Hello world!");
+	rLogger.info("Hello world!");
 }
 
 function SomeFunction() {
-  SomeFunctionThatLogs();
+	SomeFunctionThatLogs();
 }
 
 withLogContext(() => {
-  SomeFunction();
+	SomeFunction();
 });
 ```
 
 ```ts title="After"
 function SomeFunctionThatLogs(context: LogContext) {
-  const logger = context.use();
-  logger.info("Hello world!");
+	const logger = context.use();
+	logger.info("Hello world!");
 }
 
 function SomeFunction(context: LogContext) {
-  SomeFunctionThatLogs(context);
+	SomeFunctionThatLogs(context);
 }
 
 withLogContext((context) => {
-  SomeFunction(context);
+	SomeFunction(context);
 });
 ```
 
@@ -180,32 +180,32 @@ However, there are several benefits to creating individual instances:
 
 1. You have more fine-grained control over configuration.
 
-   - With individual instances, you can setup configuration settings that only apply to _some_ instances but not others.
-     This configuration could range from something as simple as different tags- to something more complex like custom
-     class encoding.
+    - With individual instances, you can setup configuration settings that only apply to _some_ instances but not
+      others. This configuration could range from something as simple as different tags- to something more complex like
+      custom class encoding.
 
 2. You're able to take advantage of correlation ids.
 
-   - Correlation IDs create a link between logs, allowing you to differentiate between outputs of the same log- but in
-     different invocations. In high traffic environments, they're a life saver when it comes time to debug.
+    - Correlation IDs create a link between logs, allowing you to differentiate between outputs of the same log- but in
+      different invocations. In high traffic environments, they're a life saver when it comes time to debug.
 
 3. It forces you into a more functional approach.
 
-   - Individual instances forces you to design your system in a more functional manner, in order to properly take
-     advantage of them. Whether this is an advantage or not depends on your coding style. For me personally, I take
-     towards a more functional style- so I enjoy having systems that enforce that.
+    - Individual instances forces you to design your system in a more functional manner, in order to properly take
+      advantage of them. Whether this is an advantage or not depends on your coding style. For me personally, I take
+      towards a more functional style- so I enjoy having systems that enforce that.
 
 4. It helps avoid configuration coupling.
 
-   - Since you're able to configure each instance in isolation, it allows you to make decisions about your logging
-     configurations on a case-by-case basis; avoiding the common pitfall of trying to wrok around a global configuration
-     in edge case sitations.
+    - Since you're able to configure each instance in isolation, it allows you to make decisions about your logging
+      configurations on a case-by-case basis; avoiding the common pitfall of trying to wrok around a global
+      configuration in edge case sitations.
 
 5. You're more aware of where and how you're logging.
-   - One of the most important aspects is that it conditions you to be more aware of _when_ and _how_ you're logging. Or
-     more specifically, it conditions you to be more aware of when you're _not_ logging. Since you're creating instances
-     on a case-by-case basis, whenever you're missing one for a new class or module- it becomes a lot more apparent.
-     This can help you avoid missing data when it comes time to debug.
+    - One of the most important aspects is that it conditions you to be more aware of _when_ and _how_ you're logging.
+      Or more specifically, it conditions you to be more aware of when you're _not_ logging. Since you're creating
+      instances on a case-by-case basis, whenever you're missing one for a new class or module- it becomes a lot more
+      apparent. This can help you avoid missing data when it comes time to debug.
 
 ### Are there plans to support message templates?
 
@@ -223,15 +223,15 @@ Namely, message templates can cause two common problems:
 
 1. Messages become overtly verbose.
 
-   - When data is mixed in with your log messages, it becomes more difficult to understand _what_ a log is saying at a
-     glance. Especially when your data is niche or extensively large. When working with a large collection of logs, this
-     can significantly increase cognitive load when debugging- and just generally causes more problems than it helps
-     fix.
+    - When data is mixed in with your log messages, it becomes more difficult to understand _what_ a log is saying at a
+      glance. Especially when your data is niche or extensively large. When working with a large collection of logs,
+      this can significantly increase cognitive load when debugging- and just generally causes more problems than it
+      helps fix.
 
 2. It becomes significantly harder to `grep` logs.
-   - Because your messages are dynamic, it becomes much harder to filter logs according to simple queries. You have to
-     come up with more complex patterns; ones that may or may not cover all the edge-cases. Seeing as how logs are
-     typically the one thing you _don't_ want to deal with edge-cases on, this can become a huge issue.
+    - Because your messages are dynamic, it becomes much harder to filter logs according to simple queries. You have to
+      come up with more complex patterns; ones that may or may not cover all the edge-cases. Seeing as how logs are
+      typically the one thing you _don't_ want to deal with edge-cases on, this can become a huge issue.
 
 Although, both of these problems can be fixed by enforcing proper logging practices. For example, only using templates
 with simple types, or ensuring you prefix all your log messages with a simple string before going in depth.
@@ -247,10 +247,10 @@ framework has to cover.
 Absolutely! If you have a platform or use-case that you feel is common enough, or practical enough, that a provided sink
 should be made for it- I'd love to add it.
 
-[Open an issue](https://github.com/daymxn/rLog/issues) on the GitHub requesting the sink, and explain why you think it
+[Open an issue](https://github.com/daymxn/rlog/issues) on the GitHub requesting the sink, and explain why you think it
 should be added. When I get the free-time, I'll work on an implementation and add it to the list of provided loggers.
 
-Alternatively, you can [create your own PR](https://github.com/daymxn/rLog/pulls) adding the sink, and I can review that
+Alternatively, you can [create your own PR](https://github.com/daymxn/rlog/pulls) adding the sink, and I can review that
 as well. I won't always have the time to invest in implementing new sinks, so if you can add it yourself- it's much
 easier for me to give a quick code-review than it is to research and implement the sink from scratch.
 
@@ -289,5 +289,5 @@ existing knowledge and bias.
 
 So I'm always _more_ than happy to take feedback; especially regarding documentation or design improvements.
 
-If you have such feedback, feel free to [open an issue](https://github.com/daymxn/rLog/issues) on the GitHub talking
+If you have such feedback, feel free to [open an issue](https://github.com/daymxn/rlog/issues) on the GitHub talking
 about it:)

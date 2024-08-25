@@ -5,6 +5,8 @@ import { LogContext } from "./log-context";
  * A callback that take in a {@link LogContext} and optionally returns a value.
  *
  * @see {@link withLogContext}, {@link withLogContextAsync}
+ *
+ * @public
  */
 export type ContextCallback<R = void> = (context: LogContext) => R;
 

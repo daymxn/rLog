@@ -38,7 +38,7 @@ function HomePage() {
         <Grid item xs={12} md={"auto"}>
           <Button
             target="_blank"
-            href={"https://github.com/daymxn/rLog"}
+            href={"https://github.com/daymxn/rlog"}
             size="large"
             color="inherit"
             variant="text"

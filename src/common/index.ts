@@ -193,6 +193,8 @@ export type FormatMethodCallback = (entry: LogEntry) => LuaTuple<unknown[]>;
 
 /**
  * Metadata used in identifying _where_ in the source code a log occurred.
+ *
+ * @public
  */
 export type SourceMetadata = {
   /**
@@ -207,10 +209,10 @@ export type SourceMetadata = {
    *
    * May be undefined if we can't find one (such as reaching max depth, or a stack full of anonymous functions)
    *
-   * Can be used in place of {@link SourceContext.function_name | function_name} for getting an idea of what's
+   * Can be used in place of {@link SourceMetadata.function_name | function_name} for getting an idea of what's
    * going on, even in anonymous functions.
    *
-   * If {@link SourceContext.function_name | function_name} is present, this value will be the same.
+   * If {@link SourceMetadata.function_name | function_name} is present, this value will be the same.
    */
   nearest_function_name?: string;
 

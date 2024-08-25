@@ -6,8 +6,9 @@
  *
  * @packageDocumentation
  */
-export { LogData, LogEnricherCallback, LogEntry, LogLevel, LogSinkCallback } from "./common";
+export { LogData, LogEnricherCallback, LogEntry, LogLevel, LogSinkCallback, SourceMetadata } from "./common";
 export { PartialRLogConfig, RLogConfig, SerializationConfig } from "./configuration";
+export { ContextCallback, LogContext, withLogContext, withLogContextAsync } from "./context";
 export { fileTagEnricher, functionTagEnricher, sourceMetadataEnricher } from "./enrichers";
 export { RLog, RLogConstructorParameters, rLog, rLogger, rlog } from "./rlog";
-export { robloxConsoleSink } from "./sinks";
+export { FormatMethodCallback, OutputMethodCallback, RobloxConsoleSinkConfig, robloxConsoleSink } from "./sinks";

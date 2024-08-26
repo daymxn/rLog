@@ -61,14 +61,14 @@
 		"prettier": "^3.2.5",
 		"prettier-plugin-organize-imports": "^3.2.4",
 		"roblox-ts": "^2.3.0",
-		"typescript": "^5.4.2"
+		"typescript": "^5.4.2",
+		"@rbxts/testez": "https://github.com/daymxn/testez#patch-1"
 	},
 	"dependencies": {
 		"@rbxts/object-utils": "^1.0.4",
 		"@rbxts/reverse-array": "^1.0.3",
 		"@rbxts/services": "^1.5.4",
 		"@rbxts/string-utils": "^1.0.3",
-		"@rbxts/t": "^3.1.1",
-		"@rbxts/testez": "https://github.com/daymxn/testez#master"
+		"@rbxts/t": "^3.1.1"
 	}
 }

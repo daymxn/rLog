@@ -1,4 +1,10 @@
-[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt; [error](./rlog.rlog.error.md)
+---
+id: rlog.rlog.error
+title: RLog.error() method
+hide_title: true
+---
+
+[@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt; [error](./rlog.rlog.error.md)
 
 ## RLog.error() method
 
@@ -16,39 +22,48 @@ error(message: string, data?: LogData): void;
 
 Parameter
 
+
 </th><th>
 
 Type
 
+
 </th><th>
 
 Description
+
 
 </th></tr></thead>
 <tbody><tr><td>
 
 message
 
+
 </td><td>
 
 string
 
+
 </td><td>
 
 The message to log.
+
 
 </td></tr>
 <tr><td>
 
 data
 
+
 </td><td>
 
 [LogData](./rlog.logdata.md)
 
+
 </td><td>
 
-_(Optional)_ Optional data to log.
+_(Optional)_ Data to log.
+
 
 </td></tr>
 </tbody></table>
@@ -57,6 +72,7 @@ _(Optional)_ Optional data to log.
 void
 
 ## Example
+
 
 ```log
 [ERROR]: Hello World!

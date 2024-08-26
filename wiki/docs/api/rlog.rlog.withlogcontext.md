@@ -1,5 +1,10 @@
-[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt;
-[withLogContext](./rlog.rlog.withlogcontext.md)
+---
+id: rlog.rlog.withlogcontext
+title: RLog.withLogContext() method
+hide_title: true
+---
+
+[@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt; [withLogContext](./rlog.rlog.withlogcontext.md)
 
 ## RLog.withLogContext() method
 
@@ -17,26 +22,32 @@ withLogContext(context: LogContext): RLog;
 
 Parameter
 
+
 </th><th>
 
 Type
 
+
 </th><th>
 
 Description
+
 
 </th></tr></thead>
 <tbody><tr><td>
 
 context
 
+
 </td><td>
 
 [LogContext](./rlog.logcontext.md)
 
+
 </td><td>
 
 The new context to use.
+
 
 </td></tr>
 </tbody></table>

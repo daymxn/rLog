@@ -53,6 +53,32 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./docs/sidebars.ts",
+          // async sidebarItemsGenerator({ defaultSidebarItemsGenerator, ...args }) {
+          //   const sidebarItems = await defaultSidebarItemsGenerator(args);
+
+          //   function attachCategoryLink(items) {
+          //     items.forEach((item) => {
+          //       if (item.type === "category" && item.items) {
+          //         const matchingDocIndex = items.findIndex(
+          //           (subItem) => subItem.type === "doc" && subItem.id.endsWith(`${item.label}`)
+          //         );
+          //         if (matchingDocIndex !== -1) {
+          //           const matchingDoc = items[matchingDocIndex];
+          //           console.log(matchingDoc);
+          //           item.link = {
+          //             type: "doc",
+          //             id: matchingDoc.id,
+          //           };
+          //           items.splice(matchingDocIndex, 1);
+          //         }
+          //         attachCategoryLink(item.items);
+          //       }
+          //     });
+          //   }
+
+          //   attachCategoryLink(sidebarItems);
+          //   return sidebarItems;
+          // },
         },
         theme: {
           customCss: "./src/css/custom.css",

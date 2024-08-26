@@ -1,17 +1,99 @@
-[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [RLogConstructorParameters](./rlog.rlogconstructorparameters.md)
+---
+id: rlog.rlogconstructorparameters
+title: RLogConstructorParameters interface
+hide_title: true
+---
 
-## RLogConstructorParameters type
+[@rbxts/rlog](./rlog.md) &gt; [RLogConstructorParameters](./rlog.rlogconstructorparameters.md)
+
+## RLogConstructorParameters interface
 
 Table version of the constructor parameters for [RLog](./rlog.rlog.md)<!-- -->.
 
 **Signature:**
 
 ```typescript
-export type RLogConstructorParameters = {
-  config?: PartialRLogConfig;
-  context?: LogContext;
-  inheritDefault?: boolean;
-};
+export interface RLogConstructorParameters 
 ```
 
-**References:** [PartialRLogConfig](./rlog.partialrlogconfig.md)<!-- -->, [LogContext](./rlog.logcontext.md)
+## Properties
+
+<table><thead><tr><th>
+
+Property
+
+
+</th><th>
+
+Modifiers
+
+
+</th><th>
+
+Type
+
+
+</th><th>
+
+Description
+
+
+</th></tr></thead>
+<tbody><tr><td>
+
+[config?](./rlog.rlogconstructorparameters.config.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[PartialRLogConfig](./rlog.partialrlogconfig.md)
+
+
+</td><td>
+
+_(Optional)_
+
+
+</td></tr>
+<tr><td>
+
+[context?](./rlog.rlogconstructorparameters.context.md)
+
+
+</td><td>
+
+
+</td><td>
+
+[LogContext](./rlog.logcontext.md)
+
+
+</td><td>
+
+_(Optional)_
+
+
+</td></tr>
+<tr><td>
+
+[inheritDefault?](./rlog.rlogconstructorparameters.inheritdefault.md)
+
+
+</td><td>
+
+
+</td><td>
+
+boolean
+
+
+</td><td>
+
+_(Optional)_
+
+
+</td></tr>
+</tbody></table>

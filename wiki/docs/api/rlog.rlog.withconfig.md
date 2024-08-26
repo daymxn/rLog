@@ -1,5 +1,10 @@
-[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt;
-[withConfig](./rlog.rlog.withconfig.md)
+---
+id: rlog.rlog.withconfig
+title: RLog.withConfig() method
+hide_title: true
+---
+
+[@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt; [withConfig](./rlog.rlog.withconfig.md)
 
 ## RLog.withConfig() method
 
@@ -17,26 +22,32 @@ withConfig(config: PartialRLogConfig): RLog;
 
 Parameter
 
+
 </th><th>
 
 Type
 
+
 </th><th>
 
 Description
+
 
 </th></tr></thead>
 <tbody><tr><td>
 
 config
 
+
 </td><td>
 
 [PartialRLogConfig](./rlog.partialrlogconfig.md)
 
+
 </td><td>
 
 Configuration settings to apply to the new instance.
+
 
 </td></tr>
 </tbody></table>
@@ -47,6 +58,7 @@ Configuration settings to apply to the new instance.
 The new [RLog](./rlog.rlog.md) instance
 
 ## Example
+
 
 ```ts
 let logger = new RLog({ minLogLevel: LogLevel.DEBUG });

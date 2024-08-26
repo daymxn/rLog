@@ -28,7 +28,7 @@ export type OutputMethodCallback = (entry: LogEntry, messages: LuaTuple<unknown[
  *
  * @public
  */
-export type RobloxConsoleSinkConfig = {
+export interface RobloxConsoleSinkConfig {
   /**
    * Optional method to convert log entries to output.
    *
@@ -75,14 +75,16 @@ export type RobloxConsoleSinkConfig = {
    * the roblox console.
    */
   readonly disable?: boolean;
-};
+}
 
 /**
  * The default sink for sending messages to the roblox console.
  *
+ * @remarks
+ *
  * By default, this is already applied at the root level through the default instance.
  *
- * @param param0 - Optional {@link RobloxConsoleSinkConfig} options for this sink.
+ * @param params - {@link RobloxConsoleSinkConfig} options for this sink.
  *
  * @returns A sink that should be added to a config.
  *
@@ -97,7 +99,9 @@ export type RobloxConsoleSinkConfig = {
  *
  * @public
  */
-export function robloxConsoleSink({ formatMethod, outputMethod, minLogLevel, disable }: RobloxConsoleSinkConfig = {}) {
+export function robloxConsoleSink(params: RobloxConsoleSinkConfig = {}) {
+  const { formatMethod, outputMethod, minLogLevel, disable } = params;
+
   return (entry: LogEntry) => {
     if (disable) return;
     if (minLogLevel !== undefined && entry.level < minLogLevel) return;

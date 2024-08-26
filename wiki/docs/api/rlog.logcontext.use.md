@@ -1,12 +1,14 @@
-[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [LogContext](./rlog.logcontext.md) &gt;
-[use](./rlog.logcontext.use.md)
+---
+id: rlog.logcontext.use
+title: LogContext.use() method
+hide_title: true
+---
+
+[@rbxts/rlog](./rlog.md) &gt; [LogContext](./rlog.logcontext.md) &gt; [use](./rlog.logcontext.use.md)
 
 ## LogContext.use() method
 
 Creates a new [RLog](./rlog.rlog.md) instance that inherits this context.
-
-All [RLog](./rlog.rlog.md) instances that use the same [LogContext](./rlog.logcontext.md) will have the same
-`correlation_id` attached to their messages.
 
 **Signature:**
 
@@ -20,26 +22,32 @@ use(config?: PartialRLogConfig): RLog;
 
 Parameter
 
+
 </th><th>
 
 Type
 
+
 </th><th>
 
 Description
+
 
 </th></tr></thead>
 <tbody><tr><td>
 
 config
 
+
 </td><td>
 
 [PartialRLogConfig](./rlog.partialrlogconfig.md)
 
+
 </td><td>
 
-_(Optional)_ Optional config to merge with this context and the new instance.
+_(Optional)_ Config to merge with this context and the new instance.
+
 
 </td></tr>
 </tbody></table>
@@ -53,7 +61,12 @@ A new [RLog](./rlog.rlog.md) instance.
 
 If the context is dead (ie; if [stop](./rlog.logcontext.stop.md) was called already)
 
+## Remarks
+
+All [RLog](./rlog.rlog.md) instances that use the same [LogContext](./rlog.logcontext.md) will have the same `correlation_id` attached to their messages.
+
 ## Example
+
 
 ```ts
 const context = LogContext.start();

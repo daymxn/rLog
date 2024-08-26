@@ -1,14 +1,16 @@
-[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt;
-[withMinLogLevel](./rlog.rlog.withminloglevel.md)
+---
+id: rlog.rlog.withminloglevel
+title: RLog.withMinLogLevel() method
+hide_title: true
+---
+
+[@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt; [withMinLogLevel](./rlog.rlog.withminloglevel.md)
 
 ## RLog.withMinLogLevel() method
 
-Returns a new [RLog](./rlog.rlog.md) with the set to the provided level.
+Returns a new [RLog](./rlog.rlog.md) with the [minLogLevel](./rlog.rlogconfig.minloglevel.md) set to the provided level.
 
 Messages below the minimum level will be ignored.
-
-You can also set this in the [config](./rlog.rlogconfig.md)<!-- -->, this method is provided purely as a means for
-easier changing.
 
 **Signature:**
 
@@ -22,26 +24,32 @@ withMinLogLevel(minLevel: LogLevel): RLog;
 
 Parameter
 
+
 </th><th>
 
 Type
 
+
 </th><th>
 
 Description
+
 
 </th></tr></thead>
 <tbody><tr><td>
 
 minLevel
 
+
 </td><td>
 
 [LogLevel](./rlog.loglevel.md)
 
+
 </td><td>
 
 The [LogLevel](./rlog.loglevel.md) to allow logs for.
+
 
 </td></tr>
 </tbody></table>
@@ -51,7 +59,12 @@ The [LogLevel](./rlog.loglevel.md) to allow logs for.
 
 The new [RLog](./rlog.rlog.md) instance
 
+## Remarks
+
+You can also set this in the [config](./rlog.rlogconfig.md)<!-- -->, this method is provided purely as a means for easier changing.
+
 ## Example
+
 
 ```ts
 let logger = new RLog();

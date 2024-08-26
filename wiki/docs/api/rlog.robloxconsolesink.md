@@ -1,20 +1,19 @@
-[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [robloxConsoleSink](./rlog.robloxconsolesink.md)
+---
+id: rlog.robloxconsolesink
+title: robloxConsoleSink() function
+hide_title: true
+---
+
+[@rbxts/rlog](./rlog.md) &gt; [robloxConsoleSink](./rlog.robloxconsolesink.md)
 
 ## robloxConsoleSink() function
 
 The default sink for sending messages to the roblox console.
 
-By default, this is already applied at the root level through the default instance.
-
 **Signature:**
 
 ```typescript
-export declare function robloxConsoleSink({
-  formatMethod,
-  outputMethod,
-  minLogLevel,
-  disable,
-}?: RobloxConsoleSinkConfig): (entry: LogEntry) => void;
+export declare function robloxConsoleSink(params?: RobloxConsoleSinkConfig): (entry: LogEntry) => void;
 ```
 
 ## Parameters
@@ -23,26 +22,32 @@ export declare function robloxConsoleSink({
 
 Parameter
 
+
 </th><th>
 
 Type
+
 
 </th><th>
 
 Description
 
+
 </th></tr></thead>
 <tbody><tr><td>
 
-{ formatMethod, outputMethod, minLogLevel, disable }
+params
+
 
 </td><td>
 
 [RobloxConsoleSinkConfig](./rlog.robloxconsolesinkconfig.md)
 
+
 </td><td>
 
-_(Optional)_
+_(Optional)_ [RobloxConsoleSinkConfig](./rlog.robloxconsolesinkconfig.md) options for this sink.
+
 
 </td></tr>
 </tbody></table>
@@ -52,10 +57,17 @@ _(Optional)_
 
 A sink that should be added to a config.
 
+## Remarks
+
+By default, this is already applied at the root level through the default instance.
+
 ## Example
+
 
 ```ts
 const logger = new rLog({
-  sinks: [robloxConsoleSink({ formatMethod: myCustomMethod })],
+  sinks: [
+     robloxConsoleSink({ formatMethod: myCustomMethod }),
+  ],
 });
 ```

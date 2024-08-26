@@ -12,11 +12,11 @@ const FILE_NAME = debug.info(1, "s")[0];
  *
  * @public
  */
-export type RLogConstructorParameters = {
+export interface RLogConstructorParameters {
   config?: PartialRLogConfig;
   context?: LogContext;
   inheritDefault?: boolean;
-};
+}
 
 function isConstructorParameters(value: object): value is RLogConstructorParameters {
   return "config" in value || "context" in value || "inheritDefault" in value;
@@ -46,7 +46,9 @@ function extractSourceMetadata(): SourceMetadata {
 /**
  * Class for Server-Side Roblox Logging.
  *
- * You can also use {@link rlog} or {@link rLog}- for style purposes.
+ * @remarks
+ *
+ * You can also use `rlog` or `rLog`- for style purposes.
  *
  * @public
  */
@@ -59,6 +61,8 @@ export class RLog {
 
   /**
    * The {@link LogContext} assigned to this instance, if any.
+   *
+   * @remarks
    *
    * Log context provides a way to carry Correlation IDs through-out
    * logs in an individual flow.
@@ -73,8 +77,14 @@ export class RLog {
   /**
    * The default or "global" {@link RLog} instance.
    *
+   * @remarks
+   *
    * All loggers inherit from this, so it's a convenient way for
    * attaching global sinks, enrichers, or configuration.
+   *
+   * You can also use {@link rLogger} for style purposes.
+   *
+   * @see {@link RLog.UpdateDefaultConfig | UpdateDefaultConfig}
    */
   public static readonly default = new RLog({ sinks: [robloxConsoleSink()] }, undefined);
 
@@ -92,7 +102,7 @@ export class RLog {
    *
    * Uses the provided table in place of the argument names.
    */
-  public constructor({ config, context, inheritDefault }: RLogConstructorParameters);
+  public constructor(params: RLogConstructorParameters);
 
   public constructor(
     config: PartialRLogConfig | RLogConstructorParameters = {},
@@ -113,6 +123,8 @@ export class RLog {
 
   /**
    * Overwrites the config for the {@link RLog.default | default} instance.
+   *
+   * @remarks
    *
    * You will rarely need to use this, and generally will want to be using
    * {@link RLog.UpdateDefaultConfig | UpdateDefaultConfig} insted.
@@ -154,6 +166,8 @@ export class RLog {
   /**
    * Resets the config for the {@link RLog.default | default} instance to the original settings.
    *
+   * @remarks
+   *
    * Essentially would be the same as if you never touched the default config.
    *
    * @see {@link RLog.UpdateDefaultConfig | UpdateDefaultConfig}, {@link RLog.ResetDefaultConfig | SetDefaultConfig}
@@ -165,7 +179,9 @@ export class RLog {
   /**
    * Force any pending messages to be sent through the sinks, regardless of the `minLogLevel`.
    *
-   * Inteded to be called before the game closes, to ensure there are no missing logs.
+   * @remarks
+   *
+   * Intended to be called before the game closes, to ensure there are no missing logs.
    *
    * @see {@link LogContext}
    *
@@ -183,6 +199,8 @@ export class RLog {
   /**
    * Creates a new {@link RLog} instance with all the same settings and properties.
    *
+   * @remarks
+   *
    * Everything is deep copied, so any mutations to the original will safely not replicate.
    *
    * @returns A duplicate of this {@link RLog} instance.
@@ -195,18 +213,22 @@ export class RLog {
    * The provided {@link RLogConstructorParameters | parameters} will be merged with
    * the existing parameters on this instance.
    *
+   * @remarks
+   *
    * Everything is deep copied, so any mutations to the original will safely not replicate.
    *
    * @returns A duplicate of this {@link RLog} instance.
    */
-  public clone({ config, context }: RLogConstructorParameters): RLog;
+  public clone(params: RLogConstructorParameters): RLog;
 
   /**
    * Creates a new {@link RLog} instance with all the same settings and properties.
    *
+   * @remarks
+   *
    * Everything is deep copied, so any mutations to the original will safely not replicate.
    *
-   * @param params - Optionally provide new arguments to merge with the new instance.
+   * @param params - New arguments to merge with the new instance.
    *
    * @returns A duplicate of this {@link RLog} instance.
    */
@@ -221,7 +243,7 @@ export class RLog {
    *
    * @param level - The severity of the log.
    * @param message - The core message of the log.
-   * @param data - Optional data to log. Will be encoded according to this logger's {@link RLogConfig | config}.
+   * @param data - Data to log. Will be encoded according to this logger's {@link RLogConfig | config}.
    *
    * @see {@link RLog.verbose | verbose}, {@link RLog.debug | debug}, {@link RLog.info | info}, {@link RLog.warning | warning}, {@link RLog.error | error}
    */
@@ -268,7 +290,7 @@ export class RLog {
    * Logs a verbose message.
    *
    * @param message - The message to log.
-   * @param data - Optional data to log.
+   * @param data - Data to log.
    *
    * @see {@link RLog.v | v}
    *
@@ -286,7 +308,7 @@ export class RLog {
    * Shorthand version of {@link RLog.verbose | verbose}.
    *
    * @param message - The message to log.
-   * @param data - Optional data to log.
+   * @param data - Data to log.
    */
   public v(message: string, data: LogData = {}) {
     this.verbose(message, data);
@@ -296,7 +318,7 @@ export class RLog {
    * Logs a debug message.
    *
    * @param message - The message to log.
-   * @param data - Optional data to log.
+   * @param data - Data to log.
    *
    * @see {@link RLog.d | d}
    *
@@ -314,7 +336,7 @@ export class RLog {
    * Shorthand version of {@link RLog.debug | debug}.
    *
    * @param message - The message to log.
-   * @param data - Optional data to log.
+   * @param data - Data to log.
    */
   public d(message: string, data: LogData = {}) {
     this.debug(message, data);
@@ -324,7 +346,7 @@ export class RLog {
    * Logs an informational message.
    *
    * @param message - The message to log.
-   * @param data - Optional data to log.
+   * @param data - Data to log.
    *
    * @see {@link RLog.i | i}
    *
@@ -342,7 +364,7 @@ export class RLog {
    * Shorthand version of {@link RLog.info | info}.
    *
    * @param message - The message to log.
-   * @param data - Optional data to log.
+   * @param data - Data to log.
    */
   public i(message: string, data: LogData = {}) {
     this.info(message, data);
@@ -352,7 +374,7 @@ export class RLog {
    * Logs a warning message.
    *
    * @param message - The message to log.
-   * @param data - Optional data to log.
+   * @param data - Data to log.
    *
    * @see {@link RLog.w | w}, {@link RLog.warn | warn}
    *
@@ -370,7 +392,7 @@ export class RLog {
    * Shorthand version of {@link RLog.warning | warning}.
    *
    * @param message - The message to log.
-   * @param data - Optional data to log.
+   * @param data - Data to log.
    */
   public warn(message: string, data: LogData = {}) {
     this.warning(message, data);
@@ -380,7 +402,7 @@ export class RLog {
    * Shorthand version of {@link RLog.warning | warning}.
    *
    * @param message - The message to log.
-   * @param data - Optional data to log.
+   * @param data - Data to log.
    */
   public w(message: string, data: LogData = {}) {
     this.warning(message, data);
@@ -390,7 +412,7 @@ export class RLog {
    * Logs an error message.
    *
    * @param message - The message to log.
-   * @param data - Optional data to log.
+   * @param data - Data to log.
    *
    * @see {@link RLog.e | e}
    *
@@ -408,7 +430,7 @@ export class RLog {
    * Shorthand version of {@link RLog.error | error}.
    *
    * @param message - The message to log.
-   * @param data - Optional data to log.
+   * @param data - Data to log.
    */
   public e(message: string, data: LogData = {}) {
     this.error(message, data);
@@ -451,6 +473,8 @@ export class RLog {
    *
    * Messages below the minimum level will be ignored.
    * 
+   * @remarks
+   * 
    * You can also set this in the {@link RLogConfig | config}, this method is provided
    * purely as a means for easier changing.
    *
@@ -481,6 +505,8 @@ export class RLog {
   /**
    * Returns a new {@link RLog} with the {@link RLogConfig.tag | tag} set
    * to the provided string.
+   *
+   * @remarks
    *
    * Tags are appended to log messages when present, for easier filtering.
    *
@@ -521,19 +547,7 @@ export class RLog {
   }
 }
 
-/**
- * Mapping to {@link RLog}
- *
- * @public
- */
-export const rlog = RLog;
-
-/**
- * Mapping to {@link RLog}
- *
- * @public
- */
-export const rLog = RLog;
+export { RLog as rlog, RLog as rLog };
 
 /**
  * Mapping to {@link RLog.default} for easier default usage.

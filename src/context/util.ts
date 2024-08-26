@@ -6,6 +6,7 @@ import { LogContext } from "./log-context";
  *
  * @see {@link withLogContext}, {@link withLogContextAsync}
  *
+ * @typeParam R - The type of value returned by the function, or void.
  * @public
  */
 export type ContextCallback<R = void> = (context: LogContext) => R;
@@ -18,6 +19,8 @@ function isContextCallback(value: unknown): value is ContextCallback {
  * Wraps around a callback, automatically creating and managing the lifecycle
  * for a {@link LogContext}.
  *
+ * @remarks
+ *
  * The callback will be invoked immediately, and within the same thread.
  *
  * Any errors thrown within the callback will be re-thrown after calling
@@ -25,7 +28,7 @@ function isContextCallback(value: unknown): value is ContextCallback {
  *
  * Any value returned from the callback will also be propagated appropriately.
  *
- * @param config - Optional config to create the context with.
+ * @param config - Config to create the context with.
  * @param callback - {@link ContextCallback} scope to run and provide the context for.
  *
  * @see {@link withLogContextAsync}
@@ -40,6 +43,7 @@ function isContextCallback(value: unknown): value is ContextCallback {
  * });
  * ```
  *
+ * @typeParam R - The type of value returned by the function, or void.
  * @public
  */
 export function withLogContext<R = void>(config: PartialRLogConfig, callback: ContextCallback<R>): R;
@@ -47,6 +51,8 @@ export function withLogContext<R = void>(config: PartialRLogConfig, callback: Co
 /**
  * Wraps around a callback, automatically creating and managing the lifecycle
  * for a {@link LogContext}.
+ *
+ * @remarks
  *
  * The callback will be invoked immediately, and within the same thread.
  *
@@ -69,6 +75,7 @@ export function withLogContext<R = void>(config: PartialRLogConfig, callback: Co
  * });
  * ```
  *
+ * @typeParam R - The type of value returned by the function, or void.
  * @public
  */
 export function withLogContext<R = void>(callback: ContextCallback<R>): R;
@@ -98,12 +105,14 @@ export function withLogContext<R = void>(arg1: PartialRLogConfig | ContextCallba
  * Wraps around an async callback, automatically creating and managing the lifecycle
  * for a {@link LogContext}.
  *
+ * @remarks
+ *
  * Will call {@link LogContext.stop | stop} on the created context when the executed
  * scope is finished- regardless if the promise was cancelled or threw an error.
  *
  * Any value returned from the callback will also be propagated appropriately.
  *
- * @param config - Optional config to create the context with.
+ * @param config - Config to create the context with.
  * @param callback - {@link ContextCallback} scope to run and provide the context for.
  *
  * @see {@link withLogContext}
@@ -118,6 +127,7 @@ export function withLogContext<R = void>(arg1: PartialRLogConfig | ContextCallba
  * );
  * ```
  *
+ * @typeParam R - The type of value returned by the function, or void.
  * @public
  */
 export async function withLogContextAsync<R = void>(
@@ -128,6 +138,8 @@ export async function withLogContextAsync<R = void>(
 /**
  * Wraps around an async callback, automatically creating and managing the lifecycle
  * for a {@link LogContext}.
+ *
+ * @remarks
  *
  * Will call {@link LogContext.stop | stop} on the created context when the executed
  * scope is finished- regardless if the promise was cancelled or threw an error.
@@ -148,6 +160,7 @@ export async function withLogContextAsync<R = void>(
  * );
  * ```
  *
+ * @typeParam R - The type of value returned by the function, or void.
  * @public
  */
 export async function withLogContextAsync<R = void>(callback: ContextCallback<Promise<R>>): Promise<R>;

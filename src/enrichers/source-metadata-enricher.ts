@@ -3,6 +3,8 @@ import { LogEntry } from "../common";
 /**
  * Attaches {@link LogEntry.source_metadata | source_metadata } to the output of a log entry.
  *
+ * @remarks
+ *
  * The metadata is attached under the `source_metadata` key in {@link LogEntry.encoded_data | encoded_data}.
  *
  * If a value is `undefined`, it will not be populated.

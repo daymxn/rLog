@@ -12,9 +12,11 @@ const isStudio = RunService.IsStudio();
  *
  * @public
  */
-export type SerializationConfig = {
+export interface SerializationConfig {
   /**
    * Whether to encode Roblox-specific types.
+   *
+   * @remarks
    *
    * When this setting is disabled, all roblox-specific types will
    * instead just be represented as `"<TYPE_NAME>"`.
@@ -31,7 +33,9 @@ export type SerializationConfig = {
   readonly encodeRobloxTypes: boolean;
 
   /**
-   * Whether to encode Roblox-specific types.
+   * Whether to encode function types.
+   *
+   * @remarks
    *
    * When this setting is disabled, all function types will
    * be represented as `"<Function>"`. Otherwise, they'll be excluded
@@ -70,6 +74,8 @@ export type SerializationConfig = {
   /**
    * Whether to perform deep encoding on tables.
    *
+   * @remarks
+   *
    * When disabled, tables will not be recursively encoded, which may cause you
    * to miss out on certain data types being properly translated (eg; roblox data types).
    *
@@ -105,7 +111,9 @@ export type SerializationConfig = {
   readonly deepEncodeTables: boolean;
 
   /**
-   * The method name to use for custom serialization.
+   * The method name to use for class encoding.
+   *
+   * @remarks
    *
    * When encoding an object, the encoder will first check if the object has
    * a method with this name. If it does, it will call that method instead of
@@ -139,7 +147,7 @@ export type SerializationConfig = {
    * ```
    */
   readonly encodeMethod: string;
-};
+}
 
 /**
  * Default configuration for serialization.
@@ -158,7 +166,7 @@ export const defaultSerializationConfig: Readonly<SerializationConfig> = {
  *
  * @public
  */
-export type RLogConfig = {
+export interface RLogConfig {
   /**
    * Sets the minimum {@link LogLevel} for data to be logged.
    * 
@@ -188,7 +196,9 @@ export type RLogConfig = {
   readonly serialization: SerializationConfig;
 
   /**
-   * Optional function to generate correlation IDs.
+   * Function to generate correlation IDs.
+   *
+   * @remarks
    *
    * By default, Correlation IDs are generated via a combination of
    * {@link https://create.roblox.com/docs/en-us/reference/engine/classes/HttpService#GenerateGUID | HttpService.GenerateGUID }
@@ -219,11 +229,13 @@ export type RLogConfig = {
   readonly correlationGenerator?: () => string;
 
   /**
-   * Optional string to prefix to all logs.
+   * String to prefix to all logs.
    *
    * Will be followed by a `->` between the log message and the log level.
    *
-   * **Note:** This setting is ignored when merging configs.
+   * @remarks
+   *
+   * This setting is ignored when merging configs.
    *
    * @example
    * ```ts
@@ -248,6 +260,8 @@ export type RLogConfig = {
   /**
    * Allows logs that have context to bypass {@link RLogConfig.minLogLevel | minLogLevel} under certain
    * circumstances.
+   *
+   * @remarks
    *
    * With this setting enabled, even if the {@link RLogConfig.minLogLevel | minLogLevel} is set
    * to filter out logs below {@link LogLevel.WARNING | WARNING}, if one of the logs in the context
@@ -287,6 +301,8 @@ export type RLogConfig = {
   /**
    * Prevents logs from propogating until the context is killed.
    *
+   * @remarks
+   *
    * With this setting enabled, logs with context will not be sent until the context is stopped.
    *
    * All of the messages will be sent at once when the context is stopped.
@@ -318,7 +334,7 @@ export type RLogConfig = {
    * ```
    */
   readonly suspendContext: boolean;
-};
+}
 
 /**
  * Default configuration for {@link RLog}.
@@ -343,6 +359,8 @@ export type PartialRLogConfig = Partial<ExcludeMembers<RLogConfig, Serialization
 
 /**
  * Merges a variable amount of config files.
+ *
+ * @remarks
  *
  * Configs that come later take precedence over those before.
  *

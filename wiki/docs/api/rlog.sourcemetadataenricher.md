@@ -1,12 +1,14 @@
-[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [sourceMetadataEnricher](./rlog.sourcemetadataenricher.md)
+---
+id: rlog.sourcemetadataenricher
+title: sourceMetadataEnricher() function
+hide_title: true
+---
+
+[@rbxts/rlog](./rlog.md) &gt; [sourceMetadataEnricher](./rlog.sourcemetadataenricher.md)
 
 ## sourceMetadataEnricher() function
 
-Attaches to the output of a log entry.
-
-The metadata is attached under the `source_metadata` key in .
-
-If a value is `undefined`<!-- -->, it will not be populated.
+Attaches [source_metadata](./rlog.logentry.source_metadata.md) to the output of a log entry.
 
 **Signature:**
 
@@ -20,24 +22,30 @@ export declare function sourceMetadataEnricher(entry: LogEntry): LogEntry;
 
 Parameter
 
+
 </th><th>
 
 Type
 
+
 </th><th>
 
 Description
+
 
 </th></tr></thead>
 <tbody><tr><td>
 
 entry
 
+
 </td><td>
 
 [LogEntry](./rlog.logentry.md)
 
+
 </td><td>
+
 
 </td></tr>
 </tbody></table>
@@ -45,7 +53,14 @@ entry
 
 [LogEntry](./rlog.logentry.md)
 
+## Remarks
+
+The metadata is attached under the `source_metadata` key in [encoded_data](./rlog.logentry.encoded_data.md)<!-- -->.
+
+If a value is `undefined`<!-- -->, it will not be populated.
+
 ## Example
+
 
 ```log
 [INFO]: Actions -> Hello world!

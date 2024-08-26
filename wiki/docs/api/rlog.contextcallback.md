@@ -1,4 +1,10 @@
-[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [ContextCallback](./rlog.contextcallback.md)
+---
+id: rlog.contextcallback
+title: ContextCallback type
+hide_title: true
+---
+
+[@rbxts/rlog](./rlog.md) &gt; [ContextCallback](./rlog.contextcallback.md)
 
 ## ContextCallback type
 
@@ -9,5 +15,4 @@ A callback that take in a [LogContext](./rlog.logcontext.md) and optionally retu
 ```typescript
 export type ContextCallback<R = void> = (context: LogContext) => R;
 ```
-
 **References:** [LogContext](./rlog.logcontext.md)

@@ -4,6 +4,8 @@ import { LogEntry } from "../common";
 /**
  * Enricher for adding a tag to a log matching the file path, if absent.
  *
+ * @remarks
+ *
  * If the entry doesn't have a tag, then this enricher will use the
  * {@link SourceMetadata.file_path | file_path} of where log occurred instead.
  *

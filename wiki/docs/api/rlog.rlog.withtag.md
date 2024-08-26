@@ -1,12 +1,14 @@
-[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt; [withTag](./rlog.rlog.withtag.md)
+---
+id: rlog.rlog.withtag
+title: RLog.withTag() method
+hide_title: true
+---
+
+[@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt; [withTag](./rlog.rlog.withtag.md)
 
 ## RLog.withTag() method
 
-Returns a new [RLog](./rlog.rlog.md) with the set to the provided string.
-
-Tags are appended to log messages when present, for easier filtering.
-
-Usually, they're used at the class or module level to keep track of all logs facilitated by a single service or action.
+Returns a new [RLog](./rlog.rlog.md) with the [tag](./rlog.rlogconfig.tag.md) set to the provided string.
 
 **Signature:**
 
@@ -20,26 +22,32 @@ withTag(tag: string): RLog;
 
 Parameter
 
+
 </th><th>
 
 Type
 
+
 </th><th>
 
 Description
+
 
 </th></tr></thead>
 <tbody><tr><td>
 
 tag
 
+
 </td><td>
 
 string
 
+
 </td><td>
 
 The new tag to use.
+
 
 </td></tr>
 </tbody></table>
@@ -49,7 +57,14 @@ The new tag to use.
 
 The new [RLog](./rlog.rlog.md) instance.
 
+## Remarks
+
+Tags are appended to log messages when present, for easier filtering.
+
+Usually, they're used at the class or module level to keep track of all logs facilitated by a single service or action.
+
 ## Example
+
 
 ```ts
 let logger = new RLog();

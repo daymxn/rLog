@@ -1,5 +1,10 @@
-[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt;
-[(constructor)](./rlog.rlog._constructor__1.md)
+---
+id: rlog.rlog._constructor__1
+title: RLog.(constructor)
+hide_title: true
+---
+
+[@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt; [(constructor)](./rlog.rlog._constructor__1.md)
 
 ## RLog.(constructor)
 
@@ -10,7 +15,7 @@ Uses the provided table in place of the argument names.
 **Signature:**
 
 ```typescript
-constructor({ config, context, inheritDefault }: RLogConstructorParameters);
+constructor(params: RLogConstructorParameters);
 ```
 
 ## Parameters
@@ -19,24 +24,30 @@ constructor({ config, context, inheritDefault }: RLogConstructorParameters);
 
 Parameter
 
+
 </th><th>
 
 Type
+
 
 </th><th>
 
 Description
 
+
 </th></tr></thead>
 <tbody><tr><td>
 
-{ config, context, inheritDefault }
+params
+
 
 </td><td>
 
 [RLogConstructorParameters](./rlog.rlogconstructorparameters.md)
 
+
 </td><td>
+
 
 </td></tr>
 </tbody></table>

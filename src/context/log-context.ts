@@ -13,6 +13,8 @@ function GenerateCorrelationID(config: RLogConfig) {
 /**
  * Context for a collection of log entries.
  *
+ * @remarks
+ *
  * Provides a centrialized means for tracking correlation ids,
  * allowing you to create a linkage between log entries in individual
  * logic flows- enabling more streamlined debugging in high traffic or
@@ -27,6 +29,8 @@ export class LogContext {
 
   /**
    * A context is considered dead after {@link LogContext.stop | stop} has been called.
+   *
+   * @remarks
    *
    * A dead context should not be used anymore, and can not be re-started.
    *
@@ -51,6 +55,8 @@ export class LogContext {
 
   /**
    * Creates a new {@link LogContext} instance that inherits this context.
+   *
+   * @remarks
    *
    * The correlation id will be the same, but the config will be merged with
    * the provided config.
@@ -80,10 +86,12 @@ export class LogContext {
   /**
    * Creates a new {@link RLog} instance that inherits this context.
    *
+   * @remarks
+   *
    * All {@link RLog} instances that use the same {@link LogContext} will
    * have the same `correlation_id` attached to their messages.
    *
-   * @param config - Optional config to merge with this context and the new instance.
+   * @param config - Config to merge with this context and the new instance.
    *
    * @returns A new {@link RLog} instance.
    *
@@ -112,6 +120,8 @@ export class LogContext {
 
   /**
    * Marks this context as dead, preventing any further usage.
+   *
+   * @remarks
    *
    * Will make calls to the context manager to ensure there are
    * no memory leaks.
@@ -144,13 +154,15 @@ export class LogContext {
   /**
    * Creates a new {@link LogContext}.
    *
+   * @remarks
+   *
    * The context can be used to create {@link RLog} instances by calling
    * {@link LogContext.use | use}.
    *
    * When you're done with the context, make sure to call {@link LogContext.stop | stop}
    * to prevent memory leaks.
    *
-   * @param config - Optional config to use for the context.
+   * @param config - Config to use for the context.
    * {@link RLog} instances that use this context will merge their configs
    * with the config of the context.
    *

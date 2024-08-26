@@ -60,12 +60,14 @@ export type LogData = Record<string, unknown>;
 /**
  * A single logging event.
  *
+ * @remarks
+ *
  * Each message has its own instance of this, with relevant data
  * attached.
  *
  * @public
  */
-export type LogEntry = {
+export interface LogEntry {
   /** The log level of the entry. */
   level: LogLevel;
 
@@ -89,20 +91,21 @@ export type LogEntry = {
 
   /** Metadata detailing where in the source this log occurred. */
   source_metadata: SourceMetadata;
-};
+}
 
 /**
  * Type representing a callback function for consuming log entries, or a "sink".
  *
- * Sinks optionally consume {@link LogEntry}s. If you return `true`,
- * then the log will be stopped, and no further sinks will be called. The {@link LogEntry} will
- * also not be logged to the console.
- *
  * Sinks are generally used to send logs to an external database or service, but they can
  * also be used to filter logs by "consuming" them.
  *
- * **Note:** you should not yield in sinks. If you're sending data to an external service, do
- * so via queue that gets dispatched in a different thread.
+ * If your callback returns `true`, then the log will be stopped, and no further sinks will
+ * be called. The {@link LogEntry} will also not be logged to the console.
+ *
+ * @remarks
+ *
+ * You should not yield in sinks. If you're sending data to an external service, do
+ * so via a queue that gets dispatched in a different thread.
  *
  * @param entry - The log entry to handle.
  *
@@ -113,18 +116,18 @@ export type LogEntry = {
  * @example
  * ```ts
  * const logger = new rLog({
- * sinks: [
- *   (entry) => {
- *      someExternalDBFunction(entry);
- *   },
- *   (entry) => {
- *     return true;
- *   },
- *   (entry) => {
- *     // never reaches because the previous sink returned true
- *     error("Messages should not log to the console");
- *   },
- * ],
+ *  sinks: [
+ *    (entry) => {
+ *       someExternalDBFunction(entry);
+ *    },
+ *    (entry) => {
+ *      return true;
+ *    },
+ *    (entry) => {
+ *      // never throws because the previous sink returned true
+ *      error("Messages should not log to the console");
+ *    },
+ *  ],
  * });
  *
  * logger.i("Hello world!");
@@ -181,24 +184,15 @@ export function enrich(entry: LogEntry, enrichers: LogEnricherCallback[]): LogEn
 }
 
 /**
- * Type representing a callback function for converting log entries to output.
- *
- * @param entry - The log entry to convert.
- *
- * @returns A tuple of of arguments to output in the entry's place
- *
- * @public
- */
-export type FormatMethodCallback = (entry: LogEntry) => LuaTuple<unknown[]>;
-
-/**
  * Metadata used in identifying _where_ in the source code a log occurred.
  *
  * @public
  */
-export type SourceMetadata = {
+export interface SourceMetadata {
   /**
    * The name of the function where this was created.
+   *
+   * @remarks
    *
    * May be undefined if this was created within an anonymous function.
    */
@@ -206,6 +200,8 @@ export type SourceMetadata = {
 
   /**
    * The nearest function name of where this was created.
+   *
+   * @remarks
    *
    * May be undefined if we can't find one (such as reaching max depth, or a stack full of anonymous functions)
    *
@@ -224,7 +220,9 @@ export type SourceMetadata = {
   /**
    * The line number in the file where this was created.
    *
+   * @remarks
+   *
    * This will be the line number in the translated luau code- _not_ the TS line number.
    */
   line_number: number;
-};
+}

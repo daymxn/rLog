@@ -1,4 +1,10 @@
-[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [LogData](./rlog.logdata.md)
+---
+id: rlog.logdata
+title: LogData type
+hide_title: true
+---
+
+[@rbxts/rlog](./rlog.md) &gt; [LogData](./rlog.logdata.md)
 
 ## LogData type
 

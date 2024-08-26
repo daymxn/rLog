@@ -4,6 +4,8 @@ import { LogEntry } from "../common";
 /**
  * Enricher for adding a tag to a log matching the function name, if absent.
  *
+ * @remarks
+ *
  * If the entry doesn't have a tag, then this enricher will use the
  * {@link SourceMetadata.nearest_function_name | nearest_function_name} of where log occurred instead.
  *

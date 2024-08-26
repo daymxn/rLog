@@ -7,9 +7,13 @@
 		"build": "rbxtsc --noInclude",
 		"dev": "rbxtsc -w --type game --rojo test.project.json --noInclude",
 		"watch": "rbxtsc -w --noInclude",
-		"buildApi": "npm run build && npm run api",
-		"api": "api-extractor run --local --verbose",
-		"api-docs": "api-documenter markdown -i ./temp  -o ./docs/api",
+		"api:build": "npm run build",
+		"api:extract": "api-extractor run --local --verbose",
+		"api:docs:generate": "api-documenter markdown -i ./temp  -o ./temp/api",
+		"api:docs:fix": "node ./scripts/fix-api-reference.js ./temp/api ./temp/fixed",
+		"api:docs:export": "node ./scripts/export-api-reference.js ./temp/fixed ./wiki/docs/api",
+		"api:docs": "npx run-s api:docs:*",
+		"api": "npx run-s api:build api:extract api:docs",
 		"prepublishOnly": "npm run build"
 	},
 	"keywords": [
@@ -41,6 +45,7 @@
 	},
 	"devDependencies": {
 		"@rbxts/compiler-types": "^2.3.0-types.1",
+		"@rbxts/testez": "https://github.com/daymxn/testez",
 		"@rbxts/types": "^1.0.795",
 		"@typescript-eslint/eslint-plugin": "^7.1.1",
 		"@typescript-eslint/parser": "^7.1.1",
@@ -52,14 +57,13 @@
 		"prettier": "^3.2.5",
 		"prettier-plugin-organize-imports": "^3.2.4",
 		"roblox-ts": "^2.3.0",
-		"typescript": "^5.4.2",
-		"@rbxts/testez": "https://github.com/daymxn/testez"
+		"typescript": "^5.4.2"
 	},
 	"dependencies": {
-		"@rbxts/services": "^1.5.4",
-		"@rbxts/t": "^3.1.1",
-		"@rbxts/string-utils": "^1.0.3",
 		"@rbxts/object-utils": "^1.0.4",
-		"@rbxts/reverse-array": "^1.0.3"
+		"@rbxts/reverse-array": "^1.0.3",
+		"@rbxts/services": "^1.5.4",
+		"@rbxts/string-utils": "^1.0.3",
+		"@rbxts/t": "^3.1.1"
 	}
 }

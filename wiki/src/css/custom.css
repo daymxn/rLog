@@ -87,6 +87,10 @@ code {
   color: #7e7e7eec !important;
 } */
 
+table td {
+  padding-bottom: 0;
+}
+
 [data-theme="dark"] .theme-code-block {
 	--ifm-global-shadow-lw: rgba(0, 0, 0, 0.06) 0px 0.8px 2px 0px, rgba(0, 0, 0, 0.1) 0px 2.7px 6.7px 0px,
 		rgba(0, 0, 0, 0.2) 0px 10px 26px 0px;

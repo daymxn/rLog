@@ -1,4 +1,10 @@
-[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt; [i](./rlog.rlog.i.md)
+---
+id: rlog.rlog.i
+title: RLog.i() method
+hide_title: true
+---
+
+[@rbxts/rlog](./rlog.md) &gt; [RLog](./rlog.rlog.md) &gt; [i](./rlog.rlog.i.md)
 
 ## RLog.i() method
 
@@ -16,39 +22,48 @@ i(message: string, data?: LogData): void;
 
 Parameter
 
+
 </th><th>
 
 Type
 
+
 </th><th>
 
 Description
+
 
 </th></tr></thead>
 <tbody><tr><td>
 
 message
 
+
 </td><td>
 
 string
 
+
 </td><td>
 
 The message to log.
+
 
 </td></tr>
 <tr><td>
 
 data
 
+
 </td><td>
 
 [LogData](./rlog.logdata.md)
 
+
 </td><td>
 
-_(Optional)_ Optional data to log.
+_(Optional)_ Data to log.
+
 
 </td></tr>
 </tbody></table>

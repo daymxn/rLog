@@ -135,7 +135,29 @@ So the error from the second sink is never thrown.
 
 ### Roblox Console
 
--- TODO()
+Sends logs to the roblox console.
+
+:::tip
+
+This sink is applied to the default instance by default, so you don't need to re-add it.
+
+If you want to configure it though, give the [Roblox Console Configuration](/docs/advanced/roblox-console-configuration)
+guide a read.
+
+:::
+
+```ts
+import { rLog, robloxConsoleSink } from "@rbxts/rlog";
+import { customFormatMethod } from "./custom-formatter";
+
+rLog.UpdateDefaultConfig({
+  sinks: [
+    robloxConsoleSink({
+      formatMethod: customFormatMethod,
+    }),
+  ],
+});
+```
 
 ### Google Cloud Logging
 
@@ -154,8 +176,8 @@ rLog.SetGlobalSinks([googleCloudLoggingSink]);
 
 :::info
 
-To learn more about setting up Google Cloud Logging for your **rLog** application, see our [Google Cloud Logging](#)
-guide.
+To learn more about setting up Google Cloud Logging for your **rLog** application, see our
+[Google Cloud Logging](/docs/advanced/google-cloud-logging) guide.
 
 :::
 

@@ -7,12 +7,8 @@ const config: Config = {
   title: "rLog",
   tagline: "Context based Server-Side logging for ROBLOX.",
   favicon: "img/favicon.ico",
-
-  // Set the production url of your site here
-  url: "https://your-docusaurus-site.example.com",
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/",
+  url: "https://rlog.daymxn.com",
+  baseUrl: "/rlog/",
   organizationName: "daymxn",
   projectName: "rLog",
   onBrokenLinks: "throw",
@@ -53,32 +49,6 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./docs/sidebars.ts",
-          // async sidebarItemsGenerator({ defaultSidebarItemsGenerator, ...args }) {
-          //   const sidebarItems = await defaultSidebarItemsGenerator(args);
-
-          //   function attachCategoryLink(items) {
-          //     items.forEach((item) => {
-          //       if (item.type === "category" && item.items) {
-          //         const matchingDocIndex = items.findIndex(
-          //           (subItem) => subItem.type === "doc" && subItem.id.endsWith(`${item.label}`)
-          //         );
-          //         if (matchingDocIndex !== -1) {
-          //           const matchingDoc = items[matchingDocIndex];
-          //           console.log(matchingDoc);
-          //           item.link = {
-          //             type: "doc",
-          //             id: matchingDoc.id,
-          //           };
-          //           items.splice(matchingDocIndex, 1);
-          //         }
-          //         attachCategoryLink(item.items);
-          //       }
-          //     });
-          //   }
-
-          //   attachCategoryLink(sidebarItems);
-          //   return sidebarItems;
-          // },
         },
         theme: {
           customCss: "./src/css/custom.css",
@@ -88,7 +58,6 @@ const config: Config = {
   ],
 
   themeConfig: {
-    // Replace with your project's social card
     image: "img/social-card.jpg",
     sidebar: {
       hideable: true,
@@ -110,6 +79,12 @@ const config: Config = {
           to: "/docs/api",
           label: "API",
           position: "left",
+        },
+        {
+          href: "https://github.com/daymxn/rlog",
+          position: "right",
+          className: "header-github-link",
+          "aria-label": "GitHub repository",
         },
       ],
     },
@@ -142,7 +117,7 @@ const config: Config = {
           items: [
             {
               label: "rLog API",
-              to: "/docs/",
+              to: "/docs/api",
             },
           ],
         },
@@ -170,16 +145,12 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.vsDark,
-      additionalLanguages: ["bash", "typescript", "lua", "powershell", "toml"],
+      additionalLanguages: ["bash", "typescript", "toml"],
       magicComments: [
         {
           className: "theme-code-block-highlighted-line",
           line: "highlight-next-line",
           block: { start: "highlight-start", end: "highlight-end" },
-        },
-        {
-          className: "theme-info-highlighted-line",
-          line: "info-next-line",
         },
         {
           className: "code-block-error-line",

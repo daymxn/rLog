@@ -1,8 +1,6 @@
-// eslint-disable-next-line prettier/prettier
-import React from 'react';
-// Import the original mapper
-import { Icon } from "@iconify/react"; // Import the entire Iconify library.
+import { Icon } from "@iconify/react";
 import MDXComponents from "@theme-original/MDXComponents";
+import React from "react";
 
 function Yes() {
   return <Icon icon="oi:check" height="33" color="green" />;
@@ -13,9 +11,8 @@ function No() {
 }
 
 export default {
-  // Re-use the default mapping
   ...MDXComponents,
-  IIcon: Icon, // Make the iconify Icon component available in MDX as <icon />.
+  IIcon: Icon,
   Yes: Yes,
   No: No,
 };

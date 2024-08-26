@@ -1,46 +1,35 @@
-# Website
+# rLog website
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+The website for rLog.
 
--- TODO(): update `log` formatting in code snippets for colors. also curious about the `log` format anyhow
+Built with docusaurus.
 
-### Installation
-
-```
-$ yarn
+```sh
+npm run start
 ```
 
-### Local Development
+You can use `--no-open` to avoid opening a web page on start.
 
-```
-$ yarn start
-```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without
-having to restart the server.
-
-### Build
-
-```
-$ yarn build
+```sh
+npm run start -- --no-open
 ```
 
-This command generates static content into the `build` directory and can be served using any static contents hosting
-service.
+## API docs
 
-### Deployment
+The API docs are built from the root **rLog** project directory
+with an npm script.
 
-Using SSH:
-
-```
-$ USE_SSH=true yarn deploy
+```sh
+npm run api
 ```
 
-Not using SSH:
+If you have the website in watch mode, it might cause a stack overflow if you
+rebuild the api at the same time. To fix this, you'll have to stop watching, build the api
+docs, and start watching again.
 
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
+## Future plans
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the
-`gh-pages` branch.
+- Update when support for google cloud logging is added
+- Possibly seperate provided sinks into their own package
+- Auto deploy workflow
+- Custom domain

@@ -1,3 +1,4 @@
+import Object from "@rbxts/object-utils";
 import { LogEntry, LogLevel, sink } from "../common";
 import { LogContext } from "./log-context";
 
@@ -60,14 +61,15 @@ export namespace LogContextManager {
    *
    * To be called when the context is stopped.
    */
-  export function flush(context: LogContext) {
-    const entries = getMessages(context.correlation_id);
+  export function flush(context: LogContext | string) {
+    const id = typeIs(context, "string") ? context : context.correlation_id;
+    const entries = getMessages(id);
     if (entries) {
       if (entries.isEmpty()) {
         warn(
           "rLog Context Manager doesn't have any messages for a context. This shouldn't happen.",
           "\nCorrelation ID:",
-          context.correlation_id
+          id
         );
       }
 
@@ -76,9 +78,9 @@ export namespace LogContextManager {
       }
     }
 
-    flaggedContext.delete(context.correlation_id);
-    pendingMessages.delete(context.correlation_id);
-    promisedMessages.delete(context.correlation_id);
+    flaggedContext.delete(id);
+    pendingMessages.delete(id);
+    promisedMessages.delete(id);
   }
 
   export function clear() {
@@ -92,6 +94,11 @@ export namespace LogContextManager {
    * Intended to be called before a game closes to avoid losing logs.
    */
   export function forceFlush() {
-    // TODO(): implement
+    const contexts = Object.keys(pendingMessages);
+    for (const context of contexts) {
+      flaggedContext.add(context);
+      flush(context);
+    }
+    pendingMessages.clear();
   }
 }

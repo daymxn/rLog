@@ -1,0 +1,11 @@
+[Home](./index.md) &gt; [@rbxts/rlog](./rlog.md) &gt; [rLog](./rlog.rlog.md)
+
+## rLog variable
+
+Mapping to [RLog](./rlog.rlog.md)
+
+**Signature:**
+
+```typescript
+rLog: typeof RLog;
+```

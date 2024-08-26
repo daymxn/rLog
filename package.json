@@ -9,7 +9,7 @@
 		"watch": "rbxtsc -w --noInclude",
 		"buildApi": "npm run build && npm run api",
 		"api": "api-extractor run --local --verbose",
-		"api-docs": "api-documenter markdown -o ./docs/api",
+		"api-docs": "api-documenter markdown -i ./temp  -o ./docs/api",
 		"prepublishOnly": "npm run build"
 	},
 	"keywords": [

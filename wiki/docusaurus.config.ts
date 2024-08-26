@@ -80,6 +80,11 @@ const config: Config = {
           position: "left",
           label: "Learn",
         },
+        {
+          to: "/docs/api",
+          label: "API",
+          position: "left",
+        },
       ],
     },
     footer: {

@@ -1,8 +1,8 @@
 /**
- * Metadata based logging framework for ROBLOX projects.
+ * Context based Server-Side logging framework for ROBLOX projects.
  *
  * @remarks
- * `rlog` exports the {@link RLog} class as the primary entry point.
+ * Exports the {@link RLog} class as the primary entry point.
  *
  * @packageDocumentation
  */

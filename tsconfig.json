@@ -25,9 +25,13 @@
 		"declaration": true,
 		"declarationMap": true,
 	},
+	"include": [
+		"src/**/*"
+	],
 	"exclude": [
 		"example/**/*",
 		"out/**/*",
-		"wiki/**/*"
+		"wiki/**/*",
+		"scripts/**/*"
 	]
 }

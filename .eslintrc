@@ -5,9 +5,9 @@
 	  "useJSXTextNode": true,
 	  "ecmaVersion": 2018,
 	  "sourceType": "module",
-	  "project": "./tsconfig.json"
+	  "project": ["./tsconfig.json", "./scripts/tsconfig.scripts.json"]
 	},
-	"ignorePatterns": ["/out"],
+	"ignorePatterns": ["/out", "*.js"],
 	"plugins": ["@typescript-eslint", "roblox-ts", "prettier"],
 	"extends": [
 	  "eslint:recommended",
@@ -16,6 +16,13 @@
 	  "plugin:prettier/recommended",
 	  "plugin:react-hooks/recommended"
 	],
+	"overrides": [{
+		"files": [ "scripts/**/*" ],
+		"rules": {
+			"roblox-ts/no-regex": 0,
+			"roblox-ts/lua-truthiness": 0
+		}
+	}],
 	"rules": {
 	  "prettier/prettier": [
 		"warn",

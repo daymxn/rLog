@@ -165,7 +165,7 @@ You can either checkout our [Quick Start](https://rlog.daymxn.com/docs/quick-sta
 - Migrate tests to individual files
 - Implement more refined serialization/assertions lib
 - Add workflow for checking API diff and version bumping according to semver
-- Add note in contributing about changelog, version bumping, and checking the api diff
+- Add note in contributing about checking the api diff
 
 ## Contributing
 

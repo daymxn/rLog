@@ -11,14 +11,22 @@
 		"scripts:watch": "npm run scripts:build -- -w",
 		"api:build": "npm run build",
 		"api:extract": "api-extractor run --local --verbose",
+		"api:update": "npx run-s api:build api:extract",
 		"api:docs:generate": "api-documenter markdown -i ./temp  -o ./temp/api",
 		"api:docs:fix": "npx tsx ./scripts/src/fix-api-reference.ts ./temp/api ./temp/fixed",
 		"api:docs:export": "npx tsx ./scripts/src/export-api-reference.ts ./temp/fixed ./wiki/docs/api",
 		"api:docs": "npx run-s api:docs:*",
-		"api": "npx run-s api:build api:extract api:docs",
+		"api": "npx run-s api:update api:docs",
 		"format": "npx eslint --fix",
 		"lint": "npm run format",
 		"lock": "npm i --package-lock-only",
+		"change": "npx changeset add",
+		"change:status": "npx changeset status",
+		"change:export": "npx changeset status --output changes.json",
+		"change:publish": "npx changeset publish",
+		"release:version": "npx changeset version",
+		"release:tags": "git push --follow-tags",
+		"release": "npx run-s build change:publish",
 		"prepublishOnly": "npm run build"
 	},
 	"keywords": [
@@ -49,6 +57,7 @@
 		"access": "public"
 	},
 	"devDependencies": {
+		"@changesets/cli": "^2.27.7",
 		"@rbxts/compiler-types": "^2.3.0-types.1",
 		"@rbxts/testez": "https://github.com/daymxn/testez#patch-1",
 		"@rbxts/types": "^1.0.795",

@@ -18,5 +18,8 @@
 		"typescript",
 		"typescriptreact"
 	],
-	"testez-companion.timeout": 5
+	"testez-companion.timeout": 5,
+	"yaml.schemas": {
+		"https://json.schemastore.org/github-workflow.json": "file:///f%3A/Programming/Games/Roblox/rlog/.github/workflows/deploy.yaml"
+	}
 }

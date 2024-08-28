@@ -164,6 +164,8 @@ You can either checkout our [Quick Start](https://rlog.daymxn.com/rlog/docs/quic
 - Support google cloud console logging
 - Migrate tests to individual files
 - Implement more refined serialization/assertions lib
+- Add workflow for checking API diff and version bumping according to semver
+- Add note in contributing about changelog, version bumping, and checking the api diff
 
 ## Contributing
 

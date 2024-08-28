@@ -9,11 +9,11 @@
 
 > Context based Server-Side logging solution for ROBLOX projects.
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/daymxn/vidos?style=flat-square)
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/daymxn/vidos/main?style=flat-square)
-![GitHub issues](https://img.shields.io/github/issues/daymxn/vidos?style=flat-square)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/daymxn/vidos?style=flat-square)
-![GitHub](https://img.shields.io/github/license/daymxn/vidos?style=flat-square)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/daymxn/rlog?style=flat-square)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/daymxn/rlog/main?style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/daymxn/rlog?style=flat-square)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/daymxn/rlog?style=flat-square)
+![GitHub](https://img.shields.io/github/license/daymxn/rlog?style=flat-square)
 
 ---
 
@@ -81,15 +81,15 @@ Utilizing [Correlation IDs](https://microsoft.github.io/code-with-engineering-pl
 
 ## Documentation
 
-[Quick Start](https://rlog.daymxn.com/rlog/docs/quick-start)
+[Quick Start](https://rlog.daymxn.com/docs/quick-start)
 
-[API Reference](https://rlog.daymxn.com/rlog/docs/api)
+[API Reference](https://rlog.daymxn.com/docs/api)
 
-[Fast Breakdown](https://rlog.daymxn.com/rlog/docs/fast-breakdown)
+[Fast Breakdown](https://rlog.daymxn.com/docs/fast-breakdown)
 
-[Basic Guides](https://rlog.daymxn.com/rlog/docs/category/guides)
+[Basic Guides](https://rlog.daymxn.com/docs/category/guides)
 
-[Advanced Guides](https://rlog.daymxn.com/rlog/docs/category/advanced-guides)
+[Advanced Guides](https://rlog.daymxn.com/docs/category/advanced-guides)
 
 ## Features
 
@@ -149,16 +149,16 @@ Utilizing [Correlation IDs](https://microsoft.github.io/code-with-engineering-pl
 
 So you're ready to get started with **rLog**!
 
-You can either checkout our [Quick Start](https://rlog.daymxn.com/rlog/docs/quick-start) guide, read through our list of [Basic Guides](https://rlog.daymxn.com/rlog/docs/category/guides), or jump straight into our [API Reference](https://rlog.daymxn.com/rlog/docs/api).
+You can either checkout our [Quick Start](https://rlog.daymxn.com/docs/quick-start) guide, read through our list of [Basic Guides](https://rlog.daymxn.com/docs/category/guides), or jump straight into our [API Reference](https://rlog.daymxn.com/docs/api).
 
 > [!TIP]
-> If you're already familiar with logging libraries, you can give our [Fast Breakdown](https://rlog.daymxn.com/rlog/docs/fast-breakdown) a read to get a quick overview of what rLog provides, and where it differs from others.
+> If you're already familiar with logging libraries, you can give our [Fast Breakdown](https://rlog.daymxn.com/docs/fast-breakdown) a read to get a quick overview of what rLog provides, and where it differs from others.
 
 ## Roadmap
 
-- Remove deps/eslint/tsconfig settings that aren't needed
-- Update shields to point to rLog once repo is public
-- Double check that are links are working properly
+- Double check that all links are working properly
+- Fix issue with robloxConsoleSink config
+- Add social preview to github repo after going public
 
 - Seperate provided sinks into a sub package
 - Support google cloud console logging

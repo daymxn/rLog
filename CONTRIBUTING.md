@@ -8,7 +8,7 @@ some things you should know.
 
 ## Getting started
 
-Make sure you've given both the [Wiki](https://rlog.daymxn.com/rlog/docs/category/guides) and the [API Reference](https://rlog.daymxn.com/rlog/docs/api) a read before moving forward, such that you understand the design behind **rLog**.
+Make sure you've given both the [Wiki](https://rlog.daymxn.com/docs/category/guides) and the [API Reference](https://rlog.daymxn.com/docs/api) a read before moving forward, such that you understand the design behind **rLog**.
 
 ### Building
 

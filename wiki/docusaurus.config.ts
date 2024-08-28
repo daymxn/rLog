@@ -8,7 +8,7 @@ const config: Config = {
   tagline: "Context based Server-Side logging for ROBLOX.",
   favicon: "img/favicon.ico",
   url: "https://rlog.daymxn.com",
-  baseUrl: "/rlog/",
+  baseUrl: "/",
   organizationName: "daymxn",
   projectName: "rLog",
   onBrokenLinks: "throw",

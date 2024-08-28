@@ -157,10 +157,9 @@ You can either checkout our [Quick Start](https://rlog.daymxn.com/docs/quick-sta
 ## Roadmap
 
 - Double check that all links are working properly
-- Fix issue with robloxConsoleSink config
 - Add social preview to github repo after going public
 
-- Seperate provided sinks into a sub package
+- Separate provided sinks into a sub package
 - Support google cloud console logging
 - Migrate tests to individual files
 - Implement more refined serialization/assertions lib

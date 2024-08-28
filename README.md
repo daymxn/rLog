@@ -156,7 +156,7 @@ You can either checkout our [Quick Start](https://rlog.daymxn.com/docs/quick-sta
 
 ## Roadmap
 
-- Double check that all links are working properly
+- Make sure the promises lib is bundled correctly
 - Add social preview to github repo after going public
 
 - Separate provided sinks into a sub package

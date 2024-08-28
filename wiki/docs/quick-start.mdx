@@ -10,7 +10,7 @@ This guide will walk you through the basics of getting started, in just a few st
 
 ## Installation
 
-First, install `rlog` with your preferred package manager:
+First, install **rLog** with your preferred package manager:
 
 <Tabs>
 <TabItem value="npm" default>
@@ -85,8 +85,8 @@ By passing a table as the second parameter to your logging method, you can optio
 
 ```ts
 logger.info("Hello world!", {
-  user: "Daymon",
-  action: "start",
+	user: "Daymon",
+	action: "start",
 });
 ```
 
@@ -106,8 +106,8 @@ The table you pass is automatically encoded, and even supports ROBLOX data types
 
 ```ts
 logger.info("Hello world!", {
-  position: new Vector3(1, 5, 10),
-  rotation: new CFrame(),
+	position: new Vector3(1, 5, 10),
+	rotation: new CFrame(),
 });
 ```
 
@@ -131,17 +131,17 @@ import { rLog, LogLevel } from "@rbxts/rlog";
 
 // Advanced setup with custom serialization and enrichers
 const logger = new rLog({
-  minLogLevel: LogLevel.WARNING,
-  tag: "Main",
-  enrichers: [
-    (entry) => {
-      entry.encoded_data.timestamp = DateTime.now().ToIsoDate();
-      return entry;
-    },
-  ],
-  serialization: {
-    encodeFunctions: true,
-  },
+	minLogLevel: LogLevel.WARNING,
+	tag: "Main",
+	enrichers: [
+		(entry) => {
+			entry.encoded_data.timestamp = DateTime.now().ToIsoDate();
+			return entry;
+		},
+	],
+	serialization: {
+		encodeFunctions: true,
+	},
 });
 ```
 
@@ -149,8 +149,8 @@ const logger = new rLog({
 
 If you're wanting to learn more, feel free to check out any of the following resources:
 
-- [Fast Breakdown](fast-breakdown)
-- [API Reference](#)
-- [Basic Guides](basics/log-entries)
-- [Advanced Guides](advanced/source-metadata)
-- [Setting up Google Cloud Logging](advanced/google-cloud-logging)
+-   [Fast Breakdown](fast-breakdown)
+-   [API Reference](api)
+-   [Basic Guides](basics/log-entries)
+-   [Advanced Guides](advanced/source-metadata)
+-   [Setting up Google Cloud Logging](advanced/google-cloud-logging)

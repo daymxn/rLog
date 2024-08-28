@@ -9,9 +9,9 @@ log.
 
 :::info what you'll learn
 
-- What log entries are
-- The different components of a log
-- How data is attached to logs
+-   What log entries are
+-   The different components of a log
+-   How data is attached to logs
 
 :::
 
@@ -22,14 +22,14 @@ information attached to them.
 
 ```ts
 export type LogEntry = {
-  level: LogLevel;
-  message: string;
-  data: LogData;
-  encoded_data: LogData;
-  config: Writable<RLogConfig>;
-  context?: LogContext;
-  timestamp: number;
-  source_metadata: SourceMetadata;
+	level: LogLevel;
+	message: string;
+	data: LogData;
+	encoded_data: LogData;
+	config: Writable<RLogConfig>;
+	context?: LogContext;
+	timestamp: number;
+	source_metadata: SourceMetadata;
 };
 ```
 
@@ -121,7 +121,7 @@ guide.
 
 #### Correlation ID
 
-`correlation_id` is a unique string attached to logs to identify entries that run across different `RLog` instances, but
+`correlation_id` is a unique string attached to logs to identify entries that run across different `rLog` instances, but
 represent the same "flow".
 
 These are provided via Log Context.
@@ -143,10 +143,10 @@ You'll learn more about Correlation IDs aswell in the [Log Context](./log-contex
 
 ```ts
 export type SourceMetadata = {
-  function_name?: string;
-  nearest_function_name?: string;
-  file_path: string;
-  line_number: number;
+	function_name?: string;
+	nearest_function_name?: string;
+	file_path: string;
+	line_number: number;
 };
 ```
 
@@ -156,6 +156,6 @@ You'll learn more about Source Metadata in the [Source Metadata](/advanced/sourc
 
 Let's recap what we've learned about log entries:
 
-- They carry all the **metadata** associated with log messages
-- They keep track of **when** logs were sent, and **who** sent them
-- They allow logs to carry additional **user provided** data
+-   They carry all the **metadata** associated with log messages
+-   They keep track of **when** logs were sent, and **who** sent them
+-   They allow logs to carry additional **user provided** data

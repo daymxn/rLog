@@ -1,0 +1,293 @@
+# FAQ
+
+### Why should I use this over rbx-log?
+
+It depends on your use case and your style.
+
+From a style perspective, **rLog** follows a more TypeScript/functional style, while **rbx-log** adopts a more C#/OOP
+approach.
+
+Feature-wise, **rbx-log** and **rLog** cover a lot of the same ground, and offer many of the same features, though there
+are some unique to each.
+
+You can use the feature table below for reference.
+
+| Feature                                      | rLog    | rbx-log |
+| -------------------------------------------- | ------- | ------- |
+| Sinks                                        | <Yes /> | <Yes /> |
+| Enrichers                                    | <Yes /> | <Yes /> |
+| Source Context                               | <Yes /> | <Yes /> |
+| Log Levels                                   | <Yes /> | <Yes /> |
+| Structured Logging                           | <Yes /> | <Yes /> |
+| Minimum Log Level logging                    | <Yes /> | <Yes /> |
+| Automatic property enrichment                | <No />  | <Yes /> |
+| Message Templates                            | <No />  | <Yes /> |
+| Automatic Correlation ID generation          | <Yes /> | <No />  |
+| Correlation ID tracking                      | <Yes /> | <No />  |
+| Log cascading (Context Bypass)               | <Yes /> | <No />  |
+| Surface level roblox data-type serialization | <Yes /> | <Yes /> |
+| Nested roblox data-type serialization        | <Yes /> | <No />  |
+| Class serialization                          | <Yes /> | <No />  |
+| Custom method serialization                  | <Yes /> | <No />  |
+| Deep serialization                           | <Yes /> | <No />  |
+| Function serialization                       | <Yes /> | <No />  |
+| Configurable roblox data-type serialization  | <Yes /> | <No />  |
+| Log prefixes (tags)                          | <Yes /> | <Yes /> |
+| Fatal severity                               | <No />  | <Yes /> |
+| Global logging                               | <Yes /> | <Yes /> |
+| Instance logging                             | <Yes /> | <Yes /> |
+
+If you're just starting, look at code samples of both and just go with the one that feels more natural to you
+personally.
+
+Then, if you get to a point where you need a certain feature that the other provides, migrating to-and-from either is
+fairly straightforward.
+
+### Why can't the library automatically pass around LogContext?
+
+This was something I spent a lot of time thinking on. If you come up with a solution, I'd be more than happy to
+implement it.
+
+So let's ask the question: how do we automatically infer the context of a log?
+
+I came up with two possible solutions.
+
+#### Matching threads to context
+
+You can get a reference to the current thread via `coroutine.running`. You could then create a table mapping these to
+their respective contexts.
+
+```ts
+const contextTracker: Record<coroutine, LogContext> = [];
+```
+
+The biggest problem with this is that it breaks across asynchronous boundaries.
+
+```ts
+async function DoOtherThing() {
+	return coroutine.running();
+}
+
+async function DoThing() {
+	const thread = coroutine.running();
+	const otherThread = await DoOtherThing();
+
+	// thread !== otherThread
+	// error-next-line
+	assert(thread === otherThread);
+}
+```
+
+Internally, individual coroutines are creating per async function.
+
+Because of this, we've now lost our `LogContext`.
+
+##### Coroutine hierarchy
+
+If we could _somehow_ have a hierarchy of coroutines; a tree of which coroutines created which, then we could make this
+work.
+
+Roblox doesn't provide anything like this though.
+
+You _could_ abuse `setfenv` to wrap around all `coroutine.create` calls and `task.spawn` calls- but the performance hit
+would be way too large. Because, keep in mind, that you'd need to wrap around _all_ modules; even external ones.
+
+#### Using the function environment
+
+Another solution I came up with was recursively tracing the stack for a `userdata` property in the function environment
+that can identify the `LogContext`.
+
+This _might_ work, but it'd require using `getfenv`, which would disable luau optimizations wherver you're logging. Not
+to mention the performance implications it could have.
+
+#### Using a Transformer
+
+The last solution I came up with was providing some sort of transformer to automate the process.
+
+For example, maybe providing a `@LogContext` annotation that would mark consumers of log context- and automatically
+change calls accordingly.
+
+```ts title="Before"
+@LogContext
+function SomeFunction() {
+  const logger = context.use();
+  // ...
+}
+
+withLogContext(() => {
+  SomeFunction();
+});
+```
+
+```ts title="After"
+function SomeFunction(context: LogContext) {
+	const logger = context.use();
+	// ...
+}
+
+withLogContext((context) => {
+	SomeFunction(context);
+});
+```
+
+Or maybe even a transformer that looks at the AST and figures out where context is needed, and drills it down.
+
+```ts title="Before"
+function SomeFunctionThatLogs() {
+	rLogger.info("Hello world!");
+}
+
+function SomeFunction() {
+	SomeFunctionThatLogs();
+}
+
+withLogContext(() => {
+	SomeFunction();
+});
+```
+
+```ts title="After"
+function SomeFunctionThatLogs(context: LogContext) {
+	const logger = context.use();
+	logger.info("Hello world!");
+}
+
+function SomeFunction(context: LogContext) {
+	SomeFunctionThatLogs(context);
+}
+
+withLogContext((context) => {
+	SomeFunction(context);
+});
+```
+
+Either of these might actually work. The problem is that it would require a moderate amount of investment, and a lot of
+testing.
+
+The one thing you _don't_ want to have edge cases in is your logging.
+
+Both of these are inherently "automagical", and are also very error prone if not implemented correctly.
+
+I might revisit this in the future and try to implement it, but it's something that's outside the scope of what I have
+time (and the mental capacity) for currently.
+
+### Why should I create different rLog instances?
+
+You don't have to. If you don't need the extra configuration, or correlation id tracking, then you can just use the
+[default instance](./basics/default-instance.mdx).
+
+However, there are several benefits to creating individual instances:
+
+1. You have more fine-grained control over configuration.
+
+    - With individual instances, you can setup configuration settings that only apply to _some_ instances but not
+      others. This configuration could range from something as simple as different tags- to something more complex like
+      custom class encoding.
+
+2. You're able to take advantage of correlation ids.
+
+    - Correlation IDs create a link between logs, allowing you to differentiate between outputs of the same log- but in
+      different invocations. In high traffic environments, they're a life saver when it comes time to debug.
+
+3. It forces you into a more functional approach.
+
+    - Individual instances forces you to design your system in a more functional manner, in order to properly take
+      advantage of them. Whether this is an advantage or not depends on your coding style. For me personally, I take
+      towards a more functional style- so I enjoy having systems that enforce that.
+
+4. It helps avoid configuration coupling.
+
+    - Since you're able to configure each instance in isolation, it allows you to make decisions about your logging
+      configurations on a case-by-case basis; avoiding the common pitfall of trying to wrok around a global
+      configuration in edge case sitations.
+
+5. You're more aware of where and how you're logging.
+    - One of the most important aspects is that it conditions you to be more aware of _when_ and _how_ you're logging.
+      Or more specifically, it conditions you to be more aware of when you're _not_ logging. Since you're creating
+      instances on a case-by-case basis, whenever you're missing one for a new class or module- it becomes a lot more
+      apparent. This can help you avoid missing data when it comes time to debug.
+
+### Are there plans to support message templates?
+
+The decision not to support message templates was intentional, and template support will not be added to **rLog**.
+
+If you want template support, I suggest you check out [rbx-log](https://github.com/roblox-aurora/rbx-log).
+
+#### Why?
+
+One of the core design philosophies of **rLog** is a seperation of the core logging message and the data associated with
+it. This decision comes from my personal (and professional) experience in using various logging frameworks in large
+scale applications.
+
+Namely, message templates can cause two common problems:
+
+1. Messages become overtly verbose.
+
+    - When data is mixed in with your log messages, it becomes more difficult to understand _what_ a log is saying at a
+      glance. Especially when your data is niche or extensively large. When working with a large collection of logs,
+      this can significantly increase cognitive load when debugging- and just generally causes more problems than it
+      helps fix.
+
+2. It becomes significantly harder to `grep` logs.
+    - Because your messages are dynamic, it becomes much harder to filter logs according to simple queries. You have to
+      come up with more complex patterns; ones that may or may not cover all the edge-cases. Seeing as how logs are
+      typically the one thing you _don't_ want to deal with edge-cases on, this can become a huge issue.
+
+Although, both of these problems can be fixed by enforcing proper logging practices. For example, only using templates
+with simple types, or ensuring you prefix all your log messages with a simple string before going in depth.
+
+But I'd rather _not_ deal with that. By not supporting message templates, you're forced to practice proper logging
+practices anyways by providing clear and concise log messages; attaching data as a secondary filter when needed.
+
+It also makes log processing much faster, simpler, and reduces the corners (and possible edge-cases) that the logging
+framework has to cover.
+
+### Can you add a sink for XYZ?
+
+Absolutely! If you have a platform or use-case that you feel is common enough, or practical enough, that a provided sink
+should be made for it- I'd love to add it.
+
+[Open an issue](https://github.com/daymxn/rlog/issues) on the GitHub requesting the sink, and explain why you think it
+should be added. When I get the free-time, I'll work on an implementation and add it to the list of provided loggers.
+
+Alternatively, you can [create your own PR](https://github.com/daymxn/rlog/pulls) adding the sink, and I can review that
+as well. I won't always have the time to invest in implementing new sinks, so if you can add it yourself- it's much
+easier for me to give a quick code-review than it is to research and implement the sink from scratch.
+
+### How can I export/filter my logs?
+
+While **rLog** does provide a bunch of utilities and configuration to help filter your logs before they hit the console,
+sometimes, that's not sufficient.. Sometimes you may want to aggregate your logs and look at the big picture.
+
+In these cases, you'll wanna use a sink that sends your logs to _some_ external service. These external services usually
+provide _rich_ in-house support for filtering, aggregating, and exporting logs.
+
+A popular choice, which **rLog** actually provides in-house support for, is
+[Google Cloud Logging](https://cloud.google.com/logging).
+
+You can check out the [Getting started with Google Cloud Logging](./advanced/google-cloud-logging.mdx) guide to learn
+more.
+
+### Can I use this for client-side logging too?
+
+**rLog** is advertised as a "server-side" logging framework, and it's designed to _only_ be ran on the server.
+
+But that isn't necessarily strictly enforced. You _can_ use **rLog** on the client-side as well.
+
+The drawback is that you can't cross client to server boundaries with context, and certain features may not work (such
+as Google Cloud Logging).
+
+Client-side logging is basically a "provided as is" use case; if it works it works, but if it doesn't then I won't be
+investing much time fixing it.
+
+### This is confusing, you could have phrased X better
+
+After working on something for an extended period, certain knowledge becomes "common sense".
+
+There might be a better way to explain certain features or processes, and I just completely overlooked it because of my
+existing knowledge and bias.
+
+So I'm always _more_ than happy to take feedback; especially regarding documentation or design improvements.
+
+If you have such feedback, feel free to [open an issue](https://github.com/daymxn/rlog/issues) on the GitHub talking
+about it:)

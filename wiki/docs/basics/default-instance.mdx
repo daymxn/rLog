@@ -1,0 +1,269 @@
+---
+description: Learn about the default (or global) instance, and how to use it.
+---
+
+# Default Instance
+
+If you have no need for Log Context, individual configs, or any of the more advanced features **rLog** provides; then
+creating individual instances can be a bit too much.
+
+The default ("global") instance allows you to set up a single configuration, and use it anywhere.
+
+:::info what you'll learn
+
+- What the default instance is
+- How to apply global configuration settings
+- How configuration inheritance works
+
+:::
+
+## Usage
+
+The default instance is accessible through either `rLog.default` or the `rLogger` alias.
+
+```ts
+import { rLog, rLogger } from "@rbxts/rlog";
+
+rLogger.info("Hello world!");
+rLog.default.info("Hello world!");
+```
+
+```logs title="Console"
+[INFO]: Hello world!
+
+[INFO]: Hello world!
+```
+
+## Configuration
+
+The default instance is the _only_ **rLog** that you can update the config for without creating a new instance.
+Individual **rLog** instances are, by design, immutable.
+
+But in doing so, you have a few different ways of going about it.
+
+### Set a Config
+
+The simplest way is "setting" the default config to your own.
+
+```ts
+import { rLog, LogLevel } from "@rbxts/rlog";
+
+rLog.SetDefaultConfig({ minLogLevel: LogLevel.DEBUG });
+```
+
+This will overwrite the current default config with your own.
+
+This will also override certain default configurations, such as the roblox console sink. If you _don't_ want to do that,
+then the next section is for you.
+
+### Merge Configs
+
+The more practical way is "updating" the default config; creating a merge between the existing config and your own.
+
+```ts
+import { rLog, LogLevel } from "@rbxts/rlog";
+
+rLog.UpdateDefaultConfig({ minLogLevel: LogLevel.DEBUG });
+```
+
+If there's any overlap between the current config and your own, the new config that you provide will take precedence.
+But otherwise, everything else will remain the same.
+
+### Reset the Config
+
+You'll rarely need to, but if you get into a situation where you want to completely wipe the default config back to its
+original settings, you can do that.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+rLog.ResetDefaultConfig();
+```
+
+### Inheritance
+
+All individual **rLog** instances inherit their settings from the default instance; effectively creating a merged
+config.
+
+```ts
+import { rLog, LogLevel } from "@rbxts/rlog";
+
+rLog.UpdateDefaultConfig({ minLogLevel: LogLevel.DEBUG });
+
+// implicitly has the minLogLevel set to DEBUG
+const logger = new rLog({ tag: "MyCoolLogger" });
+```
+
+:::warning
+
+While instances inherit from the default config, they only do so at creation time.
+
+So if you update or otherwise change the default config _after_ creating an instance, it won't inherit the changes.
+
+```ts
+import { rLog, LogLevel } from "@rbxts/rlog";
+
+// does not have its minLogLevel set to DEBUG
+// error-next-line
+const logger = new rLog({ tag: "MyCoolLogger" });
+
+rLog.UpdateDefaultConfig({ minLogLevel: LogLevel.DEBUG });
+```
+
+:::
+
+#### Settings not Inherited
+
+Some settings are unique in that they are not inherited, or they do so in a specific way.
+
+##### Tags
+
+Tags are not inherited at all. So setting a tag on the default instance has practically no effect downstream.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+rLog.UpdateDefaultConfig({ tag: "Main" });
+const logger = new rLog();
+
+rLogger.i("Hello world!");
+logger.i("Goodbye world!");
+```
+
+```logs title="Console"
+[INFO]: Main -> Hello world!
+
+[INFO]: Goodbye world!
+```
+
+##### Sinks & Enrichers
+
+Sinks and enrichers are applied bottom up, without duplicates.
+
+This means if a new instance is created with its own sinks; they will run before the default instance sinks.
+
+:::info
+
+Bottom-up meaning from the perspective of instances. They still run in the _order_ they're added, but newer instances
+have their sinks and enrichers ran before older sinks and enrichers.
+
+:::
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+rLog.UpdateDefaultConfig({
+  enrichers: [
+    (entry) => {
+      entry.message = `${entry.message}1`;
+      return entry;
+    },
+  ],
+});
+
+const logger = new rLog({
+  enrichers: [
+    (entry) => {
+      entry.message = `${entry.message}2`;
+      return entry;
+    },
+  ],
+});
+
+logger.i("Enrichers: ");
+```
+
+```logs title="Console"
+[INFO]: Enrichers: 21
+```
+
+Or if a new instance is created with similiar sinks or enrichers to the default instance; those will also run before
+others.
+
+This is what "without duplicates" means.
+
+```ts
+import { rLog, LogEntry } from "@rbxts/rlog";
+
+function AddFiveToMessageEnricher(entry: LogEntry): LogEntry {
+  entry.message = `${entry.message}5`;
+  return entry;
+}
+
+rLog.UpdateDefaultConfig({
+  enrichers: [
+    AddFiveToMessageEnricher,
+    (entry) => {
+      entry.message = `${entry.message}1`;
+      return entry;
+    },
+  ],
+});
+
+const logger = new rLog({
+  enrichers: [
+    AddFiveToMessageEnricher,
+    (entry) => {
+      entry.message = `${entry.message}2`;
+      return entry;
+    },
+  ],
+});
+
+logger.i("Enrichers: ");
+```
+
+```logs title="Console"
+[INFO]: Enrichers: 521
+```
+
+Even though `AddFiveToMessageEnricher` was added already, re-adding effectively overwrites its position in the enricher
+queue.
+
+#### Disabling Inheritance
+
+If you have an instance that you don't want to inherit the default configuration for, you can toggle the
+`inheritDefault` parameter when creating it.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+rLog.UpdateDefaultConfig({
+  enrichers: [
+    (entry) => {
+      entry.message = `${entry.message}1`;
+      return entry;
+    },
+  ],
+});
+
+const logger = new rLog({ inheritDefault: false });
+
+logger.i("Enrichers: ");
+```
+
+```logs title="Console"
+[INFO]: Enrichers:
+```
+
+By default, this parameter is set to `true`; meaning that instances inherit from default.
+
+## Best Practices
+
+- **Centrialize global settings**: If you find yourself repeating the same config settings over and over again for every
+  logger, they may be better defined in the global scope.
+- **Keep default usage simple**: The default instance offers a means for quick debugging, and covers simple use cases.
+  But **rLog** as a whole is generally designed around the principle of shared context- which doesn't really apply when
+  you only have a single instance.
+- **Take advantage of config merging**: Configs are merged by default, so you rarely should need to repeat yourself.
+  It's more practical to hoist your common settings to a centrialized place- and abuse config merging to keep things
+  simple.
+
+## Summary
+
+Let's recap what we've learned about the default instance:
+
+- The default instance is the **global** instance of **rLog** that's useful for **simple** usage.
+- All individual instances **inherit** their configurations from the global instance.
+- Configurations between instances are **merged**, helping you follow DRY principles.
+- Sinks and enrichers are ran **bottom-up** _per instance_ and _without_ **duplicates**.

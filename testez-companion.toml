@@ -1,0 +1,4 @@
+roots = ["ReplicatedStorage/TS"]
+
+[extraOptions]
+timeout = 10

@@ -1,0 +1,61 @@
+---
+description: Learn how to apply named categories to your logs.
+---
+
+# Tags
+
+Tags provide a way for you identify specific **rLog** instances, and allow finer categorization of your log messages.
+
+:::info what you'll learn
+
+- What tags are
+- How to use tags to categorize your logs
+
+:::
+
+## Using Tags
+
+By default, **rLog** instances do not have a tag. You can provide one via two ways.
+
+### Helper Method
+
+One way is by using the `withTag` helper method.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+const main = new rLog().withTag("Main");
+
+main.i("Hello world!");
+```
+
+```logs title="Console"
+[INFO]: Main -> Hello world!
+```
+
+By default, tags are prefixed to the start of log messages, after the level.
+
+This makes identifying different instances quick and easy.
+
+### Config
+
+You can also configure the tag of an instance when setting the config.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+const main = new rLog({ tag: "Main" });
+
+main.i("Hello world!");
+```
+
+```logs title="Console"
+[INFO]: Main -> Hello world!
+```
+
+## Summary
+
+Let's recap what we've learned:
+
+- You can attach **tags** to instances to provide more fine categorization.
+- Tags can be applied at the **config** level or as a **method** call.

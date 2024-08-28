@@ -1,0 +1,161 @@
+---
+description: Learn what logs are, and how they're represented.
+---
+
+# Log Entries
+
+Log entries are the core aspect of **rLog**. They're what provide log messages, and carry the additional context of a
+log.
+
+:::info what you'll learn
+
+- What log entries are
+- The different components of a log
+- How data is attached to logs
+
+:::
+
+## Overview
+
+Log entries themselves aren't nearly as complex as the systems surrounding them, but they do have a decent amount of
+information attached to them.
+
+```ts
+export type LogEntry = {
+  level: LogLevel;
+  message: string;
+  data: LogData;
+  encoded_data: LogData;
+  config: Writable<RLogConfig>;
+  context?: LogContext;
+  timestamp: number;
+  source_metadata: SourceMetadata;
+};
+```
+
+### Level
+
+The `level` is the [Log Level](./log-levels.mdx), or severity, of the log.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+const logger = new rLog();
+
+logger.info("Hello world!");
+```
+
+In this case, `LogLevel.INFO` is the level.
+
+### Message
+
+The `message` is the actual string message intended for the log.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+const logger = new rLog();
+
+logger.info("Hello world!");
+```
+
+In this instance, `Hello world!` is the message.
+
+### Data
+
+`data` is additional metadata specific to the log itself.
+
+```ts
+export type LogData = Record<string, unknown>;
+```
+
+You'll learn more about `data` in the other guides.
+
+### Encoded Data
+
+`encoded_data` is just `data` in a form that's JSON friendly, and has been ran through the **rLog** serializer.
+
+### Config
+
+`config` is a `Writable` version of the `RLogConfig` that was used when sending the log.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+const logger = new rLog({ tag: "Main" });
+
+logger.info("Hello world!");
+```
+
+In this instance, `{ tag: "Main" }` is the `config`.
+
+### Timestamp
+
+`timestamp` is the epoch milliseconds in which the log occurred.
+
+```logs
+[INFO]: Actions -> Hello world!
+{
+  // highlight-next-line
+  timestamp: 1723757975945,
+  correlation_id: "Xzm9InKevNRjvqqo"
+}
+```
+
+:::info
+
+For the sake of brevity, most of the guides will exclude `timestamp` from their output.
+
+In practice, this will be a part of your logs.
+
+:::
+
+### Context
+
+`context` is the `LogContext` instance that was used when sending the log, if there was one present at all.
+
+Log Context allows you to create linkage between log entries, and is one of the most important features of **rLog**.
+
+But, it's a bit too complex of a topic for now; you'll learn more about it in the [Log Context](./log-context.mdx)
+guide.
+
+#### Correlation ID
+
+`correlation_id` is a unique string attached to logs to identify entries that run across different `RLog` instances, but
+represent the same "flow".
+
+These are provided via Log Context.
+
+```logs
+[INFO]: Actions -> Hello world!
+{
+  timestamp: 1723757975945,
+  // highlight-next-line
+  correlation_id: "Xzm9InKevNRjvqqo"
+}
+```
+
+You'll learn more about Correlation IDs aswell in the [Log Context](./log-context.mdx) guide.
+
+### Source Metadata
+
+`source_metadata` is additional metadata detailing _where_ in the source code this log occurred.
+
+```ts
+export type SourceMetadata = {
+  function_name?: string;
+  nearest_function_name?: string;
+  file_path: string;
+  line_number: number;
+};
+```
+
+You'll learn more about Source Metadata in the [Source Metadata](/advanced/source-metadata.mdx) guide.
+
+## Summary
+
+Let's recap what we've learned about log entries:
+
+- They carry all the **metadata** associated with log messages
+- They keep track of **when** logs were sent, and **who** sent them
+- They allow logs to carry additional **user provided** data

@@ -1,0 +1,604 @@
+# Fast Breakdown
+
+If you're already familiar with logging libraries, or just want a quick breakdown of **rLog** without reading through
+the API or guides, then this is for you.
+
+We'll run through all the core components of **rLog** at a mid-high level, so you can get up and running quickly.
+
+## Instance creation
+
+`rLog` provides a default ("global") instance that you can use, but the intended usage is to create individual instances
+per file or flow.
+
+```ts
+import { rLog, rLogger } from "@rbxts/rlog";
+
+// use the default instance
+rLogger.info("Hello world!");
+
+// create your own instance
+const logger = new rLog();
+```
+
+There are also alias exports that you can use in place of `rLog`, for stylistic purposes.
+
+```ts
+import { RLog, rLog, rlog } from "@rbxts/rlog";
+
+const logger = new rLog();
+const logger = new rlog();
+const logger = new RLog();
+```
+
+## Basic Logging
+
+**rLog** supports log severity levels under the `LogLevel` enum.
+
+There are currently five types of levels.
+
+```ts
+export enum LogLevel {
+  VERBOSE,
+  DEBUG,
+  INFO,
+  WARNING,
+  ERROR,
+}
+```
+
+By default, `WARNING` and `ERROR` are output via `warn`, while the others are output via `print`.
+
+All logging methods can be called directly on an `rLog` instance using the method corresponding to the level name.
+
+Or you can call the `log` method manually.
+
+```ts
+import { rLog, LogLevel } from "@rbxts/rlog";
+
+const logger = new rLog();
+
+logger.verbose("Hello verbose!");
+logger.debug("Hello debug!");
+logger.info("Hello info!");
+logger.warning("Hello warning!");
+logger.error("Hello error!");
+
+logger.log(LogLevel.DEBUG, "Hello world!");
+```
+
+```logs title="Console"
+[VERBOSE]: Hello verbose!
+[DEBUG]: Hello debug!
+[INFO]: Hello info!
+[WARNING]: Hello warning!
+[ERROR]: Hello error!
+[DEBUG]: Hello world!
+```
+
+Each level also has at least one short-hand alias method that you can use for style purposes.
+
+```ts
+logger.verbose();
+logger.v();
+
+logger.debug();
+logger.d();
+
+logger.info();
+logger.i();
+
+logger.warning();
+logger.warn();
+logger.w();
+
+logger.error();
+logger.e();
+```
+
+## Configuration
+
+**rLog** has a moderate number of configurable options available via the [RLogConfig](#) and [SerializationConfig](#)
+types.
+
+You can apply these in a few different ways.
+
+### Global Settings
+
+You can apply settings to the default instance, and they'll be applied to all **rLog** instances automatically since
+they all inherit upwards.
+
+```ts
+import { rLog, LogLevel } from "@rbxts/rlog";
+
+const config = {
+  minLogLevel: LogLevel.DEBUG,
+};
+
+// Sets the default config, replacing any present values
+rLog.SetDefaultConfig(config);
+
+// Updates the default config, merging with the existing config
+rLog.UpdateDefaultConfig({ serialization: { encodeFunctions: true } });
+
+// Resets the default config to the original values
+rLog.ResetDefaultConfig();
+```
+
+:::warning
+
+While these settings are automatically applied to all instances, they are only done so for instances created after the
+method call.
+
+If you're using context properly, this is usually not an issue though.
+
+:::
+
+### Instance Settings
+
+The normal way for applying settings is through the constructor of **rLog**.
+
+```ts
+import { rLog, LogLevel } from "@rbxts/rlog";
+
+const logger = new rLog({ minLogLevel: LogLevel.DEBUG });
+```
+
+But there are also helper methods for many of the common settings that you can call on instances instead.
+
+```ts
+const logger = new rLog()
+  .withConfig(myConfig)
+  .withMinLogLevel(LogLevel.DEBUG)
+  .withTag("Main")
+  .withContext(customContext);
+```
+
+:::warning
+
+**rLog** follows the principle of immutability.
+
+So method calls return _new_ instances, not the current instance.
+
+:::
+
+## Serialization
+
+**rLog** provides serialization out of the box; allowing you to attach "metadata" to your messages for easier debugging
+and tracking.
+
+### Basic Usage
+
+You can pass arbitrary data as the second argument of a logging method call, and it will be internally encoded and
+output alongside your message.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+const logger = new rLog();
+
+logger.debug("User purchase made", { user: 123, order: "51015" });
+```
+
+```logs title="Console"
+[DEBUG]: Hello debug!
+{ data: { user: 123, order: "51015" } }
+```
+
+### ROBLOX Types & Nested Tables
+
+The custom encoding provided by **rLog** also supports deeply nested tables and Roblox data types out of the box.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+const logger = new rLog();
+
+logger.debug("User purchase made", {
+  user: {
+    id: 123,
+    purchase: {
+      id: 15,
+      details: {
+        item: "Nuke",
+        result: Enum.ProductPurchaseDecision.PurchaseGranted,
+        position: new Vector3(10, 15, 20),
+        rotation: new CFrame(),
+      },
+    },
+  },
+});
+```
+
+```logs title="Console"
+[DEBUG]: Hello debug!
+{
+  data: {
+    user: {
+      id: 123,
+      purchase: {
+        id: 15,
+        details: {
+          item: "Nuke",
+          result: "Enum.ProductPurchaseDecision.PurchaseGranted",
+          position: { X: 10, Y: 15, Z: 20 },
+          rotation: "CFrame(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1)",
+        }
+      }
+    }
+  }
+}
+```
+
+:::tip
+
+While the ROBLOX console may (or may not, depending on the version) output them in a way that doesn't look like it, they
+are actually output as valid JSON elements.
+
+So the output of your messages can safely be sent to backends expecting JSON.
+
+:::
+
+### Classes
+
+By default, serialization looks for a `__tostring` method on class instances to try to encode them properly. This method
+is automatically generated by **rbxts** for typescript classes, with a value of the class name.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+class Person {
+  constructor(public name: string) {}
+}
+
+const logger = new rLog();
+
+const person = new Person("Daymon");
+
+logger.debug("Person created", { me: person });
+```
+
+```logs title="Console"
+[DEBUG]: Person created
+{ data: { me: "Person" } }
+```
+
+While you can override this behavior by providing your own `toString` method on the class, you can also provide a custom
+`encodeMethod` for the serializer to look for.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+class Person {
+  constructor(public name: string) {}
+
+  public encode() {
+    return this.name;
+  }
+}
+
+const logger = new rLog({ serialization: { encodeMethod: "encode" } });
+
+const person = new Person("Daymon");
+
+logger.debug("Person created", { me: person });
+```
+
+```logs title="Console"
+[DEBUG]: Person created
+{ data: { me: "Daymon" } }
+```
+
+## Enrichers
+
+Enrichers are callbacks that can attach additional data to log entries, or mutate existing data.
+
+```ts
+export type LogEnricherCallback = (entry: LogEntry) => LogEntry;
+```
+
+### Usage
+
+You can use enrichers by specifying them at the config level when you create your **rLog** instance.
+
+:::tip
+
+**rLog** comes packaged with some ready-to-use enrichers out of the box for common use-cases.
+
+You can learn more about those in the [Provided Enrichers](./basics/enrichers#provided-enrichers) section.
+
+:::
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+function addTimestamp(entry: LogEntry): LogEntry {
+  entry.encoded_data["timestamp"] = DateTime.now();
+
+  return entry;
+}
+
+const logger = new rLog({ enrichers: [addTimestamp] });
+```
+
+## Sinks
+
+Sinks are callbacks that take in a log entry, and can optionally decide to prevent the log entry from propogating.
+
+They provide a way to filter or "consume" logs.
+
+```ts
+// returning `true` means that the log should not be processed any more
+export type LogSinkCallback = (entry: LogEntry, attachment: RLog, source: RLog) => boolean | void;
+```
+
+:::warning
+
+Sinks run _after_ enrichers. So the data you see from a sink will be data that has been modified by all the enrichers
+already.
+
+:::
+
+### Usage
+
+You can use sinks by providing them at the config level when you create your **rLog** instance.
+
+:::tip
+
+**rLog** comes packaged with some ready-to-use sinks out of the box for common use-cases.
+
+You can learn more about those in the [Provided Sinks](./basics/sinks#provided-sinks) section.
+
+:::
+
+```ts
+import { rLog } from "@rbxts/rlog";
+import { adminList } from "./constants";
+
+function removeAdminCalls(entry: LogEntry) {
+  return entry.tag === "ADMIN" && !adminList.include(entry.encoded_data.player);
+}
+
+const logger = new rLog({ sinks: [removeAdminCalls] });
+```
+
+However, a more common use case for sinks is "consuming" logs for external storage.
+
+```ts
+import { RunService } from "@rbxts/services";
+import { rLog } from "@rbxts/rlog";
+import { queueLogRequest } from "./log-database";
+
+const debug = RunService.IsStudio();
+
+function logToDatabase(entry: LogEntry) {
+  const endpoint = debug ? "qa" : "prod";
+
+  queueLogRequest(entry, endpoint);
+
+  return !debug; // only allow messages through while we're in studio
+}
+
+const logger = new rLog({ sinks: [logToDatabase] });
+```
+
+:::warning
+
+Your sinks should **not** yield, as they may otherwise cause other logs to stop being output, or cause logs to be output
+out of order.
+
+:::
+
+## Log Context
+
+Log Context provides a way to create linkage between log entries in an individual flow, making debugging easier in
+high-traffic or asynchronous environments.
+
+### Basic Usage
+
+Log Context is primarily useful in cross service logging, where you want to associate all the relevant actions in a flow
+with one another.
+
+```ts title="datastore.ts"
+import { rLog, LogContext } from "@rbxts/rlog";
+
+const config = { tag: "Datastore" };
+
+export function AddMoney(context: LogContext, player: Player, money: number) {
+  const logger = context.use(config);
+
+  logger.i("Adding money to player save");
+  // ...
+  logger.i("Money added");
+}
+```
+
+```ts title="player-actions.ts"
+import { rLog, LogContext } from "@rbxts/rlog";
+import { AddMoney } from "./datastore";
+
+const config = { tag: "PlayerActions" };
+
+export function GiveMoney(context: LogContext, player: Player, money: number) {
+  const logger = context.use(config);
+
+  logger.i("Giving player money", { player: player, money: money });
+
+  AddMoney(context, player, money);
+
+  logger.i("Money given to player");
+}
+```
+
+```ts title="network.ts"
+import { LogContext } from "@rbxts/rlog";
+import { GiveMoney } from "./player-actions";
+import { remotes } from "./remotes";
+
+remotes.giveMoney.connect((player: Player, money: number) => {
+  const context = LogContext.start();
+
+  GiveMoney(context, player, money);
+
+  context.stop();
+});
+```
+
+```logs title="Console"
+[INFO]: PlayerActions -> Giving player money
+{
+  data: { player: "Player1", money: 100 },
+  correlation_id: "ZnT961Kwlav6JFii"
+}
+
+[INFO]: Datastore -> Adding money to player save
+{ correlation_id: "ZnT961Kwlav6JFii" }
+
+[INFO]: Datastore -> Money added
+{ correlation_id: "ZnT961Kwlav6JFii" }
+
+[INFO]: PlayerActions -> Money given to player
+{ correlation_id: "ZnT961Kwlav6JFii" }
+```
+
+:::warning
+
+Log Context has a life cycle. Failing to call `stop` can cause memory leaks in your application.
+
+If you'd rather not manually handle this, you can use `withLogContext` instead:
+
+```ts
+import { withLogContext } from "@rbxts/rlog";
+import { GiveMoney } from "./player-actions";
+import { remotes } from "./remotes";
+
+remotes.giveMoney.connect((player: Player, money: number) => {
+  // automatically starts and stops the context
+  withLogContext((context) => {
+    GiveMoney(context, player, money);
+  });
+});
+```
+
+:::
+
+### Context Bypass
+
+Enabling the `contextBypass` setting will allow logs with context to bypass the `minLogLevel` whenever another log in
+the context is of severity `WARNING` or higher.
+
+```ts
+import { rLog, withContext } from "@rbxts/rlog";
+
+rLog.UpdateDefaultConfig({ minLogLevel: WARNING });
+
+const config = { contextBypass: true, suspendContext: true };
+
+withContext((context) => {
+  const logger = context.use(config);
+
+  logger.d("Some extra data");
+  logger.i("Doing stuff");
+  logger.w("Something happened");
+  logger.i("Done");
+});
+```
+
+```logs title="Console"
+[DEBUG]: Some extra data
+{ correlation_id: "BNPmmqDsnpLdWiPF" }
+
+[INFO]: Doing stuff
+{ correlation_id: "BNPmmqDsnpLdWiPF" }
+
+[WARNING]: Something happened
+{ correlation_id: "BNPmmqDsnpLdWiPF" }
+
+[INFO]: Done
+{ correlation_id: "BNPmmqDsnpLdWiPF" }
+```
+
+Since a `WARNING` message was sent through the context before it stopped, the rest of the messages in the context that
+usually wouldn't have been sent were also sent.
+
+This can be a huge help in avoiding extra verbose logs until you actually need them (ie; when debugging).
+
+### Correlation IDs
+
+One of the biggest use cases for Log Context is Correlation IDs.
+
+Correlation IDs provide a way to track the flow of a process, and by default Log Context create their own unique
+Correlation ID when they're created- and pass it to `rLog` instances that `use` it.
+
+```ts title="datastore.ts"
+import { rLog, LogContext } from "@rbxts/rlog";
+
+const config = { tag: "Datastore" };
+
+export function AddMoney(context: LogContext, player: Player, money: number) {
+  const logger = context.use(config);
+
+  logger.i("Adding money to player save");
+  // ...
+  logger.i("Money added");
+}
+```
+
+```ts title="player-actions.ts"
+import { rLog, LogContext } from "@rbxts/rlog";
+import { AddMoney } from "./datastore";
+
+const config = { tag: "PlayerActions" };
+
+export function GiveMoney(context: LogContext, player: Player, money: number) {
+  const logger = context.use(config);
+
+  logger.i("Giving player money", { player: player, money: money });
+
+  AddMoney(context, player, money);
+
+  logger.i("Money given to player");
+}
+```
+
+```ts title="network.ts"
+import { withLogContext } from "@rbxts/rlog";
+import { GiveMoney } from "./player-actions";
+import { remotes } from "./remotes";
+
+remotes.giveMoney.connect((player: Player, money: number) => {
+  withLogContext((context) => {
+    GiveMoney(context, player, money);
+  });
+});
+```
+
+```logs title="Console"
+[INFO]: PlayerActions -> Giving player money
+{
+  data: { player: "Player1", money: 100 },
+  correlation_id: "ZnT961Kwlav6JFii"
+}
+
+[INFO]: Datastore -> Adding money to player save
+{ correlation_id: "ZnT961Kwlav6JFii" }
+
+[INFO]: Datastore -> Money added
+{ correlation_id: "ZnT961Kwlav6JFii" }
+
+[INFO]: PlayerActions -> Money given to player
+{ correlation_id: "ZnT961Kwlav6JFii" }
+```
+
+Correlation IDs become especially useful in high traffic (possibly asynchronous) functions, where you may have multiple
+players or systems waiting on the result of a function, but from different invocations and threads.
+
+With Correlation IDs, you can retrieve the logs of a particular run without the noise of unrelated runs.
+
+## Learning more
+
+If you have any pending questions or want to learn more, you can read through our [API reference](#), which includes
+documentation for the entire public API.
+
+Alternatively, you can sift through our [comprehensive wiki/guide](category/guides).
+
+Or if you're more of a practical learner, take a look at our [example](#) to see how **rLog** can be used in practice.

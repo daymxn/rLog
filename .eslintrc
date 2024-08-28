@@ -1,0 +1,55 @@
+{
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+	  "jsx": true,
+	  "useJSXTextNode": true,
+	  "ecmaVersion": 2018,
+	  "sourceType": "module",
+	  "project": ["./tsconfig.json", "./scripts/tsconfig.scripts.json"]
+	},
+	"ignorePatterns": ["/out", "*.js"],
+	"plugins": ["@typescript-eslint", "roblox-ts", "prettier", "headers"],
+	"extends": [
+	  "eslint:recommended",
+	  "plugin:@typescript-eslint/recommended",
+	  "plugin:roblox-ts/recommended",
+	  "plugin:prettier/recommended",
+	  "plugin:react-hooks/recommended"
+	],
+	"overrides": [{
+		"files": [ "scripts/**/*" ],
+		"rules": {
+			"roblox-ts/no-regex": 0,
+			"roblox-ts/lua-truthiness": 0
+		}
+	}],
+	"rules": {
+	  "headers/header-format": [
+      	"error",
+      	{
+      	  "source": "file",
+      	  "path": "scripts/license-header.txt",
+		  "trailingNewlines": 2
+      	}
+      ],
+	  "prettier/prettier": [
+		"warn",
+		{
+		  "tabWidth": 2,
+		  "endOfLine": "auto",
+		  "useTabs": false,
+		  "trailingComma": "es5",
+		  "plugins": ["prettier-plugin-organize-imports"],
+		  "overrides": [
+			{
+			  "files": ["*.jsonc", ".eslintrc", "tsconfig*.json"],
+			  "options": {
+				"trailingComma": "none"
+			  }
+			}
+		  ]
+		}
+	  ]
+	}
+  }
+  

@@ -1,0 +1,198 @@
+---
+description: Learn how to apply filters to logs, or send them to external services.
+---
+
+# Sinks
+
+Sinks are an essential part of the **rLog** framework, enabling you to filter or "consume" log entries.
+
+By using sinks, you can direct your logs wherever they are needed, ensuring that important information is captured and
+available for analysis.
+
+:::info what you'll learn
+
+- What sinks are and their purpose in logging
+- How to create and use custom sinks
+- How to apply multiple sinks to a single log instance
+- Best practices for using sinks effectively
+
+:::
+
+## What is a Sink?
+
+A sink in **rLog** is a component responsible for receiving log entries and deciding if the log should be consumed or
+not.
+
+```ts
+export type LogSinkCallback = (entry: LogEntry) => boolean | void;
+```
+
+## Types of Sinks
+
+While you can use a sink for whatever you want, they usually fall under one of two categories.
+
+### Filters
+
+One of the most basic usages of a sink is the ability to apply filters to logs.
+
+More specifically, excluding certain logs from the output.
+
+```ts title="remove-admin-calls-sink.ts"
+import { rLog, LogEntry } from "@rbxts/rlog";
+import { adminList } from "./constants";
+
+export function removeAdminCallsSink(entry: LogEntry): boolean {
+  return entry.config.tag === "ADMIN" && !adminList.includes(entry.data.player);
+}
+```
+
+This sink applys a "filter" to log entries, such that if a log entry has the tag `"ADMIN"` and the player the log is for
+isn't a valid admin, then the log is discarded.
+
+### Consumers
+
+Probably the most common [and important] type of sinks are the "consumers".
+
+Consumer sinks "consume" log messages, and send them to an external server instead of the local console.
+
+But the "consume" aspect isn't necessarily required.
+
+:::tip
+
+Since sinks have a return type of `boolean | void`, you don't _have_ to return anything. If you don't want to consume
+the entry, you can just not return anything; and the implicit `void` return will be the same as `return false`.
+
+:::
+
+```ts title="log-to-database-sink.ts"
+import { RunService } from "@rbxts/services";
+import { rLog } from "@rbxts/rlog";
+import { queueLogRequest } from "./log-database";
+
+const debug = RunService.IsStudio();
+
+export function logToDatabaseSink(entry: LogEntry): boolean {
+  const endpoint = debug ? "qa" : "prod";
+
+  queueLogRequest(entry, endpoint);
+
+  return debug; // only allow messages through while we're in studio
+}
+```
+
+This sink sends all logs to our backend, and only prevents them from reaching the ROBLOX console for published games.
+
+So in studio, we can still have our logs in the console AND in a seperate external database for deeper inspection.
+
+## Using Sinks
+
+Once you've created a sink, you can "attach" it to your **rLog** instances via the `sinks` setting in your config.
+
+:::warning
+
+Keep in mind that sinks run _after_ enrichers, so the data you're seeing is after it's been fully processed by all the
+enrichers.
+
+:::
+
+```ts
+import { rLog } from "@rbxts/rlog";
+import { removeAdminCallsSink } from "./remove-admin-calls-sink";
+
+const logger = new rLog({ sinks: [removeAdminCallsSink] });
+```
+
+### Order of Sinks
+
+Sinks are applied to logs (or "ran") in the order they are "attached" to the **rLog** instance.
+
+This means that if the first sink "consumes" an entry, the second sink won't even be called.
+
+```ts
+import { rLog } from "@rbxts/rlog";
+
+const logger = new rLog({
+  sinks: [
+    (entry) => {
+      return true;
+    },
+    (entry) => {
+      error("Messages should not log to the console");
+    },
+  ],
+});
+
+logger.i("Hello world!");
+```
+
+In this example, the first sink returns `true`; effectively "consuming" the log.
+
+So the error from the second sink is never thrown.
+
+## Provided Sinks {#provided-sinks}
+
+**rLog** provides some ready to use sinks right out of the box, to cover common use cases.
+
+### Roblox Console
+
+Sends logs to the roblox console.
+
+:::tip
+
+This sink is applied to the default instance by default, so you don't need to re-add it.
+
+If you want to configure it though, give the [Roblox Console Configuration](/docs/advanced/roblox-console-configuration)
+guide a read.
+
+:::
+
+```ts
+import { rLog, robloxConsoleSink } from "@rbxts/rlog";
+import { customFormatMethod } from "./custom-formatter";
+
+rLog.UpdateDefaultConfig({
+  sinks: [
+    robloxConsoleSink({
+      formatMethod: customFormatMethod,
+    }),
+  ],
+});
+```
+
+### Google Cloud Logging
+
+Sends logs to the Google Cloud Logging API, so that they can then be viewed in the Google Cloud Console.
+
+```ts
+import { rLog, useGoogleCloudLogging } from "@rbxts/rlog";
+import { HttpService } from "@rbxts/HttpService";
+
+const googleCloudLoggingSink = useGoogleCloudLogging({
+  ACCESS_TOKEN: HttpService.GetSecret("GCLOUD_ACCESS_TOKEN");
+})
+
+rLog.SetGlobalSinks([googleCloudLoggingSink]);
+```
+
+:::info
+
+To learn more about setting up Google Cloud Logging for your **rLog** application, see our
+[Google Cloud Logging](/docs/advanced/google-cloud-logging) guide.
+
+:::
+
+## Best Practices
+
+- **Avoid yielding**: Avoid yielding in your sinks, as this can slow down your logging and impact application
+  performance. If you're sending your logs to a backend service, this should be done via a queue that gets picked up by
+  a different thread.
+- **Separate Concerns**: Use different sinks for different purposes (e.g., one for error logging, another for audit
+  trails) to keep your logs organized and easy to manage.
+
+## Summary
+
+Let's recap what we've learned about Sinks:
+
+- **Sinks** receive log entries and decide if they should be processed or not.
+- You can use sinks to **share** logs with an external service.
+- You can attach **multiple** sinks to an instance, but they're invoked in the order they're added.

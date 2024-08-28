@@ -16,6 +16,8 @@
 		"api:docs:export": "npx tsx ./scripts/src/export-api-reference.ts ./temp/fixed ./wiki/docs/api",
 		"api:docs": "npx run-s api:docs:*",
 		"api": "npx run-s api:build api:extract api:docs",
+		"format": "npx eslint --fix",
+		"lint": "npm run format",
 		"prepublishOnly": "npm run build"
 	},
 	"keywords": [

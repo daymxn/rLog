@@ -116,6 +116,7 @@ export interface RobloxConsoleSinkConfig {
  *
  * @public
  */
+// TODO()- since this returns a method, it doesn't pass the unique test on config merge; causing duplication.
 export function robloxConsoleSink(params: RobloxConsoleSinkConfig = {}) {
   const { formatMethod, outputMethod, minLogLevel, disable } = params;
 

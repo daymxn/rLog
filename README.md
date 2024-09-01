@@ -66,13 +66,6 @@ pnpm add @rbxts/rlog
 yarn add @rbxts/rlog
 ```
 
-### Wally
-
-```toml
-[dependencies]
-Reflex = "daymxn/rlog@1.0.0"
-```
-
 ## Overview
 
 rLog is a Context-based server-side logging framework for ROBLOX, designed to help organize and structure your logging process.
@@ -157,7 +150,8 @@ You can either checkout our [Quick Start](https://rlog.daymxn.com/docs/quick-sta
 ## Roadmap
 
 - Add social preview to github repo after going public
-
+- Add publishing for wally
+- Add docs for lua usage
 - Separate provided sinks into a sub package
 - Support google cloud console logging
 - Migrate tests to individual files

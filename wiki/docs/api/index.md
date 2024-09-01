@@ -28,7 +28,7 @@ Description
 
 </td><td>
 
-Context based Server-Side logging framework for ROBLOX projects.
+Context-based server-side logging framework for ROBLOX projects.
 
 
 </td></tr>

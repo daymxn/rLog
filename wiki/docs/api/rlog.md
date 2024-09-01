@@ -7,7 +7,7 @@ hide_title: true
 
 ## rlog package
 
-Context based Server-Side logging framework for ROBLOX projects.
+Context-based server-side logging framework for ROBLOX projects.
 
 ## Remarks
 
@@ -44,7 +44,7 @@ Context for a collection of log entries.
 
 </td><td>
 
-Class for Server-Side Roblox Logging.
+Class for server-side Roblox Logging.
 
 
 </td></tr>

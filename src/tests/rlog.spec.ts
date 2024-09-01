@@ -22,7 +22,8 @@ import { includes, startsWith } from "@rbxts/string-utils";
 import { t } from "@rbxts/t";
 import { LogData, LogEntry, LogLevel, SourceMetadata } from "../common";
 import { LogContext, LogContextManager, withLogContext } from "../context";
-import { rlog } from "../rlog";
+import { rLog, rlog } from "../rlog";
+import { robloxConsoleSink } from "../sinks";
 import { bind, check } from "./matchers";
 
 // TODO(): maybe split into separate files?
@@ -630,6 +631,20 @@ export = () => {
 
       const messagesAfterStop = getMessages();
       expect(messagesAfterStop.size()).to.equal(3);
+    });
+  });
+
+  describe("roblox console sink", () => {
+    it("should not duplicate logs", () => {
+      const logger = new rLog({
+        sinks: [robloxConsoleSink()],
+      });
+
+      logger.debug("Message");
+
+      const messages = getMessages();
+
+      expect(messages.size()).to.equal(1);
     });
   });
 };

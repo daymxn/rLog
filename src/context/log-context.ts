@@ -84,7 +84,7 @@ export class LogContext {
    *
    * @returns A new {@link LogContext} instance.
    *
-   * @throws If the context is dead (ie; if {@link LogContext.stop | stop} was called already)
+   * @throws If the context is dead (i.e., if {@link LogContext.stop | stop} was called already)
    *
    * @example
    * ```ts
@@ -114,7 +114,7 @@ export class LogContext {
    *
    * @see {@link LogContext.stop | stop}
    *
-   * @throws If the context is dead (ie; if {@link LogContext.stop | stop} was called already)
+   * @throws If the context is dead (i.e., if {@link LogContext.stop | stop} was called already)
    *
    * @example
    * ```ts

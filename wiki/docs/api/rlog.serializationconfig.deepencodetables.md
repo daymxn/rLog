@@ -18,7 +18,7 @@ readonly deepEncodeTables: boolean;
 
 ## Remarks
 
-When disabled, tables will not be recursively encoded, which may cause you to miss out on certain data types being properly translated (eg; roblox data types).
+When disabled, tables will not be recursively encoded, which may cause you to miss out on certain data types being properly translated (e.g., roblox data types).
 
 This will occur even if you have [encodeRobloxTypes](./rlog.serializationconfig.encoderobloxtypes.md) enabled.
 

@@ -14,7 +14,6 @@
 	  "plugin:@typescript-eslint/recommended",
 	  "plugin:roblox-ts/recommended",
 	  "plugin:prettier/recommended",
-	  "plugin:react-hooks/recommended"
 	],
 	"overrides": [{
 		"files": [ "scripts/**/*" ],

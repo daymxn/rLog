@@ -6,7 +6,8 @@
 	"enumMemberOrder": "preserve",
 	"compiler": {},
 	"apiReport": {
-		"enabled": false
+		"enabled": true,
+		"reportFolder": "<projectFolder>/api"
 	},
 	"docModel": {
 		"enabled": true,

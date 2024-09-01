@@ -8,7 +8,7 @@ some things you should know.
 
 ## Getting started
 
-Make sure you've given both the [Wiki](https://rlog.daymxn.com/rlog/docs/category/guides) and the [API Reference](https://rlog.daymxn.com/rlog/docs/api) a read before moving forward, such that you understand the design behind **rLog**.
+Make sure you've given both the [Wiki](https://rlog.daymxn.com/docs/category/guides) and the [API Reference](https://rlog.daymxn.com/docs/api) a read before moving forward, such that you understand the design behind **rLog**.
 
 ### Building
 
@@ -76,4 +76,57 @@ Code in this repo is formatted according to eslint and prettier. You can use the
 
 ```sh
 npm run format
+```
+
+### Changesets
+
+We use [changesets](https://github.com/changesets/changesets) for our release notes and version bumping.
+
+When submitting a change that should be apart of a release, you
+can run the `change` script.
+
+```sh
+npm run change
+```
+
+It will prompt you with options for setting the message and version type.
+
+#### Additional Commands
+
+Output [to stdout] a summary of the pending changes for a release.
+
+```sh
+npm run change:status
+```
+
+Export the pending changes to a `changes.json` file at the root directory.
+
+```sh
+npm run change:export
+```
+
+### Releasing
+
+To invoke a release, you'll need to pull the `main` branch
+and run the `release:version` command.
+
+```sh
+npm run release:version
+```
+
+This will automatically bump the releasing projects.
+
+After merging these changes back into `main`, you can move forward
+with the actual publishing.
+
+```sh
+npm run release
+```
+
+This will publish the releasing projects to npm, with the generated changelogs.
+
+The last step will be pushing the release tags back to the repo.
+
+```sh
+npm run release:tags
 ```

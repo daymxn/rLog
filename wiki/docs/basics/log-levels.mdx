@@ -8,10 +8,10 @@ Logs can have a different severity level attached to them, indicating at a quick
 
 :::info what you'll learn
 
-- What log levels are
-- How log levels are used
-- The various helper methods to create different log messages
-- How to apply a minimum log level to your logging setup
+-   What log levels are
+-   How log levels are used
+-   The various helper methods to create different log messages
+-   How to apply a minimum log level to your logging setup
 
 :::
 
@@ -19,11 +19,11 @@ Logs can have a different severity level attached to them, indicating at a quick
 
 Within **rLog**, there are five possible severity levels you can use:
 
-- Verbose
-- Debug
-- Info
-- Warn
-- Error
+-   Verbose
+-   Debug
+-   Info
+-   Warn
+-   Error
 
 The levels escalate in order of importance, `Verbose` being the least important, and `Error` being the most important.
 
@@ -49,9 +49,9 @@ const logger = new rLog();
 logger.verbose("Application started");
 
 function processOrder(orderId: string, userId: string) {
-  // All the logging methods have short hand aliases you can use as well
-  // highlight-next-line
-  logger.v("Fetching details for order", { order: orderId, user: userId });
+	// All the logging methods have short hand aliases you can use as well
+	// highlight-next-line
+	logger.v("Fetching details for order", { order: orderId, user: userId });
 }
 
 processOrder("12345", "user789");
@@ -81,12 +81,12 @@ const logger = new rLog();
 logger.verbose("Application started");
 
 function processOrder(orderId: string, userId: string) {
-  logger.v("Fetching details for order", { order: orderId, user: userId });
+	logger.v("Fetching details for order", { order: orderId, user: userId });
 
-  const orderDetails = { items: ["item1", "item2"], total: 100 };
+	const orderDetails = { items: ["item1", "item2"], total: 100 };
 
-  // highlight-next-line
-  logger.d(`Retrieved order details`, { details: orderDetails });
+	// highlight-next-line
+	logger.d(`Retrieved order details`, { details: orderDetails });
 }
 
 processOrder("12345", "user789");
@@ -119,17 +119,17 @@ const logger = new rLog();
 logger.verbose("Application started");
 
 function processOrder(orderId: string, userId: string) {
-  // highlight-next-line
-  logger.i("Processing order");
+	// highlight-next-line
+	logger.i("Processing order");
 
-  logger.v("Fetching details for order", { order: orderId, user: userId });
+	logger.v("Fetching details for order", { order: orderId, user: userId });
 
-  const orderDetails = { items: ["item1", "item2"], total: 100 };
+	const orderDetails = { items: ["item1", "item2"], total: 100 };
 
-  logger.d(`Retrieved order details`, { details: orderDetails });
+	logger.d(`Retrieved order details`, { details: orderDetails });
 
-  // highlight-next-line
-  logger.i("Order complete");
+	// highlight-next-line
+	logger.i("Order complete");
 }
 
 processOrder("12345", "user789");
@@ -173,29 +173,29 @@ const logger = new rLog();
 logger.verbose("Application started");
 
 function processOrder(orderId: string, userId: string) {
-  logger.i("Processing order");
+	logger.i("Processing order");
 
-  logger.v("Fetching details for order", { order: orderId, user: userId });
+	logger.v("Fetching details for order", { order: orderId, user: userId });
 
-  const orderDetails = { items: ["item1", "item2"], total: 1 };
+	const orderDetails = { items: ["item1", "item2"], total: 1 };
 
-  logger.d(`Retrieved order details`, { details: orderDetails });
+	logger.d(`Retrieved order details`, { details: orderDetails });
 
-  if (orderDetails.total < 10) {
-    // highlight-next-line
-    logger.w("Order has a suspiciously low total");
-  }
+	if (orderDetails.total < 10) {
+		// highlight-next-line
+		logger.w("Order has a suspiciously low total");
+	}
 
-  logger.v("Sending order for payment");
+	logger.v("Sending order for payment");
 
-  const paymentSuccessful = sendPayment(order, userId, orderDetails);
+	const paymentSuccessful = sendPayment(order, userId, orderDetails);
 
-  if (!paymentSuccessful) {
-    // highlight-next-line
-    logger.w("Payment for order failed");
-  }
+	if (!paymentSuccessful) {
+		// highlight-next-line
+		logger.w("Payment for order failed");
+	}
 
-  logger.i("Order complete");
+	logger.i("Order complete");
 }
 
 processOrder("12345", "user789");
@@ -238,35 +238,35 @@ const logger = new rLog();
 logger.verbose("Application started");
 
 function processOrder(orderId: string, userId: string) {
-  try {
-    logger.i("Processing order");
+	try {
+		logger.i("Processing order");
 
-    logger.v("Fetching details for order", { order: orderId, user: userId });
+		logger.v("Fetching details for order", { order: orderId, user: userId });
 
-    const orderDetails = { items: ["item1", "item2"], total: 1 };
+		const orderDetails = { items: ["item1", "item2"], total: 1 };
 
-    logger.d(`Retrieved order details`, { details: orderDetails });
+		logger.d(`Retrieved order details`, { details: orderDetails });
 
-    if (orderDetails.total < 10) {
-      logger.w("Order has a suspiciously low total");
-    }
+		if (orderDetails.total < 10) {
+			logger.w("Order has a suspiciously low total");
+		}
 
-    logger.v("Sending order for payment");
+		logger.v("Sending order for payment");
 
-    const paymentSuccessful = sendPayment(order, userId, orderDetails);
+		const paymentSuccessful = sendPayment(order, userId, orderDetails);
 
-    if (!paymentSuccessful) {
-      logger.w("Payment for order failed");
-    }
+		if (!paymentSuccessful) {
+			logger.w("Payment for order failed");
+		}
 
-    logger.i("Order complete");
-  } catch (e) {
-    // highlight-start
-    logger.e("An unexpected error occurred", {
-      reason: e.message,
-    });
-    //highlight-end
-  }
+		logger.i("Order complete");
+	} catch (e) {
+		// highlight-start
+		logger.e("An unexpected error occurred", {
+			reason: e.message,
+		});
+		//highlight-end
+	}
 }
 
 processOrder("12345", 789);
@@ -331,7 +331,7 @@ console.
 
 ### Helper Method
 
-The second way to configure this is via the `withMinLogLevel` method on `RLog` instances.
+The second way to configure this is via the `withMinLogLevel` method on `rLog` instances.
 
 ```ts
 // returns a copy of this logger, but with the `minLogLevel` set to `DEBUG`
@@ -347,8 +347,8 @@ functional setups.
 
 Let's recap what we've learned about log levels:
 
-- They respresent the **severity** or **importance** of a log
-- They're the **first** part of a log message
-- They have an **increasing** level of importance
-- You can set a **minimum** level to output
-- Levels above `INFO` are sent through the `warn` console in roblox
+-   They respresent the **severity** or **importance** of a log
+-   They're the **first** part of a log message
+-   They have an **increasing** level of importance
+-   You can set a **minimum** level to output
+-   Levels above `INFO` are sent through the `warn` console in roblox

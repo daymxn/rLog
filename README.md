@@ -7,13 +7,13 @@
  <br>
 </h1>
 
-> Context based Server-Side logging solution for ROBLOX projects.
+> Context-based server-side logging solution for ROBLOX projects.
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/daymxn/vidos?style=flat-square)
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/daymxn/vidos/main?style=flat-square)
-![GitHub issues](https://img.shields.io/github/issues/daymxn/vidos?style=flat-square)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/daymxn/vidos?style=flat-square)
-![GitHub](https://img.shields.io/github/license/daymxn/vidos?style=flat-square)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/daymxn/rlog?style=flat-square)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/daymxn/rlog/main?style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/daymxn/rlog?style=flat-square)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/daymxn/rlog?style=flat-square)
+![GitHub](https://img.shields.io/github/license/daymxn/rlog?style=flat-square)
 
 ---
 
@@ -66,42 +66,35 @@ pnpm add @rbxts/rlog
 yarn add @rbxts/rlog
 ```
 
-### Wally
-
-```toml
-[dependencies]
-Reflex = "daymxn/rlog@1.0.0"
-```
-
 ## Overview
 
-rLog is a context based server-side logging framework for ROBLOX, designed to help organize and structure your logging process.
+rLog is a Context-based server-side logging framework for ROBLOX, designed to help organize and structure your logging process.
 
-Utilizing [Correlation IDs](https://microsoft.github.io/code-with-engineering-playbook/observability/correlation-id/) via rLog's `LogContext`, you can create logging infrastructure that mirrors more entrprise-like systems; faciliating easier debugging and external auditing.
+Utilizing [Correlation IDs](https://microsoft.github.io/code-with-engineering-playbook/observability/correlation-id/) via rLog's `LogContext`, you can create logging infrastructure that mirrors more enterprise-like systems; facilitating easier debugging and external auditing.
 
 ## Documentation
 
-[Quick Start](https://rlog.daymxn.com/rlog/docs/quick-start)
+[Quick Start](https://rlog.daymxn.com/docs/quick-start)
 
-[API Reference](https://rlog.daymxn.com/rlog/docs/api)
+[API Reference](https://rlog.daymxn.com/docs/api)
 
-[Fast Breakdown](https://rlog.daymxn.com/rlog/docs/fast-breakdown)
+[Fast Breakdown](https://rlog.daymxn.com/docs/fast-breakdown)
 
-[Basic Guides](https://rlog.daymxn.com/rlog/docs/category/guides)
+[Basic Guides](https://rlog.daymxn.com/docs/category/guides)
 
-[Advanced Guides](https://rlog.daymxn.com/rlog/docs/category/advanced-guides)
+[Advanced Guides](https://rlog.daymxn.com/docs/category/advanced-guides)
 
 ## Features
 
 ### Basic Logging
 
-- Log data to the console according under different severity levels.
+- Log data to the console according to different severity levels.
 - Utilize tags (or prefixes) for individual logging instances.
 
 ### Serialization
 
-- Attach data to your log entries that gets serialized before being sent; ensuring the data is properly visable.
-- Support for deeply nested roblox data-types that don't typically translate well (eg; CFrames).
+- Attach data to your log entries that gets serialized before being sent; ensuring the data is properly visible.
+- Support for deeply nested roblox data types that don't typically translate well (e.g., CFrames).
 - Support for encoding custom classes and functions.
 - Customizable class serialization.
 
@@ -112,13 +105,13 @@ Utilizing [Correlation IDs](https://microsoft.github.io/code-with-engineering-pl
 - Automatically generate unique IDs when needed.
 - Optionally configure a custom method for providing your own ID generation.
 - Share configuration settings between context consumers, optionally unique to each invocation.
-- Optionally "suspend" logs until they're needed (ie; a `WARNING` or `ERROR` occurs.); facilitating verbose logs for easier debugging without taking up resources until they're needed.
+- Optionally "suspend" logs until they're needed (i.e., a `WARNING` or `ERROR` occurs.); facilitating verbose logs for easier debugging without taking up resources until they're needed.
 
 ### Source Context
 
 - Attach data to your logs to identify which *file* the log was sent from.
 - Attach data to your logs to identify what *line number* in the file the log was sent from.
-- Attach data to your logs to identify which *function* the log was sent from, or optionally the *nearest* named function on the stack (in the case of anonymous functions)
+- Attach data to your logs to identify which *function* the log was sent from, or optionally the *nearest* named function on the stack (in the case of anonymous functions).
 - In the case of anonymous functions, identify the nearest *named* function from where the log was sent.
 
 ### Sinks
@@ -130,14 +123,14 @@ Utilizing [Correlation IDs](https://microsoft.github.io/code-with-engineering-pl
 
 - Define callbacks that can conditionally decide to filter logs from reaching any output.
 - Define callbacks that can send logs to external services for storage and auditing.
-- Recursively define callbacks through a heirachy of logger instances and configurations; allowing you to provide callbacks for individual flows.
-- Define dynamic callbacks that change according to arguments (eg; the player).
+- Recursively define callbacks through a hierarchy of logger instances and configurations; allowing you to provide callbacks for individual flows.
+- Define dynamic callbacks that change according to arguments (e.g., the player).
 
 ### Enrichers
 
 - Define callbacks that can conditionally mutate or add data to logs.
-- Recursively define callbacks through a heirachy of logger instances and configurations; allowing you to provide callbacks for individual flows.
-- Define dynamic callbacks that change according to arguments (eg; the type of data being sent).
+- Recursively define callbacks through a hierarchy of logger instances and configurations; allowing you to provide callbacks for individual flows.
+- Define dynamic callbacks that change according to arguments (e.g., the type of data being sent).
 
 ### Configuration
 
@@ -149,23 +142,24 @@ Utilizing [Correlation IDs](https://microsoft.github.io/code-with-engineering-pl
 
 So you're ready to get started with **rLog**!
 
-You can either checkout our [Quick Start](https://rlog.daymxn.com/rlog/docs/quick-start) guide, read through our list of [Basic Guides](https://rlog.daymxn.com/rlog/docs/category/guides), or jump straight into our [API Reference](https://rlog.daymxn.com/rlog/docs/api).
+You can either checkout our [Quick Start](https://rlog.daymxn.com/docs/quick-start) guide, read through our list of [Basic Guides](https://rlog.daymxn.com/docs/category/guides), or jump straight into our [API Reference](https://rlog.daymxn.com/docs/api).
 
 > [!TIP]
-> If you're already familiar with logging libraries, you can give our [Fast Breakdown](https://rlog.daymxn.com/rlog/docs/fast-breakdown) a read to get a quick overview of what rLog provides, and where it differs from others.
+> If you're already familiar with logging libraries, you can give our [Fast Breakdown](https://rlog.daymxn.com/docs/fast-breakdown) a read to get a quick overview of what rLog provides, and where it differs from others.
 
 ## Roadmap
 
-- Remove deps/eslint/tsconfig settings that aren't needed
-- Update shields to point to rLog once repo is public
-- Double check that are links are working properly
-
-- Seperate provided sinks into a sub package
+- Add social preview to github repo after going public
+- Add publishing for wally
+- Add docs for lua usage
+- Separate provided sinks into a sub package
 - Support google cloud console logging
 - Migrate tests to individual files
+- Implement workflow for test coverage
+- Implement tests for provided workflows
 - Implement more refined serialization/assertions lib
 - Add workflow for checking API diff and version bumping according to semver
-- Add note in contributing about changelog, version bumping, and checking the api diff
+- Add note in contributing about checking the api diff
 
 ## Contributing
 

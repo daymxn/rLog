@@ -161,6 +161,8 @@ You can either checkout our [Quick Start](https://rlog.daymxn.com/docs/quick-sta
 - Separate provided sinks into a sub package
 - Support google cloud console logging
 - Migrate tests to individual files
+- Implement workflow for test coverage
+- Implement tests for provided workflows
 - Implement more refined serialization/assertions lib
 - Add workflow for checking API diff and version bumping according to semver
 - Add note in contributing about checking the api diff

@@ -5,7 +5,7 @@ import { themes as prismThemes } from "prism-react-renderer";
 
 const config: Config = {
   title: "rLog",
-  tagline: "Context based Server-Side logging for ROBLOX.",
+  tagline: "Context-based server-side logging for ROBLOX.",
   favicon: "img/favicon.ico",
   url: "https://rlog.daymxn.com",
   baseUrl: "/",

@@ -7,7 +7,7 @@
  <br>
 </h1>
 
-> Context based Server-Side logging solution for ROBLOX projects.
+> Context-based server-side logging solution for ROBLOX projects.
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/daymxn/rlog?style=flat-square)
 ![GitHub last commit (branch)](https://img.shields.io/github/last-commit/daymxn/rlog/main?style=flat-square)
@@ -75,9 +75,9 @@ Reflex = "daymxn/rlog@1.0.0"
 
 ## Overview
 
-rLog is a context based server-side logging framework for ROBLOX, designed to help organize and structure your logging process.
+rLog is a Context-based server-side logging framework for ROBLOX, designed to help organize and structure your logging process.
 
-Utilizing [Correlation IDs](https://microsoft.github.io/code-with-engineering-playbook/observability/correlation-id/) via rLog's `LogContext`, you can create logging infrastructure that mirrors more entrprise-like systems; faciliating easier debugging and external auditing.
+Utilizing [Correlation IDs](https://microsoft.github.io/code-with-engineering-playbook/observability/correlation-id/) via rLog's `LogContext`, you can create logging infrastructure that mirrors more enterprise-like systems; facilitating easier debugging and external auditing.
 
 ## Documentation
 
@@ -95,13 +95,13 @@ Utilizing [Correlation IDs](https://microsoft.github.io/code-with-engineering-pl
 
 ### Basic Logging
 
-- Log data to the console according under different severity levels.
+- Log data to the console according to different severity levels.
 - Utilize tags (or prefixes) for individual logging instances.
 
 ### Serialization
 
-- Attach data to your log entries that gets serialized before being sent; ensuring the data is properly visable.
-- Support for deeply nested roblox data-types that don't typically translate well (eg; CFrames).
+- Attach data to your log entries that gets serialized before being sent; ensuring the data is properly visible.
+- Support for deeply nested roblox data types that don't typically translate well (e.g., CFrames).
 - Support for encoding custom classes and functions.
 - Customizable class serialization.
 
@@ -112,13 +112,13 @@ Utilizing [Correlation IDs](https://microsoft.github.io/code-with-engineering-pl
 - Automatically generate unique IDs when needed.
 - Optionally configure a custom method for providing your own ID generation.
 - Share configuration settings between context consumers, optionally unique to each invocation.
-- Optionally "suspend" logs until they're needed (ie; a `WARNING` or `ERROR` occurs.); facilitating verbose logs for easier debugging without taking up resources until they're needed.
+- Optionally "suspend" logs until they're needed (i.e., a `WARNING` or `ERROR` occurs.); facilitating verbose logs for easier debugging without taking up resources until they're needed.
 
 ### Source Context
 
 - Attach data to your logs to identify which *file* the log was sent from.
 - Attach data to your logs to identify what *line number* in the file the log was sent from.
-- Attach data to your logs to identify which *function* the log was sent from, or optionally the *nearest* named function on the stack (in the case of anonymous functions)
+- Attach data to your logs to identify which *function* the log was sent from, or optionally the *nearest* named function on the stack (in the case of anonymous functions).
 - In the case of anonymous functions, identify the nearest *named* function from where the log was sent.
 
 ### Sinks
@@ -130,14 +130,14 @@ Utilizing [Correlation IDs](https://microsoft.github.io/code-with-engineering-pl
 
 - Define callbacks that can conditionally decide to filter logs from reaching any output.
 - Define callbacks that can send logs to external services for storage and auditing.
-- Recursively define callbacks through a heirachy of logger instances and configurations; allowing you to provide callbacks for individual flows.
-- Define dynamic callbacks that change according to arguments (eg; the player).
+- Recursively define callbacks through a hierarchy of logger instances and configurations; allowing you to provide callbacks for individual flows.
+- Define dynamic callbacks that change according to arguments (e.g., the player).
 
 ### Enrichers
 
 - Define callbacks that can conditionally mutate or add data to logs.
-- Recursively define callbacks through a heirachy of logger instances and configurations; allowing you to provide callbacks for individual flows.
-- Define dynamic callbacks that change according to arguments (eg; the type of data being sent).
+- Recursively define callbacks through a hierarchy of logger instances and configurations; allowing you to provide callbacks for individual flows.
+- Define dynamic callbacks that change according to arguments (e.g., the type of data being sent).
 
 ### Configuration
 

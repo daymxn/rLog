@@ -1,6 +1,6 @@
 /* eslint-disable headers/header-format */
 /**
- * Context based Server-Side logging framework for ROBLOX projects.
+ * Context-based server-side logging framework for ROBLOX projects.
  *
  * @remarks
  * Exports the {@link RLog} class as the primary entry point.

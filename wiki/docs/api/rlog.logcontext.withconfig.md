@@ -59,7 +59,7 @@ A new [LogContext](./rlog.logcontext.md) instance.
 
 ## Exceptions
 
-If the context is dead (ie; if [stop](./rlog.logcontext.stop.md) was called already)
+If the context is dead (i.e., if [stop](./rlog.logcontext.stop.md) was called already)
 
 ## Remarks
 

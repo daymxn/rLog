@@ -1,7 +1,7 @@
 {
 	"name": "@rbxts/rlog",
 	"version": "0.8.0",
-	"description": "Context based Server-Side logging solution for ROBLOX projects.",
+	"description": "Context-based server-side logging solution for ROBLOX projects.",
 	"main": "out/init.lua",
 	"scripts": {
 		"build": "rbxtsc",

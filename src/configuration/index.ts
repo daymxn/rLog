@@ -94,7 +94,7 @@ export interface SerializationConfig {
    * @remarks
    *
    * When disabled, tables will not be recursively encoded, which may cause you
-   * to miss out on certain data types being properly translated (eg; roblox data types).
+   * to miss out on certain data types being properly translated (e.g., roblox data types).
    *
    * This will occur even if you have {@link SerializationConfig.encodeRobloxTypes | encodeRobloxTypes}
    * enabled.

@@ -63,7 +63,7 @@ objects and Roblox-specific data types.
 
 ### Roblox Types
 
-A lot of Roblox data-types don't properly encode to string or JSON, especially when nested in tables.
+A lot of Roblox data types don't properly encode to string or JSON, especially when nested in tables.
 
 **rLog** will manually encode these types, so you don't have to worry about data missing in your logs.
 
@@ -285,8 +285,8 @@ Meaning you can also return tables, numbers, or even booleans- if a string isn't
 
 A not so common use-case is functions.
 
-By default, rLog does _not_ encode functions in the output. But, this behavior can sometimes be desirable (eg; if you're
-inspecting run-time types).
+By default, rLog does _not_ encode functions in the output. But, this behavior can sometimes be desirable (e.g., if
+you're inspecting run-time types).
 
 You can enable this behavior with the `encodeFunctions` config option.
 
@@ -390,6 +390,6 @@ logger.debug("Person created", { me: person });
 
 Let's recap what we've learned about Serialization:
 
--   Serialization occurs **automatically** for ROBLOX data-types and complex data structures.
+-   Serialization occurs **automatically** for ROBLOX data types and complex data structures.
 -   You can **configure** your serialization with `SerializationConfig` settings.
 -   You can setup **custom** serialization for classes and in-house data structures.

@@ -61,7 +61,7 @@ function extractSourceMetadata(): SourceMetadata {
 }
 
 /**
- * Class for Server-Side Roblox Logging.
+ * Class for server-side Roblox Logging.
  *
  * @remarks
  *

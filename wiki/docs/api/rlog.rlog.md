@@ -8,7 +8,7 @@ hide_title: true
 
 ## RLog class
 
-Class for Server-Side Roblox Logging.
+Class for server-side Roblox Logging.
 
 **Signature:**
 

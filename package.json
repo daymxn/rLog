@@ -4,9 +4,9 @@
 	"description": "Context based Server-Side logging solution for ROBLOX projects.",
 	"main": "out/init.lua",
 	"scripts": {
-		"build": "rbxtsc --noInclude",
-		"dev": "rbxtsc -w --type game --rojo test.project.json --noInclude",
-		"watch": "rbxtsc -w --noInclude",
+		"build": "rbxtsc",
+		"dev": "rbxtsc -w --type game --rojo test.project.json",
+		"watch": "rbxtsc -w",
 		"scripts:build": "npx tsc --project ./scripts/tsconfig.scripts.json",
 		"scripts:watch": "npm run scripts:build -- -w",
 		"api:build": "npm run build",
@@ -73,7 +73,7 @@
 		"npm-run-all2": "^6.2.2",
 		"prettier": "^3.2.5",
 		"prettier-plugin-organize-imports": "^3.2.4",
-		"roblox-ts": "^2.3.0",
+		"roblox-ts": ">=2.3.0-dev-30dae68",
 		"typescript": "^5.4.2"
 	},
 	"dependencies": {
@@ -82,5 +82,8 @@
 		"@rbxts/services": "^1.5.4",
 		"@rbxts/string-utils": "^1.0.3",
 		"@rbxts/t": "^3.1.1"
+	},
+	"peerDependencies": {
+		"roblox-ts": ">=2.3.0-dev-0338e9d"
 	}
 }

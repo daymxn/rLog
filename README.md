@@ -9,11 +9,16 @@
 
 > Context-based server-side logging solution for ROBLOX projects.
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/daymxn/rlog?style=flat-square)
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/daymxn/rlog/main?style=flat-square)
-![GitHub issues](https://img.shields.io/github/issues/daymxn/rlog?style=flat-square)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/daymxn/rlog?style=flat-square)
-![GitHub](https://img.shields.io/github/license/daymxn/rlog?style=flat-square)
+<a alt="Released version" href="https://www.npmjs.com/package/@rbxts/rlog">
+<img src="https://img.shields.io/npm/v/%40rbxts%2Frlog?style=flat-square"></a>
+<img alt="Last release date" src="https://img.shields.io/github/release-date/daymxn/rlog?label=last%20release">
+<a alt="Last commit date" href="https://github.com/daymxn/rLog/commits/main/">
+<img src="https://img.shields.io/github/last-commit/daymxn/rlog/main?style=flat-square"></a>
+<a alt="Open issues" href="https://github.com/daymxn/rLog/issues">
+<img src="https://img.shields.io/github/issues/daymxn/rlog?style=flat-square"></a>
+<img alt="Code size" src="https://img.shields.io/github/languages/code-size/daymxn/rlog?style=flat-square">
+<a alt="License" href="https://github.com/daymxn/rLog/blob/main/LICENSE">
+<img src="https://img.shields.io/github/license/daymxn/rlog?style=flat-square"></a>
 
 ---
 

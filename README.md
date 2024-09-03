@@ -154,7 +154,6 @@ You can either checkout our [Quick Start](https://rlog.daymxn.com/docs/quick-sta
 
 ## Roadmap
 
-- Add social preview to github repo after going public
 - Add publishing for wally
 - Add docs for lua usage
 - Separate provided sinks into a sub package

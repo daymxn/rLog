@@ -9,6 +9,7 @@
 
 > Context-based server-side logging solution for ROBLOX projects.
 
+<p align="left">
 <a alt="Released version" href="https://www.npmjs.com/package/@rbxts/rlog">
 <img src="https://img.shields.io/npm/v/%40rbxts%2Frlog?style=flat-square"></a>
 <img alt="Last release date" src="https://img.shields.io/github/release-date/daymxn/rlog?label=last%20release">
@@ -19,6 +20,7 @@
 <img alt="Code size" src="https://img.shields.io/github/languages/code-size/daymxn/rlog?style=flat-square">
 <a alt="License" href="https://github.com/daymxn/rLog/blob/main/LICENSE">
 <img src="https://img.shields.io/github/license/daymxn/rlog?style=flat-square"></a>
+</p>
 
 ---
 
